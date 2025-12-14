@@ -32,6 +32,18 @@ import classes from './MealPlan.module.css';
 
 const DAY_NAMES = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 
+// Get day indices starting from today
+// JS Date: 0=Sunday, 1=Monday, ..., 6=Saturday
+// App uses: 0=Monday, 1=Tuesday, ..., 6=Sunday
+function getOrderedDayIndices(): number[] {
+  const jsDay = new Date().getDay();
+  // Convert JS day (0=Sunday) to app day (0=Monday)
+  const todayIndex = (jsDay + 6) % 7;
+  
+  // Create array starting from today
+  return Array.from({ length: 7 }, (_, i) => (todayIndex + i) % 7);
+}
+
 function PlusIcon() {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -309,11 +321,11 @@ export function MealPlanPage() {
 
           {/* Week grid */}
           <Box className={classes.weekGrid}>
-            {DAY_NAMES.map((_, index) => (
+            {getOrderedDayIndices().map((dayIndex) => (
               <DayCard
-                key={index}
-                dayIndex={index}
-                entries={getEntriesForDay(index)}
+                key={dayIndex}
+                dayIndex={dayIndex}
+                entries={getEntriesForDay(dayIndex)}
                 recipes={recipes}
                 onAddRecipe={handleAddRecipe}
                 onRemoveRecipe={handleRemoveRecipe}
