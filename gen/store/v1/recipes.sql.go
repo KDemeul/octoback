@@ -7,12 +7,13 @@ package v1
 
 import (
 	"context"
+	"database/sql"
 )
 
 const createRecipe = `-- name: CreateRecipe :one
-INSERT INTO recipe (name, description, servings, prep_time_minutes, cook_time_minutes)
-VALUES (?, ?, ?, ?, ?)
-RETURNING id, name, description, servings, prep_time_minutes, cook_time_minutes, created_at, version
+INSERT INTO recipe (name, description, servings, prep_time_minutes, cook_time_minutes, tenant_id)
+VALUES (?, ?, ?, ?, ?, ?)
+RETURNING id, name, description, servings, prep_time_minutes, cook_time_minutes, created_at, version, tenant_id
 `
 
 type CreateRecipeParams struct {
@@ -21,6 +22,7 @@ type CreateRecipeParams struct {
 	Servings        int64
 	PrepTimeMinutes int64
 	CookTimeMinutes int64
+	TenantID        sql.NullInt64
 }
 
 func (q *Queries) CreateRecipe(ctx context.Context, arg CreateRecipeParams) (Recipe, error) {
@@ -30,6 +32,7 @@ func (q *Queries) CreateRecipe(ctx context.Context, arg CreateRecipeParams) (Rec
 		arg.Servings,
 		arg.PrepTimeMinutes,
 		arg.CookTimeMinutes,
+		arg.TenantID,
 	)
 	var i Recipe
 	err := row.Scan(
@@ -41,6 +44,7 @@ func (q *Queries) CreateRecipe(ctx context.Context, arg CreateRecipeParams) (Rec
 		&i.CookTimeMinutes,
 		&i.CreatedAt,
 		&i.Version,
+		&i.TenantID,
 	)
 	return i, err
 }
@@ -54,7 +58,7 @@ RETURNING id, recipe_id, name, quantity, unit, created_at, version
 type CreateRecipeIngredientParams struct {
 	RecipeID int64
 	Name     string
-	Quantity string
+	Quantity int64
 	Unit     string
 }
 
@@ -80,12 +84,17 @@ func (q *Queries) CreateRecipeIngredient(ctx context.Context, arg CreateRecipeIn
 
 const deleteRecipe = `-- name: DeleteRecipe :one
 DELETE FROM recipe
-WHERE id = ?
-RETURNING id, name, description, servings, prep_time_minutes, cook_time_minutes, created_at, version
+WHERE id = ? AND tenant_id = ?
+RETURNING id, name, description, servings, prep_time_minutes, cook_time_minutes, created_at, version, tenant_id
 `
 
-func (q *Queries) DeleteRecipe(ctx context.Context, id int64) (Recipe, error) {
-	row := q.db.QueryRowContext(ctx, deleteRecipe, id)
+type DeleteRecipeParams struct {
+	ID       int64
+	TenantID sql.NullInt64
+}
+
+func (q *Queries) DeleteRecipe(ctx context.Context, arg DeleteRecipeParams) (Recipe, error) {
+	row := q.db.QueryRowContext(ctx, deleteRecipe, arg.ID, arg.TenantID)
 	var i Recipe
 	err := row.Scan(
 		&i.ID,
@@ -96,13 +105,14 @@ func (q *Queries) DeleteRecipe(ctx context.Context, id int64) (Recipe, error) {
 		&i.CookTimeMinutes,
 		&i.CreatedAt,
 		&i.Version,
+		&i.TenantID,
 	)
 	return i, err
 }
 
 const deleteRecipeIngredient = `-- name: DeleteRecipeIngredient :one
 DELETE FROM recipe_ingredient
-WHERE id = ?
+WHERE recipe_ingredient.id = ?
 RETURNING id, recipe_id, name, quantity, unit, created_at, version
 `
 
@@ -122,14 +132,19 @@ func (q *Queries) DeleteRecipeIngredient(ctx context.Context, id int64) (RecipeI
 }
 
 const getRecipe = `-- name: GetRecipe :one
-SELECT id, name, description, servings, prep_time_minutes, cook_time_minutes, created_at, version
+SELECT id, name, description, servings, prep_time_minutes, cook_time_minutes, created_at, version, tenant_id
 FROM recipe
-WHERE id = ?
+WHERE id = ? AND tenant_id = ?
 LIMIT 1
 `
 
-func (q *Queries) GetRecipe(ctx context.Context, id int64) (Recipe, error) {
-	row := q.db.QueryRowContext(ctx, getRecipe, id)
+type GetRecipeParams struct {
+	ID       int64
+	TenantID sql.NullInt64
+}
+
+func (q *Queries) GetRecipe(ctx context.Context, arg GetRecipeParams) (Recipe, error) {
+	row := q.db.QueryRowContext(ctx, getRecipe, arg.ID, arg.TenantID)
 	var i Recipe
 	err := row.Scan(
 		&i.ID,
@@ -140,19 +155,26 @@ func (q *Queries) GetRecipe(ctx context.Context, id int64) (Recipe, error) {
 		&i.CookTimeMinutes,
 		&i.CreatedAt,
 		&i.Version,
+		&i.TenantID,
 	)
 	return i, err
 }
 
 const getRecipeIngredient = `-- name: GetRecipeIngredient :one
-SELECT id, recipe_id, name, quantity, unit, created_at, version
-FROM recipe_ingredient
-WHERE id = ?
+SELECT ri.id, ri.recipe_id, ri.name, ri.quantity, ri.unit, ri.created_at, ri.version
+FROM recipe_ingredient ri
+JOIN recipe r ON ri.recipe_id = r.id
+WHERE ri.id = ? AND r.tenant_id = ?
 LIMIT 1
 `
 
-func (q *Queries) GetRecipeIngredient(ctx context.Context, id int64) (RecipeIngredient, error) {
-	row := q.db.QueryRowContext(ctx, getRecipeIngredient, id)
+type GetRecipeIngredientParams struct {
+	ID       int64
+	TenantID sql.NullInt64
+}
+
+func (q *Queries) GetRecipeIngredient(ctx context.Context, arg GetRecipeIngredientParams) (RecipeIngredient, error) {
+	row := q.db.QueryRowContext(ctx, getRecipeIngredient, arg.ID, arg.TenantID)
 	var i RecipeIngredient
 	err := row.Scan(
 		&i.ID,
@@ -167,13 +189,19 @@ func (q *Queries) GetRecipeIngredient(ctx context.Context, id int64) (RecipeIngr
 }
 
 const listRecipeIngredientsByRecipe = `-- name: ListRecipeIngredientsByRecipe :many
-SELECT id, recipe_id, name, quantity, unit, created_at, version
-FROM recipe_ingredient
-WHERE recipe_id = ?
+SELECT ri.id, ri.recipe_id, ri.name, ri.quantity, ri.unit, ri.created_at, ri.version
+FROM recipe_ingredient ri
+JOIN recipe r ON ri.recipe_id = r.id
+WHERE ri.recipe_id = ? AND r.tenant_id = ?
 `
 
-func (q *Queries) ListRecipeIngredientsByRecipe(ctx context.Context, recipeID int64) ([]RecipeIngredient, error) {
-	rows, err := q.db.QueryContext(ctx, listRecipeIngredientsByRecipe, recipeID)
+type ListRecipeIngredientsByRecipeParams struct {
+	RecipeID int64
+	TenantID sql.NullInt64
+}
+
+func (q *Queries) ListRecipeIngredientsByRecipe(ctx context.Context, arg ListRecipeIngredientsByRecipeParams) ([]RecipeIngredient, error) {
+	rows, err := q.db.QueryContext(ctx, listRecipeIngredientsByRecipe, arg.RecipeID, arg.TenantID)
 	if err != nil {
 		return nil, err
 	}
@@ -204,12 +232,13 @@ func (q *Queries) ListRecipeIngredientsByRecipe(ctx context.Context, recipeID in
 }
 
 const listRecipes = `-- name: ListRecipes :many
-SELECT id, name, description, servings, prep_time_minutes, cook_time_minutes, created_at, version
+SELECT id, name, description, servings, prep_time_minutes, cook_time_minutes, created_at, version, tenant_id
 FROM recipe
+WHERE tenant_id = ?
 `
 
-func (q *Queries) ListRecipes(ctx context.Context) ([]Recipe, error) {
-	rows, err := q.db.QueryContext(ctx, listRecipes)
+func (q *Queries) ListRecipes(ctx context.Context, tenantID sql.NullInt64) ([]Recipe, error) {
+	rows, err := q.db.QueryContext(ctx, listRecipes, tenantID)
 	if err != nil {
 		return nil, err
 	}
@@ -226,6 +255,7 @@ func (q *Queries) ListRecipes(ctx context.Context) ([]Recipe, error) {
 			&i.CookTimeMinutes,
 			&i.CreatedAt,
 			&i.Version,
+			&i.TenantID,
 		); err != nil {
 			return nil, err
 		}
@@ -243,8 +273,8 @@ func (q *Queries) ListRecipes(ctx context.Context) ([]Recipe, error) {
 const updateRecipe = `-- name: UpdateRecipe :one
 UPDATE recipe
 SET name = ?, description = ?, servings = ?, prep_time_minutes = ?, cook_time_minutes = ?, version = version + 1
-WHERE id = ? AND version = ?
-RETURNING id, name, description, servings, prep_time_minutes, cook_time_minutes, created_at, version
+WHERE id = ? AND tenant_id = ? AND version = ?
+RETURNING id, name, description, servings, prep_time_minutes, cook_time_minutes, created_at, version, tenant_id
 `
 
 type UpdateRecipeParams struct {
@@ -254,6 +284,7 @@ type UpdateRecipeParams struct {
 	PrepTimeMinutes int64
 	CookTimeMinutes int64
 	ID              int64
+	TenantID        sql.NullInt64
 	Version         int64
 }
 
@@ -265,6 +296,7 @@ func (q *Queries) UpdateRecipe(ctx context.Context, arg UpdateRecipeParams) (Rec
 		arg.PrepTimeMinutes,
 		arg.CookTimeMinutes,
 		arg.ID,
+		arg.TenantID,
 		arg.Version,
 	)
 	var i Recipe
@@ -277,6 +309,7 @@ func (q *Queries) UpdateRecipe(ctx context.Context, arg UpdateRecipeParams) (Rec
 		&i.CookTimeMinutes,
 		&i.CreatedAt,
 		&i.Version,
+		&i.TenantID,
 	)
 	return i, err
 }
@@ -284,13 +317,13 @@ func (q *Queries) UpdateRecipe(ctx context.Context, arg UpdateRecipeParams) (Rec
 const updateRecipeIngredient = `-- name: UpdateRecipeIngredient :one
 UPDATE recipe_ingredient
 SET name = ?, quantity = ?, unit = ?, version = version + 1
-WHERE id = ? AND version = ?
+WHERE recipe_ingredient.id = ? AND recipe_ingredient.version = ?
 RETURNING id, recipe_id, name, quantity, unit, created_at, version
 `
 
 type UpdateRecipeIngredientParams struct {
 	Name     string
-	Quantity string
+	Quantity int64
 	Unit     string
 	ID       int64
 	Version  int64

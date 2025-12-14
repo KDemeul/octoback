@@ -595,8 +595,8 @@ type CreateRecipeIngredientRequest struct {
 	Recipe int64 `protobuf:"varint,1,opt,name=recipe,proto3" json:"recipe,omitempty"`
 	// The ingredient name.
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	// The ingredient quantity (e.g., "2", "1/2").
-	Quantity string `protobuf:"bytes,3,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	// The ingredient quantity.
+	Quantity int32 `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`
 	// The ingredient unit (e.g., "cups", "tbsp").
 	Unit          string `protobuf:"bytes,4,opt,name=unit,proto3" json:"unit,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -647,11 +647,11 @@ func (x *CreateRecipeIngredientRequest) GetName() string {
 	return ""
 }
 
-func (x *CreateRecipeIngredientRequest) GetQuantity() string {
+func (x *CreateRecipeIngredientRequest) GetQuantity() int32 {
 	if x != nil {
 		return x.Quantity
 	}
-	return ""
+	return 0
 }
 
 func (x *CreateRecipeIngredientRequest) GetUnit() string {
@@ -983,13 +983,13 @@ const file_octoback_recipes_v1_service_proto_rawDesc = "" +
 	"\x10GetRecipeRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"H\n" +
 	"\x11GetRecipeResponse\x123\n" +
-	"\x06recipe\x18\x01 \x01(\v2\x1b.octoback.recipes.v1.RecipeR\x06recipe\"\xe3\x01\n" +
+	"\x06recipe\x18\x01 \x01(\v2\x1b.octoback.recipes.v1.RecipeR\x06recipe\"\xc8\x01\n" +
 	"\x13CreateRecipeRequest\x12\x1b\n" +
 	"\x04name\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\x12 \n" +
-	"\vdescription\x18\x02 \x01(\tR\vdescription\x12#\n" +
-	"\bservings\x18\x03 \x01(\x05B\a\xbaH\x04\x1a\x02 \x00R\bservings\x123\n" +
-	"\x11prep_time_minutes\x18\x04 \x01(\x05B\a\xbaH\x04\x1a\x02(\x00R\x0fprepTimeMinutes\x123\n" +
-	"\x11cook_time_minutes\x18\x05 \x01(\x05B\a\xbaH\x04\x1a\x02(\x00R\x0fcookTimeMinutes\"K\n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1a\n" +
+	"\bservings\x18\x03 \x01(\x05R\bservings\x12*\n" +
+	"\x11prep_time_minutes\x18\x04 \x01(\x05R\x0fprepTimeMinutes\x12*\n" +
+	"\x11cook_time_minutes\x18\x05 \x01(\x05R\x0fcookTimeMinutes\"K\n" +
 	"\x14CreateRecipeResponse\x123\n" +
 	"\x06recipe\x18\x01 \x01(\v2\x1b.octoback.recipes.v1.RecipeR\x06recipe\"\x87\x01\n" +
 	"\x13UpdateRecipeRequest\x123\n" +
@@ -1007,11 +1007,11 @@ const file_octoback_recipes_v1_service_proto_rawDesc = "" +
 	"\x1aGetRecipeIngredientRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"q\n" +
 	"\x1bGetRecipeIngredientResponse\x12R\n" +
-	"\x11recipe_ingredient\x18\x01 \x01(\v2%.octoback.recipes.v1.RecipeIngredientR\x10recipeIngredient\"\x86\x01\n" +
+	"\x11recipe_ingredient\x18\x01 \x01(\v2%.octoback.recipes.v1.RecipeIngredientR\x10recipeIngredient\"\x8f\x01\n" +
 	"\x1dCreateRecipeIngredientRequest\x12\x16\n" +
 	"\x06recipe\x18\x01 \x01(\x03R\x06recipe\x12\x1d\n" +
-	"\x04name\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18dR\x04name\x12\x1a\n" +
-	"\bquantity\x18\x03 \x01(\tR\bquantity\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18dR\x04name\x12#\n" +
+	"\bquantity\x18\x03 \x01(\x05B\a\xbaH\x04\x1a\x02 \x00R\bquantity\x12\x12\n" +
 	"\x04unit\x18\x04 \x01(\tR\x04unit\"t\n" +
 	"\x1eCreateRecipeIngredientResponse\x12R\n" +
 	"\x11recipe_ingredient\x18\x01 \x01(\v2%.octoback.recipes.v1.RecipeIngredientR\x10recipeIngredient\"\xb0\x01\n" +

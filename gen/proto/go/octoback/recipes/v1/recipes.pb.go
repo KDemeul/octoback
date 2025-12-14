@@ -130,7 +130,7 @@ type RecipeIngredient struct {
 	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	Recipe        int64                  `protobuf:"varint,2,opt,name=recipe,proto3" json:"recipe,omitempty"`
 	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	Quantity      string                 `protobuf:"bytes,4,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	Quantity      int32                  `protobuf:"varint,4,opt,name=quantity,proto3" json:"quantity,omitempty"`
 	Unit          string                 `protobuf:"bytes,5,opt,name=unit,proto3" json:"unit,omitempty"`
 	CreateTime    *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=create_time,json=createTime,proto3" json:"create_time,omitempty"`
 	Version       int32                  `protobuf:"varint,7,opt,name=version,proto3" json:"version,omitempty"`
@@ -189,11 +189,11 @@ func (x *RecipeIngredient) GetName() string {
 	return ""
 }
 
-func (x *RecipeIngredient) GetQuantity() string {
+func (x *RecipeIngredient) GetQuantity() int32 {
 	if x != nil {
 		return x.Quantity
 	}
-	return ""
+	return 0
 }
 
 func (x *RecipeIngredient) GetUnit() string {
@@ -236,7 +236,7 @@ const file_octoback_recipes_v1_recipes_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x02id\x12\x1f\n" +
 	"\x06recipe\x18\x02 \x01(\x03B\a\xbaH\x04\"\x02 \x00R\x06recipe\x12\x1d\n" +
 	"\x04name\x18\x03 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18dR\x04name\x12#\n" +
-	"\bquantity\x18\x04 \x01(\tB\a\xbaH\x04r\x02\x182R\bquantity\x12\x1b\n" +
+	"\bquantity\x18\x04 \x01(\x05B\a\xbaH\x04\x1a\x02 \x00R\bquantity\x12\x1b\n" +
 	"\x04unit\x18\x05 \x01(\tB\a\xbaH\x04r\x02\x182R\x04unit\x12;\n" +
 	"\vcreate_time\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"createTime\x12\x18\n" +

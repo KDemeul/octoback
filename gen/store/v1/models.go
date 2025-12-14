@@ -4,6 +4,10 @@
 
 package v1
 
+import (
+	"database/sql"
+)
+
 type GroceryItem struct {
 	ID            int64
 	GroceryListID int64
@@ -19,6 +23,30 @@ type GroceryList struct {
 	Name      string
 	CreatedAt string
 	Version   int64
+	TenantID  sql.NullInt64
+}
+
+type MealPlan struct {
+	ID            int64
+	TenantID      int64
+	GroceryListID sql.NullInt64
+	CreatedAt     string
+	Version       int64
+}
+
+type MealPlanEntry struct {
+	ID         int64
+	MealPlanID int64
+	RecipeID   int64
+	DayOfWeek  int64
+	CreatedAt  string
+	Version    int64
+}
+
+type MealPlanItemCheck struct {
+	MealPlanEntryID    int64
+	RecipeIngredientID int64
+	Checked            int64
 }
 
 type Recipe struct {
@@ -30,14 +58,41 @@ type Recipe struct {
 	CookTimeMinutes int64
 	CreatedAt       string
 	Version         int64
+	TenantID        sql.NullInt64
 }
 
 type RecipeIngredient struct {
 	ID        int64
 	RecipeID  int64
 	Name      string
-	Quantity  string
+	Quantity  int64
 	Unit      string
 	CreatedAt string
 	Version   int64
+}
+
+type Tenant struct {
+	ID        int64
+	Name      string
+	CreatedAt string
+	Version   int64
+}
+
+type TenantInvitation struct {
+	ID         int64
+	TenantID   int64
+	InviteCode string
+	CreatedBy  string
+	ExpiresAt  sql.NullString
+	UsedAt     sql.NullString
+	UsedBy     sql.NullString
+	CreatedAt  string
+}
+
+type TenantMember struct {
+	ID        int64
+	TenantID  int64
+	UserID    string
+	Role      string
+	CreatedAt string
 }

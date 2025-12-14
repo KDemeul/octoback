@@ -7,6 +7,7 @@ package v1
 
 import (
 	"context"
+	"database/sql"
 )
 
 const createGroceryItem = `-- name: CreateGroceryItem :one
@@ -43,26 +44,32 @@ func (q *Queries) CreateGroceryItem(ctx context.Context, arg CreateGroceryItemPa
 }
 
 const createGroceryList = `-- name: CreateGroceryList :one
-INSERT INTO grocery_list (name)
-VALUES (?)
-RETURNING id, name, created_at, version
+INSERT INTO grocery_list (name, tenant_id)
+VALUES (?, ?)
+RETURNING id, name, created_at, version, tenant_id
 `
 
-func (q *Queries) CreateGroceryList(ctx context.Context, name string) (GroceryList, error) {
-	row := q.db.QueryRowContext(ctx, createGroceryList, name)
+type CreateGroceryListParams struct {
+	Name     string
+	TenantID sql.NullInt64
+}
+
+func (q *Queries) CreateGroceryList(ctx context.Context, arg CreateGroceryListParams) (GroceryList, error) {
+	row := q.db.QueryRowContext(ctx, createGroceryList, arg.Name, arg.TenantID)
 	var i GroceryList
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.CreatedAt,
 		&i.Version,
+		&i.TenantID,
 	)
 	return i, err
 }
 
 const deleteGroceryItem = `-- name: DeleteGroceryItem :one
 DELETE FROM grocery_item
-WHERE id = ?
+WHERE grocery_item.id = ?
 RETURNING id, grocery_list_id, name, quantity, checked, created_at, version
 `
 
@@ -83,31 +90,43 @@ func (q *Queries) DeleteGroceryItem(ctx context.Context, id int64) (GroceryItem,
 
 const deleteGroceryList = `-- name: DeleteGroceryList :one
 DELETE FROM grocery_list
-WHERE id = ?
-RETURNING id, name, created_at, version
+WHERE id = ? AND tenant_id = ?
+RETURNING id, name, created_at, version, tenant_id
 `
 
-func (q *Queries) DeleteGroceryList(ctx context.Context, id int64) (GroceryList, error) {
-	row := q.db.QueryRowContext(ctx, deleteGroceryList, id)
+type DeleteGroceryListParams struct {
+	ID       int64
+	TenantID sql.NullInt64
+}
+
+func (q *Queries) DeleteGroceryList(ctx context.Context, arg DeleteGroceryListParams) (GroceryList, error) {
+	row := q.db.QueryRowContext(ctx, deleteGroceryList, arg.ID, arg.TenantID)
 	var i GroceryList
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.CreatedAt,
 		&i.Version,
+		&i.TenantID,
 	)
 	return i, err
 }
 
 const getGroceryItem = `-- name: GetGroceryItem :one
-SELECT id, grocery_list_id, name, quantity, checked, created_at, version
-FROM grocery_item
-WHERE id = ?
+SELECT gi.id, gi.grocery_list_id, gi.name, gi.quantity, gi.checked, gi.created_at, gi.version
+FROM grocery_item gi
+JOIN grocery_list gl ON gi.grocery_list_id = gl.id
+WHERE gi.id = ? AND gl.tenant_id = ?
 LIMIT 1
 `
 
-func (q *Queries) GetGroceryItem(ctx context.Context, id int64) (GroceryItem, error) {
-	row := q.db.QueryRowContext(ctx, getGroceryItem, id)
+type GetGroceryItemParams struct {
+	ID       int64
+	TenantID sql.NullInt64
+}
+
+func (q *Queries) GetGroceryItem(ctx context.Context, arg GetGroceryItemParams) (GroceryItem, error) {
+	row := q.db.QueryRowContext(ctx, getGroceryItem, arg.ID, arg.TenantID)
 	var i GroceryItem
 	err := row.Scan(
 		&i.ID,
@@ -122,32 +141,44 @@ func (q *Queries) GetGroceryItem(ctx context.Context, id int64) (GroceryItem, er
 }
 
 const getGroceryList = `-- name: GetGroceryList :one
-SELECT id, name, created_at, version
+SELECT id, name, created_at, version, tenant_id
 FROM grocery_list
-WHERE id = ?
+WHERE id = ? AND tenant_id = ?
 LIMIT 1
 `
 
-func (q *Queries) GetGroceryList(ctx context.Context, id int64) (GroceryList, error) {
-	row := q.db.QueryRowContext(ctx, getGroceryList, id)
+type GetGroceryListParams struct {
+	ID       int64
+	TenantID sql.NullInt64
+}
+
+func (q *Queries) GetGroceryList(ctx context.Context, arg GetGroceryListParams) (GroceryList, error) {
+	row := q.db.QueryRowContext(ctx, getGroceryList, arg.ID, arg.TenantID)
 	var i GroceryList
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.CreatedAt,
 		&i.Version,
+		&i.TenantID,
 	)
 	return i, err
 }
 
 const listGroceryItemsByGroceryList = `-- name: ListGroceryItemsByGroceryList :many
-SELECT id, grocery_list_id, name, quantity, checked, created_at, version
-FROM grocery_item
-WHERE grocery_list_id = ?
+SELECT gi.id, gi.grocery_list_id, gi.name, gi.quantity, gi.checked, gi.created_at, gi.version
+FROM grocery_item gi
+JOIN grocery_list gl ON gi.grocery_list_id = gl.id
+WHERE gi.grocery_list_id = ? AND gl.tenant_id = ?
 `
 
-func (q *Queries) ListGroceryItemsByGroceryList(ctx context.Context, groceryListID int64) ([]GroceryItem, error) {
-	rows, err := q.db.QueryContext(ctx, listGroceryItemsByGroceryList, groceryListID)
+type ListGroceryItemsByGroceryListParams struct {
+	GroceryListID int64
+	TenantID      sql.NullInt64
+}
+
+func (q *Queries) ListGroceryItemsByGroceryList(ctx context.Context, arg ListGroceryItemsByGroceryListParams) ([]GroceryItem, error) {
+	rows, err := q.db.QueryContext(ctx, listGroceryItemsByGroceryList, arg.GroceryListID, arg.TenantID)
 	if err != nil {
 		return nil, err
 	}
@@ -178,12 +209,13 @@ func (q *Queries) ListGroceryItemsByGroceryList(ctx context.Context, groceryList
 }
 
 const listGroceryLists = `-- name: ListGroceryLists :many
-SELECT id, name, created_at, version
+SELECT id, name, created_at, version, tenant_id
 FROM grocery_list
+WHERE tenant_id = ?
 `
 
-func (q *Queries) ListGroceryLists(ctx context.Context) ([]GroceryList, error) {
-	rows, err := q.db.QueryContext(ctx, listGroceryLists)
+func (q *Queries) ListGroceryLists(ctx context.Context, tenantID sql.NullInt64) ([]GroceryList, error) {
+	rows, err := q.db.QueryContext(ctx, listGroceryLists, tenantID)
 	if err != nil {
 		return nil, err
 	}
@@ -196,6 +228,7 @@ func (q *Queries) ListGroceryLists(ctx context.Context) ([]GroceryList, error) {
 			&i.Name,
 			&i.CreatedAt,
 			&i.Version,
+			&i.TenantID,
 		); err != nil {
 			return nil, err
 		}
@@ -213,7 +246,7 @@ func (q *Queries) ListGroceryLists(ctx context.Context) ([]GroceryList, error) {
 const updateGroceryItem = `-- name: UpdateGroceryItem :one
 UPDATE grocery_item
 SET name = ?, quantity = ?, checked = ?, version = version + 1
-WHERE id = ? AND version = ?
+WHERE grocery_item.id = ? AND grocery_item.version = ?
 RETURNING id, grocery_list_id, name, quantity, checked, created_at, version
 `
 
@@ -249,24 +282,31 @@ func (q *Queries) UpdateGroceryItem(ctx context.Context, arg UpdateGroceryItemPa
 const updateGroceryList = `-- name: UpdateGroceryList :one
 UPDATE grocery_list
 SET name = ?, version = version + 1
-WHERE id = ? AND version = ?
-RETURNING id, name, created_at, version
+WHERE id = ? AND tenant_id = ? AND version = ?
+RETURNING id, name, created_at, version, tenant_id
 `
 
 type UpdateGroceryListParams struct {
-	Name    string
-	ID      int64
-	Version int64
+	Name     string
+	ID       int64
+	TenantID sql.NullInt64
+	Version  int64
 }
 
 func (q *Queries) UpdateGroceryList(ctx context.Context, arg UpdateGroceryListParams) (GroceryList, error) {
-	row := q.db.QueryRowContext(ctx, updateGroceryList, arg.Name, arg.ID, arg.Version)
+	row := q.db.QueryRowContext(ctx, updateGroceryList,
+		arg.Name,
+		arg.ID,
+		arg.TenantID,
+		arg.Version,
+	)
 	var i GroceryList
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
 		&i.CreatedAt,
 		&i.Version,
+		&i.TenantID,
 	)
 	return i, err
 }

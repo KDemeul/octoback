@@ -516,11 +516,11 @@ export class CreateRecipeIngredientRequest extends Message<CreateRecipeIngredien
   name = "";
 
   /**
-   * The ingredient quantity (e.g., "2", "1/2").
+   * The ingredient quantity.
    *
-   * @generated from field: string quantity = 3;
+   * @generated from field: int32 quantity = 3;
    */
-  quantity = "";
+  quantity = 0;
 
   /**
    * The ingredient unit (e.g., "cups", "tbsp").
@@ -539,7 +539,7 @@ export class CreateRecipeIngredientRequest extends Message<CreateRecipeIngredien
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 1, name: "recipe", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
     { no: 2, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 3, name: "quantity", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "quantity", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
     { no: 4, name: "unit", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 

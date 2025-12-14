@@ -109,9 +109,9 @@ export class RecipeIngredient extends Message<RecipeIngredient> {
   name = "";
 
   /**
-   * @generated from field: string quantity = 4;
+   * @generated from field: int32 quantity = 4;
    */
-  quantity = "";
+  quantity = 0;
 
   /**
    * @generated from field: string unit = 5;
@@ -139,7 +139,7 @@ export class RecipeIngredient extends Message<RecipeIngredient> {
     { no: 1, name: "id", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
     { no: 2, name: "recipe", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
     { no: 3, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
-    { no: 4, name: "quantity", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 4, name: "quantity", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
     { no: 5, name: "unit", kind: "scalar", T: 9 /* ScalarType.STRING */ },
     { no: 6, name: "create_time", kind: "message", T: Timestamp },
     { no: 7, name: "version", kind: "scalar", T: 5 /* ScalarType.INT32 */ },

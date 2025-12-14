@@ -1,4 +1,4 @@
-import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
+import { Auth0Provider, useAuth0, type AppState } from '@auth0/auth0-react';
 import type { ReactNode } from 'react';
 
 // Auth0 configuration from environment variables
@@ -18,6 +18,11 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const redirectUri = window.location.origin;
 
+  const onRedirectCallback = (appState?: AppState) => {
+    // Navigate to the returnTo path or default to /groceries
+    window.location.replace(appState?.returnTo || '/groceries');
+  };
+
   if (!auth0Config.domain || !auth0Config.clientId) {
     console.warn('Auth0 configuration missing. Set VITE_AUTH0_DOMAIN and VITE_AUTH0_CLIENT_ID environment variables.');
     return <>{children}</>;
@@ -32,6 +37,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         audience: auth0Config.audience,
       }}
       cacheLocation="localstorage"
+      onRedirectCallback={onRedirectCallback}
     >
       {children}
     </Auth0Provider>
