@@ -274,53 +274,117 @@ export function GroceryListDetailPage() {
   const handleAddItem = async () => {
     if (!newItemName.trim()) return;
 
-    await createMutation.mutateAsync({
+    const tempId = BigInt(Date.now());
+    const newItem = {
+      id: tempId,
       groceryList: listId,
       name: newItemName.trim(),
       quantity: newItemQuantity,
       checked: false,
-    });
+    };
 
-    queryClient.invalidateQueries({
-      queryKey: ['octoback.groceries.v1.Service', 'ListGroceryItems'],
-    });
+    // Optimistic update: add the item immediately
+    queryClient.setQueryData(
+      ['octoback.groceries.v1.Service', 'ListGroceryItems', { groceryList: listId.toString() + 'n' }],
+      (old: { groceryItems: GroceryItem[] } | undefined) => ({
+        groceryItems: [...(old?.groceryItems ?? []), newItem],
+      })
+    );
 
     setNewItemName('');
     setNewItemQuantity(1);
     inputRef.current?.focus();
+
+    try {
+      await createMutation.mutateAsync({
+        groceryList: listId,
+        name: newItem.name,
+        quantity: newItem.quantity,
+        checked: false,
+      });
+    } finally {
+      // Refetch to get the real ID from server
+      queryClient.invalidateQueries({
+        queryKey: ['octoback.groceries.v1.Service', 'ListGroceryItems'],
+      });
+    }
   };
 
   const handleToggleItem = async (item: GroceryItem) => {
-    await updateMutation.mutateAsync({
-      groceryItem: {
-        ...item,
-        checked: !item.checked,
-      },
-      updateMask: new FieldMask({ paths: ['checked'] }),
-    });
+    const newChecked = !item.checked;
 
-    queryClient.invalidateQueries({
-      queryKey: ['octoback.groceries.v1.Service', 'ListGroceryItems'],
-    });
+    // Optimistic update: toggle immediately
+    queryClient.setQueryData(
+      ['octoback.groceries.v1.Service', 'ListGroceryItems', { groceryList: listId.toString() + 'n' }],
+      (old: { groceryItems: GroceryItem[] } | undefined) => ({
+        groceryItems: (old?.groceryItems ?? []).map((i) =>
+          i.id === item.id ? { ...i, checked: newChecked } : i
+        ),
+      })
+    );
+
+    try {
+      await updateMutation.mutateAsync({
+        groceryItem: {
+          ...item,
+          checked: newChecked,
+        },
+        updateMask: new FieldMask({ paths: ['checked'] }),
+      });
+    } catch {
+      // Revert on error
+      queryClient.invalidateQueries({
+        queryKey: ['octoback.groceries.v1.Service', 'ListGroceryItems'],
+      });
+    }
   };
 
   const handleToggleVirtualItem = async (item: VirtualGroceryItem) => {
-    await setMealPlanItemCheckMutation.mutateAsync({
-      mealPlanEntryId: item.mealPlanEntryId,
-      recipeIngredientId: item.recipeIngredientId,
-      checked: !item.checked,
-    });
+    const newChecked = !item.checked;
 
-    queryClient.invalidateQueries({
-      queryKey: ['octoback.mealplans.v1.Service', 'ListVirtualGroceryItems'],
-    });
+    // Optimistic update: toggle immediately
+    queryClient.setQueryData(
+      ['octoback.mealplans.v1.Service', 'ListVirtualGroceryItems', { groceryListId: listId.toString() + 'n' }],
+      (old: { items: VirtualGroceryItem[] } | undefined) => ({
+        items: (old?.items ?? []).map((i) =>
+          i.mealPlanEntryId === item.mealPlanEntryId && i.recipeIngredientId === item.recipeIngredientId
+            ? { ...i, checked: newChecked }
+            : i
+        ),
+      })
+    );
+
+    try {
+      await setMealPlanItemCheckMutation.mutateAsync({
+        mealPlanEntryId: item.mealPlanEntryId,
+        recipeIngredientId: item.recipeIngredientId,
+        checked: newChecked,
+      });
+    } catch {
+      // Revert on error
+      queryClient.invalidateQueries({
+        queryKey: ['octoback.mealplans.v1.Service', 'ListVirtualGroceryItems'],
+      });
+    }
   };
 
   const handleDeleteItem = async (itemId: bigint) => {
-    await deleteMutation.mutateAsync({ id: itemId });
-    queryClient.invalidateQueries({
-      queryKey: ['octoback.groceries.v1.Service', 'ListGroceryItems'],
-    });
+    // Optimistic update: remove immediately
+    queryClient.setQueryData(
+      ['octoback.groceries.v1.Service', 'ListGroceryItems', { groceryList: listId.toString() + 'n' }],
+      (old: { groceryItems: GroceryItem[] } | undefined) => ({
+        groceryItems: (old?.groceryItems ?? []).filter((i) => i.id !== itemId),
+      })
+    );
+
+    try {
+      await deleteMutation.mutateAsync({ id: itemId });
+    } catch {
+      // Revert on error
+      queryClient.invalidateQueries({
+        queryKey: ['octoback.groceries.v1.Service', 'ListGroceryItems'],
+      });
+    }
   };
 
   const isLoading = listLoading || itemsLoading || virtualItemsLoading;

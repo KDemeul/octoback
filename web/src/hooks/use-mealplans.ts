@@ -10,6 +10,9 @@ import {
   listVirtualGroceryItems,
 } from '../gen/octoback/mealplans/v1/service-Service_connectquery';
 
+// Polling interval for real-time sync (1 seconds)
+const SYNC_INTERVAL = 1000;
+
 // ============ Query Hooks ============
 
 /**
@@ -30,7 +33,9 @@ export function useMealPlanEntries() {
  * Fetch virtual grocery items for a specific grocery list
  */
 export function useVirtualGroceryItems(groceryListId: bigint) {
-  return useQuery(listVirtualGroceryItems, { groceryListId });
+  return useQuery(listVirtualGroceryItems, { groceryListId }, {
+    refetchInterval: SYNC_INTERVAL,
+  });
 }
 
 // ============ Mutation Hooks ============

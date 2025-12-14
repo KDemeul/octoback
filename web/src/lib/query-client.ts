@@ -6,7 +6,7 @@ import { QueryClient, QueryKey } from '@tanstack/react-query';
  */
 function bigIntReplacer(_key: string, value: unknown): unknown {
   if (typeof value === 'bigint') {
-    return value.toString() + 'n';
+    return `${value.toString()}n`;
   }
   return value;
 }
@@ -24,8 +24,8 @@ export const queryClient = new QueryClient({
     queries: {
       // With Connect-RPC, we get proper error handling
       retry: 1,
-      staleTime: 1000 * 60, // 1 minute
-      refetchOnWindowFocus: false,
+      staleTime: 1000 * 30, // 30 seconds
+      refetchOnWindowFocus: true, // Refetch when user returns to the app
       queryKeyHashFn,
     },
     mutations: {

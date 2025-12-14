@@ -12,20 +12,27 @@ import {
   updateGroceryList,
 } from '../gen/octoback/groceries/v1/service-Service_connectquery';
 
+// Polling interval for real-time sync (1 seconds)
+const SYNC_INTERVAL = 1000;
+
 // ============ Query Hooks ============
 
 /**
  * Fetch a single grocery list by ID
  */
 export function useGroceryList(id: bigint) {
-  return useQuery(getGroceryList, { id });
+  return useQuery(getGroceryList, { id }, {
+    refetchInterval: SYNC_INTERVAL,
+  });
 }
 
 /**
  * Fetch all grocery lists
  */
 export function useGroceryLists() {
-  return useQuery(listGroceryLists, {});
+  return useQuery(listGroceryLists, {}, {
+    refetchInterval: SYNC_INTERVAL,
+  });
 }
 
 /**
@@ -39,7 +46,9 @@ export function useGroceryItem(id: bigint) {
  * Fetch all grocery items for a specific list
  */
 export function useGroceryItems(groceryListId: bigint) {
-  return useQuery(listGroceryItems, { groceryList: groceryListId });
+  return useQuery(listGroceryItems, { groceryList: groceryListId }, {
+    refetchInterval: SYNC_INTERVAL,
+  });
 }
 
 // ============ Mutation Hooks ============
