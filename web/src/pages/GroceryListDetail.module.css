@@ -64,6 +64,22 @@
   box-shadow: 0 0 0 3px rgba(246, 143, 113, 0.15);
 }
 
+.addFormGroup {
+  gap: var(--mantine-spacing-sm);
+}
+
+@media (max-width: 768px) {
+  .addFormGroup {
+    gap: var(--mantine-spacing-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .addFormGroup {
+    gap: 6px;
+  }
+}
+
 .addInput {
   flex: 1;
 }
@@ -75,6 +91,56 @@
 .addButton {
   min-width: 48px;
   padding: 0;
+}
+
+@media (max-width: 768px) {
+  .addInput input {
+    font-size: 0.9rem;
+    height: 36px;
+    min-height: 36px;
+  }
+
+  .quantityInput {
+    width: 56px !important;
+  }
+
+  .quantityInput input {
+    font-size: 0.9rem;
+    height: 36px;
+    min-height: 36px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .addButton {
+    min-width: 40px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .addInput input {
+    font-size: 0.85rem;
+    height: 32px;
+    min-height: 32px;
+  }
+
+  .quantityInput {
+    width: 48px !important;
+  }
+
+  .quantityInput input {
+    font-size: 0.85rem;
+    height: 32px;
+    min-height: 32px;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .addButton {
+    min-width: 36px;
+    height: 32px;
+  }
 }
 
 /* Loading state */
@@ -218,6 +284,23 @@
   color: white;
 }
 
+/* Item row group */
+.itemRowGroup {
+  gap: var(--mantine-spacing-md);
+}
+
+@media (max-width: 768px) {
+  .itemRowGroup {
+    gap: var(--mantine-spacing-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .itemRowGroup {
+    gap: 6px;
+  }
+}
+
 /* Item content */
 .itemContent {
   display: flex;
@@ -289,6 +372,38 @@
   border-left-color: var(--mantine-color-sage-6);
 }
 
+/* Recipe badge styling */
+.recipeBadge {
+  flex-shrink: 1;
+  min-width: 0;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .recipeBadge {
+    max-width: 70px;
+    font-size: 0.6rem !important;
+    padding: 0 4px;
+    height: 16px;
+  }
+
+  .itemRow[data-virtual] {
+    border-left-width: 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .recipeBadge {
+    max-width: 55px;
+    font-size: 0.55rem !important;
+    padding: 0 3px;
+    height: 14px;
+  }
+}
+
 /* Separator */
 .separator {
   display: flex;
@@ -308,7 +423,7 @@
   background: var(--mantine-color-dark-5);
 }
 
-/* Responsive */
+/* Responsive - Compact mobile UI for on-the-go use */
 @media (max-width: 768px) {
   .wrapper {
     padding: 0;
@@ -316,21 +431,116 @@
 
   .progress {
     border-radius: var(--mantine-radius-md);
-    padding: 12px 16px;
+    padding: 8px 12px;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .progressBar {
+    height: 6px;
   }
 
   .addForm {
-    padding: 10px 12px;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+  }
+
+  .itemsList {
+    gap: 6px !important;
   }
 
   .itemRow {
-    padding: 14px 16px;
+    padding: 10px 12px;
     border-radius: var(--mantine-radius-md);
   }
 
+  .checkbox {
+    width: 24px;
+    height: 24px;
+  }
+
+  .itemName {
+    font-size: 0.9rem;
+  }
+
+  .itemQuantity {
+    font-size: 0.75rem;
+    padding: 1px 6px;
+  }
+
   .strikethrough {
-    left: 56px;
-    right: 40px;
+    left: 48px;
+    right: 16px;
+  }
+
+  .separator {
+    padding: 4px 0;
+    margin: 4px 0;
+  }
+
+  .emptyState {
+    min-height: 200px;
+    padding: 24px 16px;
+  }
+
+  .emptyIcon {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 12px;
+  }
+
+  .emptyTitle {
+    font-size: 1.25rem;
+  }
+}
+
+/* Extra compact for small phones */
+@media (max-width: 480px) {
+  .progress {
+    padding: 6px 10px;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .progressBar {
+    height: 5px;
+  }
+
+  .addForm {
+    padding: 6px 8px;
+    margin-bottom: 8px;
+  }
+
+  .itemsList {
+    gap: 4px !important;
+  }
+
+  .itemRow {
+    padding: 8px 10px;
+    border-radius: var(--mantine-radius-sm);
+  }
+
+  .checkbox {
+    width: 22px;
+    height: 22px;
+  }
+
+  .itemName {
+    font-size: 0.85rem;
+  }
+
+  .itemQuantity {
+    font-size: 0.7rem;
+    padding: 1px 5px;
+  }
+
+  .itemContent {
+    gap: 6px;
+  }
+
+  .strikethrough {
+    left: 42px;
+    right: 12px;
   }
 }
 

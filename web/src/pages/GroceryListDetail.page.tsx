@@ -122,7 +122,7 @@ function GroceryItemRow({ item, onToggle, onDelete, delay }: GroceryItemRowProps
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Group gap="md" wrap="nowrap">
+      <Group className={classes.itemRowGroup} wrap="nowrap">
         <UnstyledButton
           className={classes.checkbox}
           data-checked={item.checked || undefined}
@@ -195,7 +195,7 @@ function VirtualItemRow({ item, onToggle, delay }: VirtualItemRowProps) {
       data-virtual="true"
       style={{ animationDelay: `${delay}ms` }}
     >
-      <Group gap="md" wrap="nowrap">
+      <Group className={classes.itemRowGroup} wrap="nowrap">
         <UnstyledButton
           className={classes.checkbox}
           data-checked={item.checked || undefined}
@@ -209,7 +209,7 @@ function VirtualItemRow({ item, onToggle, delay }: VirtualItemRowProps) {
             <Text className={classes.itemName} data-checked={item.checked || undefined}>
               {item.name}
             </Text>
-            <Badge size="xs" variant="light" color="sage">
+            <Badge size="xs" variant="light" color="sage" className={classes.recipeBadge}>
               {item.recipeName}
             </Badge>
           </Group>
@@ -345,7 +345,7 @@ export function GroceryListDetailPage() {
 
         {/* Add item form */}
         <Paper className={classes.addForm} data-theme={colorScheme}>
-          <Group gap="sm" wrap="nowrap">
+          <Group className={classes.addFormGroup} wrap="nowrap">
             <TextInput
               ref={inputRef}
               placeholder="Ajouter un article..."
