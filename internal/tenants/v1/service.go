@@ -141,6 +141,50 @@ func (s *Service) GetMyTenants(ctx context.Context, _ *connect.Request[models.Ge
 	}), nil
 }
 
+// UpdateTenant updates a tenant's details (owner/admin only).
+func (s *Service) UpdateTenant(ctx context.Context, r *connect.Request[models.UpdateTenantRequest]) (*connect.Response[models.UpdateTenantResponse], error) {
+	log, _ := cloudzap.GetLogger(ctx)
+	log.Info("UpdateTenant")
+
+	userID, err := userIDFromContext(ctx)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeUnauthenticated, err)
+	}
+
+	// Check if user is a member with sufficient permissions (owner or admin)
+	member, err := s.querier.GetTenantMemberByUserAndTenant(ctx, store.GetTenantMemberByUserAndTenantParams{
+		UserID:   userID,
+		TenantID: r.Msg.GetTenantId(),
+	})
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, connect.NewError(connect.CodePermissionDenied, errors.New("not a member of this tenant"))
+		}
+		panic(err)
+	}
+
+	if member.Role != "owner" && member.Role != "admin" {
+		return nil, connect.NewError(connect.CodePermissionDenied, errors.New("only owner or admin can update tenant"))
+	}
+
+	// Update the tenant
+	tenant, err := s.querier.UpdateTenant(ctx, store.UpdateTenantParams{
+		ID:      r.Msg.GetTenantId(),
+		Name:    r.Msg.GetName(),
+		Version: int64(r.Msg.GetVersion()),
+	})
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, connect.NewError(connect.CodeAborted, errors.New("tenant was modified by another request, please refresh and try again"))
+		}
+		panic(err)
+	}
+
+	return connect.NewResponse(&models.UpdateTenantResponse{
+		Tenant: translateTenant(tenant),
+	}), nil
+}
+
 // LeaveTenant removes the current user from a tenant.
 func (s *Service) LeaveTenant(ctx context.Context, r *connect.Request[models.LeaveTenantRequest]) (*connect.Response[models.LeaveTenantResponse], error) {
 	log, _ := cloudzap.GetLogger(ctx)

@@ -13,6 +13,8 @@ service Service {
     rpc EnsureUserTenant(EnsureUserTenantRequest) returns (EnsureUserTenantResponse);
     // GetMyTenants lists tenants the current user is a member of.
     rpc GetMyTenants(GetMyTenantsRequest) returns (GetMyTenantsResponse);
+    // UpdateTenant updates a tenant's details (owner/admin only).
+    rpc UpdateTenant(UpdateTenantRequest) returns (UpdateTenantResponse);
     // LeaveTenant removes the current user from a tenant.
     rpc LeaveTenant(LeaveTenantRequest) returns (LeaveTenantResponse);
     // CreateInvitation creates an invitation code for a tenant.
@@ -43,6 +45,21 @@ message GetMyTenantsRequest {}
 message GetMyTenantsResponse {
     repeated TenantMembership memberships = 1;
     repeated Tenant tenants = 2;
+}
+
+// UpdateTenant
+message UpdateTenantRequest {
+    // The ID of the tenant to update.
+    int64 tenant_id = 1;
+    // The new display name for the tenant.
+    string name = 2;
+    // The current version of the tenant (for optimistic locking).
+    int32 version = 3;
+}
+
+message UpdateTenantResponse {
+    // The updated tenant.
+    Tenant tenant = 1;
 }
 
 // LeaveTenant

@@ -7,6 +7,7 @@ import {
   leaveTenant,
   listInvitations,
   revokeInvitation,
+  updateTenant,
 } from '../gen/octoback/tenants/v1/service-Service_connectquery';
 
 // ============ Query Hooks ============
@@ -39,6 +40,13 @@ export function useEnsureUserTenant() {
  */
 export function useLeaveTenant() {
   return useMutation(leaveTenant);
+}
+
+/**
+ * Update a tenant (name, etc.)
+ */
+export function useUpdateTenant() {
+  return useMutation(updateTenant);
 }
 
 /**
