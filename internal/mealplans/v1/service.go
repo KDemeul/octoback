@@ -97,7 +97,7 @@ func (s *Service) UpdateMealPlan(ctx context.Context, r *connect.Request[models.
 	}), nil
 }
 
-// SetMealPlanEntry sets a recipe for a specific day, replacing any existing entry.
+// SetMealPlanEntry adds a recipe for a specific day (multiple recipes allowed per day).
 func (s *Service) SetMealPlanEntry(ctx context.Context, r *connect.Request[models.SetMealPlanEntryRequest]) (*connect.Response[models.SetMealPlanEntryResponse], error) {
 	log, _ := cloudzap.GetLogger(ctx)
 	log.Info("SetMealPlanEntry")
@@ -120,13 +120,7 @@ func (s *Service) SetMealPlanEntry(ctx context.Context, r *connect.Request[model
 		}
 	}
 
-	// Delete existing entry for this day (if any)
-	_, _ = s.querier.DeleteMealPlanEntryByDay(ctx, store.DeleteMealPlanEntryByDayParams{
-		MealPlanID: mp.ID,
-		DayOfWeek:  int64(r.Msg.GetDayOfWeek()),
-	})
-
-	// Create new entry
+	// Create new entry (no longer deletes existing entries for the same day)
 	entry, err := s.querier.CreateMealPlanEntry(ctx, store.CreateMealPlanEntryParams{
 		MealPlanID: mp.ID,
 		RecipeID:   r.Msg.GetRecipeId(),
@@ -141,27 +135,27 @@ func (s *Service) SetMealPlanEntry(ctx context.Context, r *connect.Request[model
 	}), nil
 }
 
-// ClearMealPlanEntry removes a recipe from a specific day.
+// ClearMealPlanEntry removes a specific meal plan entry by ID.
 func (s *Service) ClearMealPlanEntry(ctx context.Context, r *connect.Request[models.ClearMealPlanEntryRequest]) (*connect.Response[models.ClearMealPlanEntryResponse], error) {
 	log, _ := cloudzap.GetLogger(ctx)
 	log.Info("ClearMealPlanEntry")
 
 	tenantID := tenantIDFromContext(ctx)
 
-	mp, err := s.querier.GetMealPlan(ctx, tenantID)
+	// Verify the entry belongs to this tenant before deleting
+	_, err := s.querier.GetMealPlanEntry(ctx, store.GetMealPlanEntryParams{
+		ID:       r.Msg.GetEntryId(),
+		TenantID: tenantID,
+	})
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			// No meal plan, nothing to clear
-			return connect.NewResponse(&models.ClearMealPlanEntryResponse{}), nil
+			return nil, connect.NewError(connect.CodeNotFound, errors.New("meal plan entry not found"))
 		}
 		panic(err)
 	}
 
 	// Delete the entry (this will cascade delete any checked states)
-	_, err = s.querier.DeleteMealPlanEntryByDay(ctx, store.DeleteMealPlanEntryByDayParams{
-		MealPlanID: mp.ID,
-		DayOfWeek:  int64(r.Msg.GetDayOfWeek()),
-	})
+	_, err = s.querier.DeleteMealPlanEntry(ctx, r.Msg.GetEntryId())
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		panic(err)
 	}

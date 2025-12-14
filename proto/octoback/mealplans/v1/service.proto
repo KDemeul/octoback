@@ -68,8 +68,8 @@ message SetMealPlanEntryResponse {
 }
 
 message ClearMealPlanEntryRequest {
-    // Day of week to clear (0 = Monday, 6 = Sunday).
-    int32 day_of_week = 1 [(buf.validate.field).int32 = { gte: 0, lte: 6 }];
+    // The entry ID to delete.
+    int64 entry_id = 1 [(buf.validate.field).int64.gt = 0];
 }
 
 message ClearMealPlanEntryResponse {}

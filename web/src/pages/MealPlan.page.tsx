@@ -70,17 +70,14 @@ function ClockIcon() {
 
 interface DayCardProps {
   dayIndex: number;
-  entry: MealPlanEntry | undefined;
+  entries: MealPlanEntry[];
   recipes: Recipe[];
   onAddRecipe: (dayIndex: number) => void;
-  onRemoveRecipe: (dayIndex: number) => void;
+  onRemoveRecipe: (entryId: bigint) => void;
 }
 
-function DayCard({ dayIndex, entry, recipes, onAddRecipe, onRemoveRecipe }: DayCardProps) {
+function DayCard({ dayIndex, entries, recipes, onAddRecipe, onRemoveRecipe }: DayCardProps) {
   const { colorScheme } = useMantineColorScheme();
-  
-  const recipe = entry ? recipes.find(r => r.id === entry.recipeId) : undefined;
-  const totalTime = recipe ? recipe.prepTimeMinutes + recipe.cookTimeMinutes : 0;
 
   return (
     <Box className={classes.dayCard} data-theme={colorScheme}>
@@ -88,9 +85,46 @@ function DayCard({ dayIndex, entry, recipes, onAddRecipe, onRemoveRecipe }: DayC
         <Text className={classes.dayName}>{DAY_NAMES[dayIndex]}</Text>
       </Box>
       <Box className={classes.dayContent}>
-        {!entry || !recipe ? (
+        <Stack gap="xs" className={classes.recipeInDay}>
+          {entries.map((entry) => {
+            const recipe = recipes.find(r => r.id === entry.recipeId);
+            if (!recipe) return null;
+            const totalTime = recipe.prepTimeMinutes + recipe.cookTimeMinutes;
+            return (
+              <Box key={entry.id.toString()} className={classes.recipeCard}>
+                <Group justify="space-between" align="flex-start" mb="xs">
+                  <ThemeIcon size={32} radius="xl" variant="light" color="sage" className={classes.recipeIcon}>
+                    <ChefHatIcon size={18} />
+                  </ThemeIcon>
+                  <ActionIcon
+                    variant="subtle"
+                    color="red"
+                    size="sm"
+                    className={classes.removeButton}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRemoveRecipe(entry.id);
+                    }}
+                  >
+                    <CloseIcon />
+                  </ActionIcon>
+                </Group>
+                <Text className={classes.recipeName} lineClamp={2}>
+                  {recipe.name}
+                </Text>
+                {totalTime > 0 && (
+                  <Group gap={4} mt="xs">
+                    <ClockIcon />
+                    <Text size="xs" c="dimmed">
+                      {totalTime} min
+                    </Text>
+                  </Group>
+                )}
+              </Box>
+            );
+          })}
           <UnstyledButton 
-            className={classes.emptyDay}
+            className={classes.addRecipeButton}
             onClick={() => onAddRecipe(dayIndex)}
           >
             <Box className={classes.addRecipeIcon}>
@@ -98,40 +132,7 @@ function DayCard({ dayIndex, entry, recipes, onAddRecipe, onRemoveRecipe }: DayC
             </Box>
             <Text size="sm">Ajouter</Text>
           </UnstyledButton>
-        ) : (
-          <Box className={classes.recipeInDay}>
-            <Box className={classes.recipeCard}>
-              <Group justify="space-between" align="flex-start" mb="xs">
-                <ThemeIcon size={32} radius="xl" variant="light" color="sage" className={classes.recipeIcon}>
-                  <ChefHatIcon size={18} />
-                </ThemeIcon>
-                <ActionIcon
-                  variant="subtle"
-                  color="red"
-                  size="sm"
-                  className={classes.removeButton}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onRemoveRecipe(dayIndex);
-                  }}
-                >
-                  <CloseIcon />
-                </ActionIcon>
-              </Group>
-              <Text className={classes.recipeName} lineClamp={2}>
-                {recipe.name}
-              </Text>
-              {totalTime > 0 && (
-                <Group gap={4} mt="xs">
-                  <ClockIcon />
-                  <Text size="xs" c="dimmed">
-                    {totalTime} min
-                  </Text>
-                </Group>
-              )}
-            </Box>
-          </Box>
-        )}
+        </Stack>
       </Box>
     </Box>
   );
@@ -228,8 +229,8 @@ export function MealPlanPage() {
 
   const isLoading = mealPlanLoading || entriesLoading || recipesLoading || groceryListsLoading;
 
-  const getEntryForDay = (dayIndex: number): MealPlanEntry | undefined => {
-    return entries.find(e => e.dayOfWeek === dayIndex);
+  const getEntriesForDay = (dayIndex: number): MealPlanEntry[] => {
+    return entries.filter(e => e.dayOfWeek === dayIndex);
   };
 
   const handleGroceryListChange = async (value: string | null) => {
@@ -267,8 +268,8 @@ export function MealPlanPage() {
     setSelectedDay(null);
   };
 
-  const handleRemoveRecipe = async (dayIndex: number) => {
-    await clearEntryMutation.mutateAsync({ dayOfWeek: dayIndex });
+  const handleRemoveRecipe = async (entryId: bigint) => {
+    await clearEntryMutation.mutateAsync({ entryId });
     queryClient.invalidateQueries({ queryKey: ['octoback.mealplans.v1.Service'] });
   };
 
@@ -312,7 +313,7 @@ export function MealPlanPage() {
               <DayCard
                 key={index}
                 dayIndex={index}
-                entry={getEntryForDay(index)}
+                entries={getEntriesForDay(index)}
                 recipes={recipes}
                 onAddRecipe={handleAddRecipe}
                 onRemoveRecipe={handleRemoveRecipe}
