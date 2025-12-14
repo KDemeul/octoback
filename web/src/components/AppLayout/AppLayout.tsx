@@ -2,6 +2,7 @@ import {
   ActionIcon,
   Box,
   Container,
+  Divider,
   Drawer,
   Group,
   Stack,
@@ -13,6 +14,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { Link, useLocation } from 'react-router-dom';
 import { ColorSchemeToggle } from '../ColorSchemeToggle/ColorSchemeToggle';
+import { TenantSelector } from '../TenantSelector/TenantSelector';
 import { useAuth0 } from '../../lib/auth0';
 import classes from './AppLayout.module.css';
 
@@ -166,6 +168,8 @@ export function AppLayout({ children, title, backTo, action }: AppLayoutProps) {
         </Box>
 
         <Box className={classes.sidebarFooter}>
+          <TenantSelector variant="sidebar" />
+          <Divider w={32} my={4} />
           <Tooltip label="Paramètres" position="right" offset={12}>
             <UnstyledButton
               component={Link}
@@ -259,7 +263,11 @@ export function AppLayout({ children, title, backTo, action }: AppLayoutProps) {
           title: classes.mobileDrawerTitle,
         }}
       >
-        <Stack gap="xs" pb="md">
+        <Stack gap="xs" pb="md" px="xs">
+          <TenantSelector variant="mobile" />
+          
+          <Divider my="xs" />
+          
           <UnstyledButton
             component={Link}
             to="/settings"

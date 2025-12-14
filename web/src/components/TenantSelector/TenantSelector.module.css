@@ -1,0 +1,59 @@
+/* Sidebar variant - matches nav items */
+.sidebarButton {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--mantine-radius-md);
+  color: var(--mantine-color-gray-6);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.sidebarButton:hover {
+  background: var(--mantine-color-gray-1);
+  color: var(--mantine-color-gray-8);
+}
+
+:global([data-theme='dark']) .sidebarButton:hover {
+  background: var(--mantine-color-dark-5);
+  color: var(--mantine-color-gray-2);
+}
+
+.sidebarButton[data-active] {
+  color: var(--mantine-color-coral-6);
+}
+
+:global([data-theme='dark']) .sidebarButton[data-active] {
+  color: var(--mantine-color-coral-4);
+}
+
+.sidebarButton[data-single] {
+  cursor: default;
+}
+
+/* Mobile variant */
+.mobileButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-gray-0);
+  transition: all 0.2s ease;
+}
+
+.mobileButton:hover {
+  background: var(--mantine-color-gray-1);
+}
+
+:global([data-theme='dark']) .mobileButton {
+  background: var(--mantine-color-dark-6);
+}
+
+:global([data-theme='dark']) .mobileButton:hover {
+  background: var(--mantine-color-dark-5);
+}
+

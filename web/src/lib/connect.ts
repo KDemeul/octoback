@@ -3,8 +3,8 @@ import { createConnectTransport } from '@connectrpc/connect-web';
 
 // Create a transport for Connect-RPC
 // In development, we use localhost:8080 where the Go server runs
-// In production, this should point to your backend URL
-const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+// In production, the API is served from the same origin
+const baseUrl = import.meta.env.VITE_API_URL ?? (import.meta.env.DEV ? 'http://localhost:8080' : '');
 
 /**
  * Creates an auth interceptor that adds the Authorization header to requests.
@@ -20,12 +20,28 @@ export function createAuthInterceptor(getToken: () => Promise<string | null>): I
 }
 
 /**
- * Creates a Connect transport with authentication.
+ * Creates a tenant interceptor that adds the X-Tenant-ID header to requests.
  */
-export function createAuthenticatedTransport(getToken: () => Promise<string | null>) {
+export function createTenantInterceptor(getTenantId: () => bigint | null): Interceptor {
+  return (next) => async (req) => {
+    const tenantId = getTenantId();
+    if (tenantId !== null) {
+      req.header.set('X-Tenant-ID', tenantId.toString());
+    }
+    return next(req);
+  };
+}
+
+/**
+ * Creates a Connect transport with authentication and tenant context.
+ */
+export function createAuthenticatedTransport(
+  getToken: () => Promise<string | null>,
+  getTenantId: () => bigint | null = () => null
+) {
   return createConnectTransport({
     baseUrl,
-    interceptors: [createAuthInterceptor(getToken)],
+    interceptors: [createAuthInterceptor(getToken), createTenantInterceptor(getTenantId)],
   });
 }
 
