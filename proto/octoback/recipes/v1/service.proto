@@ -100,8 +100,8 @@ message CreateRecipeIngredientRequest {
     int64 recipe = 1;
     // The ingredient name.
     string name = 2 [(buf.validate.field).string = { min_len: 1, max_len: 100 }];
-    // The ingredient quantity (e.g., "2", "1/2").
-    string quantity = 3;
+    // The ingredient quantity.
+    int32 quantity = 3 [(buf.validate.field).int32.gt = 0];
     // The ingredient unit (e.g., "cups", "tbsp").
     string unit = 4;
 }

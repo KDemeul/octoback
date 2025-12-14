@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package octoback.mealplans.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/kiliandbigblue/octoback/mealplans/v1;mealplans";
+
+// MealPlan represents a meal planning schedule for a tenant.
+message MealPlan {
+    int64 id = 1 [(buf.validate.field).int64.gt = 0];
+    // The grocery list associated with this meal plan for ingredient sync.
+    int64 grocery_list_id = 2;
+    google.protobuf.Timestamp create_time = 3;
+    int32 version = 4;
+}
+
+// MealPlanEntry represents a recipe assigned to a specific day.
+message MealPlanEntry {
+    int64 id = 1 [(buf.validate.field).int64.gt = 0];
+    int64 meal_plan_id = 2 [(buf.validate.field).int64.gt = 0];
+    int64 recipe_id = 3 [(buf.validate.field).int64.gt = 0];
+    // Day of week (0 = Monday, 6 = Sunday).
+    int32 day_of_week = 4 [(buf.validate.field).int32 = { gte: 0, lte: 6 }];
+    google.protobuf.Timestamp create_time = 5;
+    int32 version = 6;
+}
+
+// VirtualGroceryItem represents a recipe ingredient that appears in a grocery list
+// because it's part of a meal plan entry.
+message VirtualGroceryItem {
+    int64 meal_plan_entry_id = 1;
+    int64 recipe_ingredient_id = 2;
+    string name = 3;
+    int32 quantity = 4;
+    string unit = 5;
+    string recipe_name = 6;
+    int32 day_of_week = 7;
+    bool checked = 8;
+}
+

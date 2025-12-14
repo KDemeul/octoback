@@ -191,7 +191,7 @@ export function RecipeDetailPage() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [newIngredientName, setNewIngredientName] = useState('');
-  const [newIngredientQuantity, setNewIngredientQuantity] = useState('');
+  const [newIngredientQuantity, setNewIngredientQuantity] = useState<number | ''>(1);
   const [newIngredientUnit, setNewIngredientUnit] = useState('');
 
   const [editOpened, { open: openEdit, close: closeEdit }] = useDisclosure(false);
@@ -205,7 +205,7 @@ export function RecipeDetailPage() {
   const [editIngredientOpened, { open: openEditIngredient, close: closeEditIngredient }] = useDisclosure(false);
   const [editingIngredient, setEditingIngredient] = useState<RecipeIngredient | null>(null);
   const [editIngredientName, setEditIngredientName] = useState('');
-  const [editIngredientQuantity, setEditIngredientQuantity] = useState('');
+  const [editIngredientQuantity, setEditIngredientQuantity] = useState<number | ''>(1);
   const [editIngredientUnit, setEditIngredientUnit] = useState('');
 
   const recipeId = BigInt(id ?? '0');
@@ -242,7 +242,7 @@ export function RecipeDetailPage() {
     await createIngredientMutation.mutateAsync({
       recipe: recipeId,
       name: newIngredientName.trim(),
-      quantity: newIngredientQuantity.trim(),
+      quantity: Number(newIngredientQuantity) || 1,
       unit: newIngredientUnit.trim(),
     });
 
@@ -251,7 +251,7 @@ export function RecipeDetailPage() {
     });
 
     setNewIngredientName('');
-    setNewIngredientQuantity('');
+    setNewIngredientQuantity(1);
     setNewIngredientUnit('');
     inputRef.current?.focus();
   };
@@ -266,7 +266,7 @@ export function RecipeDetailPage() {
   const handleOpenEditIngredient = (ingredient: RecipeIngredient) => {
     setEditingIngredient(ingredient);
     setEditIngredientName(ingredient.name);
-    setEditIngredientQuantity(ingredient.quantity);
+    setEditIngredientQuantity(ingredient.quantity || 1);
     setEditIngredientUnit(ingredient.unit);
     openEditIngredient();
   };
@@ -281,7 +281,7 @@ export function RecipeDetailPage() {
         id: editingIngredient.id,
         recipe: editingIngredient.recipe,
         name: editIngredientName.trim(),
-        quantity: editIngredientQuantity.trim(),
+        quantity: Number(editIngredientQuantity) || 1,
         unit: editIngredientUnit.trim(),
         version: editingIngredient.version,
       },
@@ -419,10 +419,11 @@ export function RecipeDetailPage() {
                   },
                 }}
               />
-              <TextInput
+              <NumberInput
                 placeholder="Qté"
                 value={newIngredientQuantity}
-                onChange={(e) => setNewIngredientQuantity(e.currentTarget.value)}
+                onChange={(value) => setNewIngredientQuantity(value === '' ? '' : Number(value))}
+                min={1}
                 className={classes.addInputSmall}
                 size="md"
                 radius="md"
@@ -432,6 +433,7 @@ export function RecipeDetailPage() {
                     textAlign: 'center',
                   },
                 }}
+                hideControls
               />
               <TextInput
                 placeholder="Unité"
@@ -586,11 +588,12 @@ export function RecipeDetailPage() {
             required
           />
           <Group grow>
-            <TextInput
+            <NumberInput
               label="Quantité"
               placeholder="Ex: 500"
               value={editIngredientQuantity}
-              onChange={(e) => setEditIngredientQuantity(e.currentTarget.value)}
+              onChange={(value) => setEditIngredientQuantity(value === '' ? '' : Number(value))}
+              min={1}
               size="md"
               radius="md"
             />

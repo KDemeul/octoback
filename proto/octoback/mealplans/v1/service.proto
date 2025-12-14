@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+package octoback.mealplans.v1;
+
+import "buf/validate/validate.proto";
+import "octoback/mealplans/v1/mealplans.proto";
+
+option go_package = "github.com/kiliandbigblue/octoback/mealplans/v1;mealplans";
+
+// Service is the meal plans service.
+service Service {
+    // Get the current tenant's meal plan.
+    rpc GetMealPlan(GetMealPlanRequest) returns (GetMealPlanResponse);
+    // Create a meal plan for the current tenant.
+    rpc CreateMealPlan(CreateMealPlanRequest) returns (CreateMealPlanResponse);
+    // Update a meal plan (e.g., change linked grocery list).
+    rpc UpdateMealPlan(UpdateMealPlanRequest) returns (UpdateMealPlanResponse);
+    // Set a recipe for a specific day (replaces existing if any).
+    rpc SetMealPlanEntry(SetMealPlanEntryRequest) returns (SetMealPlanEntryResponse);
+    // Clear a recipe from a specific day.
+    rpc ClearMealPlanEntry(ClearMealPlanEntryRequest) returns (ClearMealPlanEntryResponse);
+    // List all entries for the current meal plan.
+    rpc ListMealPlanEntries(ListMealPlanEntriesRequest) returns (ListMealPlanEntriesResponse);
+    // Toggle checked state for a virtual grocery item.
+    rpc SetMealPlanItemCheck(SetMealPlanItemCheckRequest) returns (SetMealPlanItemCheckResponse);
+    // List virtual grocery items for a grocery list.
+    rpc ListVirtualGroceryItems(ListVirtualGroceryItemsRequest) returns (ListVirtualGroceryItemsResponse);
+}
+
+message GetMealPlanRequest {}
+
+message GetMealPlanResponse {
+    // The meal plan, or empty if none exists.
+    MealPlan meal_plan = 1;
+}
+
+message CreateMealPlanRequest {
+    // Optional grocery list to link.
+    int64 grocery_list_id = 1;
+}
+
+message CreateMealPlanResponse {
+    MealPlan meal_plan = 1;
+}
+
+message UpdateMealPlanRequest {
+    // The meal plan ID to update.
+    int64 id = 1 [(buf.validate.field).int64.gt = 0];
+    // The grocery list to link (0 to unlink).
+    int64 grocery_list_id = 2;
+    // Expected version for optimistic locking.
+    int32 version = 3;
+}
+
+message UpdateMealPlanResponse {
+    MealPlan meal_plan = 1;
+}
+
+message SetMealPlanEntryRequest {
+    // The recipe to assign.
+    int64 recipe_id = 1 [(buf.validate.field).int64.gt = 0];
+    // Day of week (0 = Monday, 6 = Sunday).
+    int32 day_of_week = 2 [(buf.validate.field).int32 = { gte: 0, lte: 6 }];
+}
+
+message SetMealPlanEntryResponse {
+    MealPlanEntry entry = 1;
+}
+
+message ClearMealPlanEntryRequest {
+    // Day of week to clear (0 = Monday, 6 = Sunday).
+    int32 day_of_week = 1 [(buf.validate.field).int32 = { gte: 0, lte: 6 }];
+}
+
+message ClearMealPlanEntryResponse {}
+
+message ListMealPlanEntriesRequest {}
+
+message ListMealPlanEntriesResponse {
+    repeated MealPlanEntry entries = 1;
+}
+
+message SetMealPlanItemCheckRequest {
+    // The meal plan entry ID.
+    int64 meal_plan_entry_id = 1 [(buf.validate.field).int64.gt = 0];
+    // The recipe ingredient ID.
+    int64 recipe_ingredient_id = 2 [(buf.validate.field).int64.gt = 0];
+    // Whether the item is checked.
+    bool checked = 3;
+}
+
+message SetMealPlanItemCheckResponse {}
+
+message ListVirtualGroceryItemsRequest {
+    // The grocery list ID to get virtual items for.
+    int64 grocery_list_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListVirtualGroceryItemsResponse {
+    repeated VirtualGroceryItem items = 1;
+}
+

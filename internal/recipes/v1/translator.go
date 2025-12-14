@@ -34,10 +34,9 @@ func translateRecipeIngredient(ingredient store.RecipeIngredient) *models.Recipe
 		Id:         ingredient.ID,
 		Recipe:     ingredient.RecipeID,
 		Name:       ingredient.Name,
-		Quantity:   ingredient.Quantity,
+		Quantity:   int32(ingredient.Quantity),
 		Unit:       ingredient.Unit,
 		CreateTime: timestamppb.New(parseTime(ingredient.CreatedAt)),
 		Version:    int32(ingredient.Version),
 	}
 }
-

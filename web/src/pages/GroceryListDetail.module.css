@@ -1,0 +1,336 @@
+.wrapper {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Progress indicator */
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px 20px;
+  background: var(--mantine-color-body);
+  border-radius: var(--mantine-radius-lg);
+  border: 1px solid var(--mantine-color-gray-2);
+}
+
+.wrapper[data-theme='dark'] .progress {
+  background: var(--mantine-color-dark-7);
+  border-color: var(--mantine-color-dark-5);
+}
+
+.progressBar {
+  flex: 1;
+  height: 8px;
+  background: var(--mantine-color-gray-2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.wrapper[data-theme='dark'] .progressBar {
+  background: var(--mantine-color-dark-5);
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--mantine-color-sage-5) 0%, var(--mantine-color-sage-6) 100%);
+  border-radius: 4px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Add form */
+.addForm {
+  margin-bottom: 24px;
+  padding: 12px 16px;
+  border-radius: var(--mantine-radius-lg);
+  background: var(--mantine-color-body);
+  border: 2px solid var(--mantine-color-gray-2);
+  transition: all 0.2s ease;
+}
+
+.addForm:focus-within {
+  border-color: var(--mantine-color-coral-4);
+  box-shadow: 0 0 0 3px rgba(246, 143, 113, 0.1);
+}
+
+.addForm[data-theme='dark'] {
+  background: var(--mantine-color-dark-7);
+  border-color: var(--mantine-color-dark-5);
+}
+
+.addForm[data-theme='dark']:focus-within {
+  border-color: var(--mantine-color-coral-6);
+  box-shadow: 0 0 0 3px rgba(246, 143, 113, 0.15);
+}
+
+.addInput {
+  flex: 1;
+}
+
+.quantityInput input {
+  font-weight: 600;
+}
+
+.addButton {
+  min-width: 48px;
+  padding: 0;
+}
+
+/* Loading state */
+.loadingState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+/* Empty state */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 40px 20px;
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.emptyIcon {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--mantine-color-sage-0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: var(--mantine-color-sage-5);
+}
+
+.emptyState[data-theme='dark'] .emptyIcon {
+  background: rgba(120, 181, 150, 0.1);
+}
+
+.emptyTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 8px;
+}
+
+/* Items list */
+.itemsList {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Item row */
+.itemRow {
+  position: relative;
+  padding: 16px 20px;
+  border-radius: var(--mantine-radius-lg);
+  background: var(--mantine-color-body);
+  border: 1px solid var(--mantine-color-gray-2);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideIn 0.3s ease-out both;
+  overflow: hidden;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.itemRow[data-theme='dark'] {
+  background: var(--mantine-color-dark-7);
+  border-color: var(--mantine-color-dark-5);
+}
+
+.itemRow:hover {
+  border-color: var(--mantine-color-gray-3);
+  background: var(--mantine-color-gray-0);
+}
+
+.itemRow[data-theme='dark']:hover {
+  border-color: var(--mantine-color-dark-4);
+  background: var(--mantine-color-dark-6);
+}
+
+.itemRow[data-checked] {
+  opacity: 0.6;
+}
+
+.itemRow[data-animating] {
+  animation: checkPulse 0.4s ease-out;
+}
+
+@keyframes checkPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+    background: var(--mantine-color-sage-0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Checkbox */
+.checkbox {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--mantine-color-gray-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.checkbox:hover {
+  border-color: var(--mantine-color-sage-5);
+  background: var(--mantine-color-sage-0);
+}
+
+.checkbox[data-checked] {
+  background: var(--mantine-color-sage-5);
+  border-color: var(--mantine-color-sage-5);
+  color: white;
+}
+
+/* Item content */
+.itemContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.itemName {
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.itemName[data-checked] {
+  color: var(--mantine-color-gray-5);
+}
+
+.itemQuantity {
+  font-size: 0.875rem;
+  color: var(--mantine-color-gray-5);
+  font-weight: 600;
+  background: var(--mantine-color-gray-1);
+  padding: 2px 8px;
+  border-radius: 100px;
+  transition: all 0.2s ease;
+}
+
+.itemRow[data-theme='dark'] .itemQuantity {
+  background: var(--mantine-color-dark-5);
+  color: var(--mantine-color-gray-4);
+}
+
+.itemQuantity[data-checked] {
+  opacity: 0.5;
+}
+
+/* Strikethrough animation */
+.strikethrough {
+  position: absolute;
+  left: 68px;
+  top: 50%;
+  right: 48px;
+  height: 2px;
+  background: var(--mantine-color-gray-4);
+  transform: translateY(-50%);
+  animation: strikeIn 0.3s ease-out;
+}
+
+@keyframes strikeIn {
+  from {
+    transform: translateY(-50%) scaleX(0);
+    transform-origin: left;
+  }
+  to {
+    transform: translateY(-50%) scaleX(1);
+  }
+}
+
+.deleteButton {
+  flex-shrink: 0;
+}
+
+/* Virtual items (from meal plan) */
+.itemRow[data-virtual] {
+  border-left: 3px solid var(--mantine-color-sage-4);
+}
+
+.itemRow[data-virtual][data-theme='dark'] {
+  border-left-color: var(--mantine-color-sage-6);
+}
+
+/* Separator */
+.separator {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 8px 0;
+  margin: 8px 0;
+}
+
+.separatorLine {
+  flex: 1;
+  height: 1px;
+  background: var(--mantine-color-gray-2);
+}
+
+.wrapper[data-theme='dark'] .separatorLine {
+  background: var(--mantine-color-dark-5);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 0;
+  }
+
+  .progress {
+    border-radius: var(--mantine-radius-md);
+    padding: 12px 16px;
+  }
+
+  .addForm {
+    padding: 10px 12px;
+  }
+
+  .itemRow {
+    padding: 14px 16px;
+    border-radius: var(--mantine-radius-md);
+  }
+
+  .strikethrough {
+    left: 56px;
+    right: 40px;
+  }
+}
+

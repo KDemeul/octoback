@@ -119,7 +119,7 @@ function MoreIcon() {
 const navItems = [
   { icon: ListIcon, label: 'Listes', path: '/groceries' },
   { icon: ChefHatIcon, label: 'Recettes', path: '/recipes' },
-  { icon: CalendarIcon, label: 'Planning', path: '/planning' },
+  { icon: CalendarIcon, label: 'Planning', path: '/mealplan' },
 ];
 
 interface AppLayoutProps {

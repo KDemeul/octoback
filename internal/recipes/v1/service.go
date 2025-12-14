@@ -220,7 +220,7 @@ func (s *Service) CreateRecipeIngredient(ctx context.Context, r *connect.Request
 	ingredient, err := s.querier.CreateRecipeIngredient(ctx, store.CreateRecipeIngredientParams{
 		RecipeID: r.Msg.GetRecipe(),
 		Name:     r.Msg.GetName(),
-		Quantity: r.Msg.GetQuantity(),
+		Quantity: int64(r.Msg.GetQuantity()),
 		Unit:     r.Msg.GetUnit(),
 	})
 	if err != nil {
@@ -268,7 +268,7 @@ func (s *Service) UpdateRecipeIngredient(ctx context.Context, r *connect.Request
 		ingredient.Name = r.Msg.GetRecipeIngredient().GetName()
 	}
 	if _, ok := fields["quantity"]; ok {
-		ingredient.Quantity = r.Msg.GetRecipeIngredient().GetQuantity()
+		ingredient.Quantity = int64(r.Msg.GetRecipeIngredient().GetQuantity())
 	}
 	if _, ok := fields["unit"]; ok {
 		ingredient.Unit = r.Msg.GetRecipeIngredient().GetUnit()

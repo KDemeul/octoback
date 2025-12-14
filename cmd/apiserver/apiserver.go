@@ -17,10 +17,12 @@ import (
 	"connectrpc.com/connect"
 	"connectrpc.com/validate"
 	"github.com/kiliandbigblue/octoback/gen/proto/go/octoback/groceries/v1/groceriesv1connect"
+	"github.com/kiliandbigblue/octoback/gen/proto/go/octoback/mealplans/v1/mealplansv1connect"
 	"github.com/kiliandbigblue/octoback/gen/proto/go/octoback/recipes/v1/recipesv1connect"
 	"github.com/kiliandbigblue/octoback/gen/proto/go/octoback/tenants/v1/tenantsv1connect"
 	store "github.com/kiliandbigblue/octoback/gen/store/v1"
 	groceriesv1 "github.com/kiliandbigblue/octoback/internal/groceries/v1"
+	mealplansv1 "github.com/kiliandbigblue/octoback/internal/mealplans/v1"
 	recipesv1 "github.com/kiliandbigblue/octoback/internal/recipes/v1"
 	tenantsv1 "github.com/kiliandbigblue/octoback/internal/tenants/v1"
 	"github.com/kiliandbigblue/octoback/internal/x/auth0"
@@ -92,6 +94,7 @@ func main() {
 	querier := store.New(db)
 	groceriesSvc := groceriesv1.NewService(querier)
 	recipesSvc := recipesv1.NewService(querier)
+	mealplansSvc := mealplansv1.NewService(querier)
 	tenantsSvc := tenantsv1.NewService(querier)
 
 	vi, err := validate.NewInterceptor()
@@ -115,6 +118,8 @@ func main() {
 	mux.Handle(groceriesPath, groceriesHandler)
 	recipesPath, recipesHandler := recipesv1connect.NewServiceHandler(recipesSvc, interceptors)
 	mux.Handle(recipesPath, recipesHandler)
+	mealplansPath, mealplansHandler := mealplansv1connect.NewServiceHandler(mealplansSvc, interceptors)
+	mux.Handle(mealplansPath, mealplansHandler)
 
 	// Tenant service uses only auth interceptor (no tenant context needed)
 	tenantInterceptors := connect.WithInterceptors(ai, li, vi)

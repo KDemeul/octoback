@@ -59,11 +59,12 @@ func FakeRecipeIngredientID() int64 {
 }
 
 func FakeRecipeIngredient(recipe int64) *models.RecipeIngredient {
+	qty, _ := rand.Int(rand.Reader, big.NewInt(10))
 	return &models.RecipeIngredient{
 		Id:         FakeRecipeIngredientID(),
 		Recipe:     recipe,
 		Name:       fake.Characters(),
-		Quantity:   fake.DigitsN(2),
+		Quantity:   int32(qty.Int64() + 1),
 		Unit:       fake.Word(),
 		CreateTime: timestamppb.Now(),
 		Version:    1,
@@ -71,11 +72,12 @@ func FakeRecipeIngredient(recipe int64) *models.RecipeIngredient {
 }
 
 func FakeStoreRecipeIngredient(recipe int64) store.RecipeIngredient {
+	qty, _ := rand.Int(rand.Reader, big.NewInt(10))
 	return store.RecipeIngredient{
 		ID:        FakeRecipeIngredientID(),
 		RecipeID:  recipe,
 		Name:      fake.Characters(),
-		Quantity:  fake.DigitsN(2),
+		Quantity:  qty.Int64() + 1,
 		Unit:      fake.Word(),
 		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
 		Version:   1,
