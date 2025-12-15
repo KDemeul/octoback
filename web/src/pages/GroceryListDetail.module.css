@@ -372,6 +372,15 @@
   border-left-color: var(--mantine-color-sage-6);
 }
 
+/* Staple items */
+.itemRow[data-staple] {
+  border-left: 3px solid var(--mantine-color-amber-4);
+}
+
+.itemRow[data-staple][data-theme='dark'] {
+  border-left-color: var(--mantine-color-amber-6);
+}
+
 /* Recipe badge styling */
 .recipeBadge {
   flex-shrink: 1;
@@ -380,6 +389,17 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Staple badge styling */
+.stapleBadge {
+  flex-shrink: 0;
+}
+
+/* Reset button */
+.resetButton {
+  align-self: center;
+  margin: 8px 0;
 }
 
 @media (max-width: 768px) {
@@ -391,6 +411,10 @@
   }
 
   .itemRow[data-virtual] {
+    border-left-width: 2px;
+  }
+
+  .itemRow[data-staple] {
     border-left-width: 2px;
   }
 }

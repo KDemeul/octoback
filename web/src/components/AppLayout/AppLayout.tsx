@@ -89,6 +89,19 @@ function CalendarIcon() {
   );
 }
 
+function SaltIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2L8 6h8l-4-4z" />
+      <rect x="6" y="6" width="12" height="16" rx="2" />
+      <circle cx="10" cy="12" r="0.5" fill="currentColor" />
+      <circle cx="14" cy="14" r="0.5" fill="currentColor" />
+      <circle cx="11" cy="16" r="0.5" fill="currentColor" />
+      <circle cx="13" cy="10" r="0.5" fill="currentColor" />
+    </svg>
+  );
+}
+
 function SettingsIcon() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -122,6 +135,7 @@ const navItems = [
   { icon: ListIcon, label: 'Listes', path: '/groceries' },
   { icon: ChefHatIcon, label: 'Recettes', path: '/recipes' },
   { icon: CalendarIcon, label: 'Planning', path: '/mealplan' },
+  { icon: SaltIcon, label: 'Essentiels', path: '/staples' },
 ];
 
 interface AppLayoutProps {

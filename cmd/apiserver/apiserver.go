@@ -19,11 +19,13 @@ import (
 	"github.com/kiliandbigblue/octoback/gen/proto/go/octoback/groceries/v1/groceriesv1connect"
 	"github.com/kiliandbigblue/octoback/gen/proto/go/octoback/mealplans/v1/mealplansv1connect"
 	"github.com/kiliandbigblue/octoback/gen/proto/go/octoback/recipes/v1/recipesv1connect"
+	"github.com/kiliandbigblue/octoback/gen/proto/go/octoback/staples/v1/staplesv1connect"
 	"github.com/kiliandbigblue/octoback/gen/proto/go/octoback/tenants/v1/tenantsv1connect"
 	store "github.com/kiliandbigblue/octoback/gen/store/v1"
 	groceriesv1 "github.com/kiliandbigblue/octoback/internal/groceries/v1"
 	mealplansv1 "github.com/kiliandbigblue/octoback/internal/mealplans/v1"
 	recipesv1 "github.com/kiliandbigblue/octoback/internal/recipes/v1"
+	staplesv1 "github.com/kiliandbigblue/octoback/internal/staples/v1"
 	tenantsv1 "github.com/kiliandbigblue/octoback/internal/tenants/v1"
 	"github.com/kiliandbigblue/octoback/internal/x/auth0"
 	"github.com/kiliandbigblue/octoback/internal/x/cloudzap"
@@ -95,6 +97,7 @@ func main() {
 	groceriesSvc := groceriesv1.NewService(querier)
 	recipesSvc := recipesv1.NewService(querier)
 	mealplansSvc := mealplansv1.NewService(querier)
+	staplesSvc := staplesv1.NewService(querier)
 	tenantsSvc := tenantsv1.NewService(querier)
 
 	vi, err := validate.NewInterceptor()
@@ -120,6 +123,8 @@ func main() {
 	mux.Handle(recipesPath, recipesHandler)
 	mealplansPath, mealplansHandler := mealplansv1connect.NewServiceHandler(mealplansSvc, interceptors)
 	mux.Handle(mealplansPath, mealplansHandler)
+	staplesPath, staplesHandler := staplesv1connect.NewServiceHandler(staplesSvc, interceptors)
+	mux.Handle(staplesPath, staplesHandler)
 
 	// Tenant service uses only auth interceptor (no tenant context needed)
 	tenantInterceptors := connect.WithInterceptors(ai, li, vi)

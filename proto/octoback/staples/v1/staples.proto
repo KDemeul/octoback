@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package octoback.staples.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/kiliandbigblue/octoback/staples/v1;staples";
+
+// StapleList represents a named list of always-needed staple items.
+message StapleList {
+    int64 id = 1 [(buf.validate.field).int64.gt = 0];
+    string name = 2 [(buf.validate.field).string = { min_len: 1, max_len: 100 }];
+    // The grocery list associated with this staple list for ingredient sync.
+    int64 grocery_list_id = 3;
+    google.protobuf.Timestamp create_time = 4;
+    int32 version = 5;
+}
+
+// StapleItem represents a single staple item (e.g., olive oil, salt).
+message StapleItem {
+    int64 id = 1 [(buf.validate.field).int64.gt = 0];
+    int64 staple_list_id = 2 [(buf.validate.field).int64.gt = 0];
+    string name = 3 [(buf.validate.field).string = { min_len: 1, max_len: 100 }];
+    int32 quantity = 4 [(buf.validate.field).int32.gt = 0];
+    google.protobuf.Timestamp create_time = 5;
+    int32 version = 6;
+}
+
+// VirtualStapleItem represents a staple item that appears in a grocery list.
+message VirtualStapleItem {
+    int64 staple_item_id = 1;
+    string name = 2;
+    int32 quantity = 3;
+    bool checked = 4;
+}
+

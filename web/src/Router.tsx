@@ -6,6 +6,8 @@ import { GroceryListDetailPage } from './pages/GroceryListDetail.page';
 import { RecipesPage } from './pages/Recipes.page';
 import { RecipeDetailPage } from './pages/RecipeDetail.page';
 import { MealPlanPage } from './pages/MealPlan.page';
+import { StaplesPage } from './pages/Staples.page';
+import { StapleListDetailPage } from './pages/StapleListDetail.page';
 
 const router = createBrowserRouter([
   {
@@ -35,6 +37,14 @@ const router = createBrowserRouter([
   {
     path: '/mealplan',
     element: <MealPlanPage />,
+  },
+  {
+    path: '/staples',
+    element: <StaplesPage />,
+  },
+  {
+    path: '/staples/:id',
+    element: <StapleListDetailPage />,
   },
 ]);
 

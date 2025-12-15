@@ -1,0 +1,156 @@
+syntax = "proto3";
+
+package octoback.staples.v1;
+
+import "buf/validate/validate.proto";
+import "octoback/staples/v1/staples.proto";
+
+option go_package = "github.com/kiliandbigblue/octoback/staples/v1;staples";
+
+// Service is the staples service.
+service Service {
+    // Get a staple list by ID.
+    rpc GetStapleList(GetStapleListRequest) returns (GetStapleListResponse);
+    // Create a new staple list.
+    rpc CreateStapleList(CreateStapleListRequest) returns (CreateStapleListResponse);
+    // Update a staple list.
+    rpc UpdateStapleList(UpdateStapleListRequest) returns (UpdateStapleListResponse);
+    // Delete a staple list.
+    rpc DeleteStapleList(DeleteStapleListRequest) returns (DeleteStapleListResponse);
+    // List all staple lists for the current tenant.
+    rpc ListStapleLists(ListStapleListsRequest) returns (ListStapleListsResponse);
+    // Create a staple item.
+    rpc CreateStapleItem(CreateStapleItemRequest) returns (CreateStapleItemResponse);
+    // Update a staple item.
+    rpc UpdateStapleItem(UpdateStapleItemRequest) returns (UpdateStapleItemResponse);
+    // Delete a staple item.
+    rpc DeleteStapleItem(DeleteStapleItemRequest) returns (DeleteStapleItemResponse);
+    // List all staple items for a staple list.
+    rpc ListStapleItems(ListStapleItemsRequest) returns (ListStapleItemsResponse);
+    // Toggle checked state for a staple item in a grocery list.
+    rpc SetStapleItemCheck(SetStapleItemCheckRequest) returns (SetStapleItemCheckResponse);
+    // List virtual staple items for a grocery list.
+    rpc ListVirtualStapleItems(ListVirtualStapleItemsRequest) returns (ListVirtualStapleItemsResponse);
+    // Reset all staple item checks for a grocery list (uncheck all).
+    rpc ResetStapleItemChecks(ResetStapleItemChecksRequest) returns (ResetStapleItemChecksResponse);
+}
+
+message GetStapleListRequest {
+    // The ID of the staple list to get.
+    int64 id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message GetStapleListResponse {
+    StapleList staple_list = 1;
+}
+
+message CreateStapleListRequest {
+    // The name of the staple list.
+    string name = 1 [(buf.validate.field).string = { min_len: 1, max_len: 100 }];
+    // Optional grocery list to link.
+    int64 grocery_list_id = 2;
+}
+
+message CreateStapleListResponse {
+    StapleList staple_list = 1;
+}
+
+message UpdateStapleListRequest {
+    // The staple list ID.
+    int64 id = 1 [(buf.validate.field).int64.gt = 0];
+    // The staple list name.
+    string name = 2 [(buf.validate.field).string = { min_len: 1, max_len: 100 }];
+    // The grocery list to link (0 to unlink).
+    int64 grocery_list_id = 3;
+    // Expected version for optimistic locking.
+    int32 version = 4;
+}
+
+message UpdateStapleListResponse {
+    StapleList staple_list = 1;
+}
+
+message DeleteStapleListRequest {
+    // The ID of the staple list to delete.
+    int64 id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message DeleteStapleListResponse {}
+
+message ListStapleListsRequest {}
+
+message ListStapleListsResponse {
+    repeated StapleList staple_lists = 1;
+}
+
+message CreateStapleItemRequest {
+    // The staple list to add the item to.
+    int64 staple_list_id = 1 [(buf.validate.field).int64.gt = 0];
+    // The staple item name.
+    string name = 2 [(buf.validate.field).string = { min_len: 1, max_len: 100 }];
+    // The staple item quantity.
+    int32 quantity = 3 [(buf.validate.field).int32.gt = 0];
+}
+
+message CreateStapleItemResponse {
+    StapleItem staple_item = 1;
+}
+
+message UpdateStapleItemRequest {
+    // The staple item ID.
+    int64 id = 1 [(buf.validate.field).int64.gt = 0];
+    // The staple item name.
+    string name = 2 [(buf.validate.field).string = { min_len: 1, max_len: 100 }];
+    // The staple item quantity.
+    int32 quantity = 3 [(buf.validate.field).int32.gt = 0];
+    // Expected version for optimistic locking.
+    int32 version = 4;
+}
+
+message UpdateStapleItemResponse {
+    StapleItem staple_item = 1;
+}
+
+message DeleteStapleItemRequest {
+    // The ID of the staple item to delete.
+    int64 id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message DeleteStapleItemResponse {}
+
+message ListStapleItemsRequest {
+    // The staple list ID.
+    int64 staple_list_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListStapleItemsResponse {
+    repeated StapleItem staple_items = 1;
+}
+
+message SetStapleItemCheckRequest {
+    // The grocery list ID.
+    int64 grocery_list_id = 1 [(buf.validate.field).int64.gt = 0];
+    // The staple item ID.
+    int64 staple_item_id = 2 [(buf.validate.field).int64.gt = 0];
+    // Whether the item is checked.
+    bool checked = 3;
+}
+
+message SetStapleItemCheckResponse {}
+
+message ListVirtualStapleItemsRequest {
+    // The grocery list ID to get virtual staple items for.
+    int64 grocery_list_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ListVirtualStapleItemsResponse {
+    repeated VirtualStapleItem items = 1;
+}
+
+message ResetStapleItemChecksRequest {
+    // The grocery list ID to reset staple item checks for.
+    int64 grocery_list_id = 1 [(buf.validate.field).int64.gt = 0];
+}
+
+message ResetStapleItemChecksResponse {}
+
