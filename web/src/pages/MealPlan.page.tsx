@@ -1,16 +1,20 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   ActionIcon,
   Box,
+  Combobox,
   Group,
   Loader,
   Modal,
   Paper,
+  ScrollArea,
   Select,
   Stack,
   Text,
+  TextInput,
   ThemeIcon,
   UnstyledButton,
+  useCombobox,
   useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
@@ -76,6 +80,15 @@ function ClockIcon() {
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="10" />
       <polyline points="12 6 12 12 16 14" />
+    </svg>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8" />
+      <path d="M21 21l-4.35-4.35" />
     </svg>
   );
 }
@@ -160,17 +173,43 @@ interface RecipeSelectorModalProps {
 
 function RecipeSelectorModal({ opened, onClose, onSelect, recipes, dayIndex }: RecipeSelectorModalProps) {
   const { colorScheme } = useMantineColorScheme();
+  const [search, setSearch] = useState('');
+  const combobox = useCombobox({
+    onDropdownClose: () => combobox.resetSelectedOption(),
+  });
+
+  const filteredRecipes = useMemo(() => {
+    const searchLower = search.toLowerCase().trim();
+    if (!searchLower) return recipes.slice(0, 10); // Show first 10 when no search
+    return recipes.filter((recipe) =>
+      recipe.name.toLowerCase().includes(searchLower)
+    );
+  }, [recipes, search]);
+
+  const handleSelect = (recipeId: string) => {
+    onSelect(BigInt(recipeId));
+    setSearch('');
+    combobox.closeDropdown();
+    onClose();
+  };
+
+  // Reset search when modal opens/closes
+  const handleClose = () => {
+    setSearch('');
+    combobox.closeDropdown();
+    onClose();
+  };
 
   if (dayIndex === null) return null;
 
   return (
     <Modal
       opened={opened}
-      onClose={onClose}
+      onClose={handleClose}
       title={`Choisir une recette pour ${DAY_NAMES[dayIndex]}`}
       centered
       radius="lg"
-      size="lg"
+      size="md"
       classNames={{
         title: classes.modalTitle,
         content: classes.modalContent,
@@ -187,32 +226,74 @@ function RecipeSelectorModal({ opened, onClose, onSelect, recipes, dayIndex }: R
           </Text>
         </Box>
       ) : (
-        <Box className={classes.recipeGrid}>
-          {recipes.map((recipe) => {
-            const totalTime = recipe.prepTimeMinutes + recipe.cookTimeMinutes;
-            return (
-              <UnstyledButton
-                key={recipe.id.toString()}
-                className={classes.recipeOption}
-                data-theme={colorScheme}
-                onClick={() => {
-                  onSelect(recipe.id);
-                  onClose();
-                }}
-              >
-                <Text className={classes.recipeOptionName} lineClamp={2}>
-                  {recipe.name}
-                </Text>
-                {totalTime > 0 && (
-                  <Group gap={4} className={classes.recipeOptionMeta}>
-                    <ClockIcon />
-                    <Text size="xs">{totalTime} min</Text>
-                  </Group>
+        <Combobox
+          store={combobox}
+          onOptionSubmit={handleSelect}
+        >
+          <Combobox.Target>
+            <TextInput
+              placeholder="Rechercher une recette..."
+              value={search}
+              onChange={(event) => {
+                setSearch(event.currentTarget.value);
+                combobox.openDropdown();
+                combobox.updateSelectedOptionIndex();
+              }}
+              onClick={() => combobox.openDropdown()}
+              onFocus={() => combobox.openDropdown()}
+              onBlur={() => combobox.closeDropdown()}
+              leftSection={<SearchIcon />}
+              radius="md"
+              size="md"
+              classNames={{ input: classes.searchInput }}
+            />
+          </Combobox.Target>
+
+          <Combobox.Dropdown>
+            <Combobox.Options>
+              <ScrollArea.Autosize mah={300} type="scroll">
+                {filteredRecipes.length === 0 ? (
+                  <Combobox.Empty>
+                    <Text size="sm" c="dimmed" ta="center" py="md">
+                      Aucune recette trouvée
+                    </Text>
+                  </Combobox.Empty>
+                ) : (
+                  filteredRecipes.map((recipe) => {
+                    const totalTime = recipe.prepTimeMinutes + recipe.cookTimeMinutes;
+                    return (
+                      <Combobox.Option
+                        key={recipe.id.toString()}
+                        value={recipe.id.toString()}
+                        className={classes.recipeSearchOption}
+                        data-theme={colorScheme}
+                      >
+                        <Group justify="space-between" wrap="nowrap">
+                          <Text size="sm" fw={500} lineClamp={1}>
+                            {recipe.name}
+                          </Text>
+                          {totalTime > 0 && (
+                            <Group gap={4} wrap="nowrap">
+                              <ClockIcon />
+                              <Text size="xs" c="dimmed">
+                                {totalTime} min
+                              </Text>
+                            </Group>
+                          )}
+                        </Group>
+                      </Combobox.Option>
+                    );
+                  })
                 )}
-              </UnstyledButton>
-            );
-          })}
-        </Box>
+                {search === '' && recipes.length > 10 && (
+                  <Text size="xs" c="dimmed" ta="center" py="xs">
+                    Tapez pour rechercher parmi {recipes.length} recettes
+                  </Text>
+                )}
+              </ScrollArea.Autosize>
+            </Combobox.Options>
+          </Combobox.Dropdown>
+        </Combobox>
       )}
     </Modal>
   );

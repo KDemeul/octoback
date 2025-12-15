@@ -311,3 +311,25 @@
   border-radius: var(--mantine-radius-xl) !important;
 }
 
+/* Search input */
+.searchInput {
+  font-size: 1rem;
+}
+
+/* Recipe search options */
+.recipeSearchOption {
+  padding: 12px 14px;
+  border-radius: var(--mantine-radius-md);
+  transition: background 0.15s ease;
+}
+
+.recipeSearchOption:hover,
+.recipeSearchOption[data-combobox-selected] {
+  background: var(--mantine-color-sage-0);
+}
+
+.recipeSearchOption[data-theme='dark']:hover,
+.recipeSearchOption[data-theme='dark'][data-combobox-selected] {
+  background: rgba(120, 181, 150, 0.15);
+}
+
