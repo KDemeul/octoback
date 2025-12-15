@@ -270,32 +270,30 @@ export function AppLayout({ children, title, backTo, action }: AppLayoutProps) {
         onClose={closeMobileMenu}
         position="bottom"
         size="auto"
-        title="Menu"
+        withCloseButton={false}
         classNames={{
           content: classes.mobileDrawer,
-          header: classes.mobileDrawerHeader,
-          title: classes.mobileDrawerTitle,
+          body: classes.mobileDrawerBody,
         }}
       >
-        <Stack gap="xs" pb="md" px="xs">
+        <Box className={classes.mobileDrawerHandle} />
+        
+        <Box className={classes.mobileDrawerSection}>
           <TenantSelector variant="mobile" />
-          
-          <Divider my="xs" />
-          
+        </Box>
+        
+        <Box className={classes.mobileDrawerSection}>
           <UnstyledButton
             component={Link}
             to="/settings"
             className={classes.mobileMenuItem}
             onClick={closeMobileMenu}
           >
-            <SettingsIcon />
-            <Text ml="md">Paramètres</Text>
+            <Box className={classes.mobileMenuIcon}>
+              <SettingsIcon />
+            </Box>
+            <Text size="sm" fw={500}>Paramètres</Text>
           </UnstyledButton>
-          
-          <Box className={classes.mobileMenuItem}>
-            <ColorSchemeToggle />
-            <Text ml="md">Thème</Text>
-          </Box>
           
           <UnstyledButton
             className={classes.mobileMenuItem}
@@ -304,10 +302,16 @@ export function AppLayout({ children, title, backTo, action }: AppLayoutProps) {
               logout({ logoutParams: { returnTo: window.location.origin } });
             }}
           >
-            <LogoutIcon />
-            <Text ml="md">Déconnexion</Text>
+            <Box className={classes.mobileMenuIcon} c="red.6">
+              <LogoutIcon />
+            </Box>
+            <Text size="sm" fw={500} c="red.6">Déconnexion</Text>
           </UnstyledButton>
-        </Stack>
+        </Box>
+
+        <Box className={classes.mobileDrawerFooter}>
+          <ColorSchemeToggle />
+        </Box>
       </Drawer>
     </Box>
   );

@@ -202,44 +202,84 @@
 
 /* Mobile drawer */
 .mobileDrawer {
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  max-height: 70vh;
 }
 
-.mobileDrawerHeader {
-  padding: 16px 20px;
+.mobileDrawerBody {
+  padding: 0 16px 24px;
+}
+
+.mobileDrawerHandle {
+  width: 36px;
+  height: 4px;
+  background: var(--mantine-color-gray-3);
+  border-radius: 2px;
+  margin: 12px auto 16px;
+}
+
+.wrapper[data-theme='dark'] .mobileDrawerHandle {
+  background: var(--mantine-color-dark-4);
+}
+
+.mobileDrawerSection {
+  padding: 8px 0;
   border-bottom: 1px solid var(--mantine-color-gray-2);
 }
 
-.wrapper[data-theme='dark'] .mobileDrawerHeader {
+.mobileDrawerSection:last-of-type {
+  border-bottom: none;
+}
+
+.wrapper[data-theme='dark'] .mobileDrawerSection {
   border-bottom-color: var(--mantine-color-dark-5);
 }
 
-.mobileDrawerTitle {
-  font-weight: 600;
-  font-size: 1.1rem;
+.mobileDrawerFooter {
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
 }
 
 .mobileMenuItem {
   display: flex;
   align-items: center;
-  padding: 14px 20px;
+  gap: 12px;
+  padding: 12px 8px;
   border-radius: var(--mantine-radius-md);
   color: var(--mantine-color-gray-7);
-  transition: all 0.2s ease;
-  margin: 0 8px;
+  transition: all 0.15s ease;
+  width: 100%;
 }
 
-.mobileMenuItem:hover {
+.mobileMenuItem:active {
   background: var(--mantine-color-gray-1);
+  transform: scale(0.98);
 }
 
 .wrapper[data-theme='dark'] .mobileMenuItem {
   color: var(--mantine-color-gray-3);
 }
 
-.wrapper[data-theme='dark'] .mobileMenuItem:hover {
+.wrapper[data-theme='dark'] .mobileMenuItem:active {
   background: var(--mantine-color-dark-5);
+}
+
+.mobileMenuIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--mantine-color-gray-0);
+  border-radius: var(--mantine-radius-md);
+  color: var(--mantine-color-gray-6);
+}
+
+.wrapper[data-theme='dark'] .mobileMenuIcon {
+  background: var(--mantine-color-dark-6);
+  color: var(--mantine-color-gray-4);
 }
 
 /* Responsive */
