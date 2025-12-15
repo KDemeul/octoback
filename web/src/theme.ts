@@ -81,4 +81,36 @@ export const theme = createTheme({
     backgroundCream: '#fffbf7',
     backgroundDark: '#1a1a1a',
   },
+  components: {
+    TextInput: {
+      styles: {
+        input: { fontSize: '16px' },
+      },
+    },
+    Textarea: {
+      styles: {
+        input: { fontSize: '16px' },
+      },
+    },
+    NumberInput: {
+      styles: {
+        input: { fontSize: '16px' },
+      },
+    },
+    Select: {
+      styles: {
+        input: { fontSize: '16px' },
+      },
+    },
+    PasswordInput: {
+      styles: {
+        input: { fontSize: '16px' },
+      },
+    },
+    Autocomplete: {
+      styles: {
+        input: { fontSize: '16px' },
+      },
+    },
+  },
 });
