@@ -7,7 +7,6 @@ import {
   Button,
   Card,
   CopyButton,
-  Container,
   Divider,
   Group,
   Loader,
@@ -23,8 +22,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
+import { AppLayout } from '../components/AppLayout/AppLayout';
 import {
   useAcceptInvitation,
   useCreateInvitation,
@@ -86,62 +84,6 @@ function CopyIcon() {
   );
 }
 
-function BackIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M19 12H5M5 12L12 19M5 12L12 5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function OctopusLogo({ size = 48 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 64 64"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <circle cx="32" cy="24" r="16" fill="currentColor" />
-      <circle cx="26" cy="22" r="3" fill="white" />
-      <circle cx="38" cy="22" r="3" fill="white" />
-      <circle cx="26" cy="22" r="1.5" fill="#2d3436" />
-      <circle cx="38" cy="22" r="1.5" fill="#2d3436" />
-      <path
-        d="M12 40C12 40 8 52 12 56C14 58 18 56 18 52C18 48 16 44 20 40"
-        stroke="currentColor"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M20 42C20 42 18 54 22 58C24 60 28 58 28 54C28 50 26 46 28 42"
-        stroke="currentColor"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M36 42C36 42 38 54 42 58C44 60 40 60 38 56C36 52 38 48 36 42"
-        stroke="currentColor"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M44 40C44 40 48 52 52 56C54 58 50 58 48 54C46 50 48 44 44 40"
-        stroke="currentColor"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-      <ellipse cx="32" cy="28" rx="4" ry="2" fill="#f68f71" opacity="0.6" />
-    </svg>
-  );
-}
 
 const roleLabels: Record<string, string> = {
   owner: 'Propriétaire',
@@ -172,7 +114,7 @@ function TenantCard({
   const canLeave = role !== 'owner';
 
   return (
-    <Card className={classes.tenantCard} data-member={true}>
+    <Card className={classes.tenantCard} data-member>
       <Group justify="space-between" align="flex-start">
         <Group gap="md">
           <ThemeIcon size={48} radius="xl" variant="filled" color="coral">
@@ -290,6 +232,15 @@ function InviteModal({
   );
 }
 
+function SettingsIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    </svg>
+  );
+}
+
 export function SettingsPage() {
   const { colorScheme } = useMantineColorScheme();
   const { user, isAuthenticated, isLoading: authLoading, loginWithRedirect } = useAuth0();
@@ -316,7 +267,9 @@ export function SettingsPage() {
   };
 
   const handleJoin = async () => {
-    if (!joinCode.trim()) return;
+    if (!joinCode.trim()) {
+      return;
+    }
     setJoinError(null);
     try {
       await acceptInvitationMutation.mutateAsync({ inviteCode: joinCode.trim() });
@@ -346,25 +299,25 @@ export function SettingsPage() {
 
   if (authLoading) {
     return (
-      <Box className={classes.wrapper} data-theme={colorScheme}>
-        <Container size="md" py={100}>
-          <Stack align="center" gap="xl">
+      <AppLayout title="Paramètres">
+        <Box className={classes.wrapper} data-theme={colorScheme}>
+          <Stack align="center" gap="xl" py={100}>
             <Loader size="lg" color="coral" />
             <Text c="dimmed">Chargement...</Text>
           </Stack>
-        </Container>
-      </Box>
+        </Box>
+      </AppLayout>
     );
   }
 
   if (!isAuthenticated) {
     return (
-      <Box className={classes.wrapper} data-theme={colorScheme}>
-        <Container size="md" py={100}>
-          <Stack align="center" gap="xl">
-            <Box c="coral.5">
-              <OctopusLogo size={80} />
-            </Box>
+      <AppLayout title="Paramètres">
+        <Box className={classes.wrapper} data-theme={colorScheme}>
+          <Stack align="center" gap="xl" py={100}>
+            <ThemeIcon size={80} radius="xl" variant="light" color="coral">
+              <SettingsIcon />
+            </ThemeIcon>
             <Title order={2} ta="center">
               Connexion requise
             </Title>
@@ -375,167 +328,138 @@ export function SettingsPage() {
               Se connecter
             </Button>
           </Stack>
-        </Container>
-      </Box>
+        </Box>
+      </AppLayout>
     );
   }
 
   return (
-    <Box className={classes.wrapper} data-theme={colorScheme}>
-      {/* Background decoration */}
-      <Box className={classes.bgDecoration} />
-
-      {/* Header */}
-      <Box component="header" className={classes.header}>
-        <Container size="xl">
-          <Group justify="space-between" h={70}>
-            <Group gap="md">
-              <ActionIcon
-                component={Link}
-                to="/"
-                variant="subtle"
-                color={colorScheme === 'dark' ? 'gray' : 'charcoal'}
-                size="lg"
-              >
-                <BackIcon />
-              </ActionIcon>
-              <Group gap="xs">
-                <Box c="coral.5">
-                  <OctopusLogo size={36} />
-                </Box>
-                <Text fw={700} size="lg" style={{ letterSpacing: '-0.5px' }}>
-                  Paramètres
-                </Text>
-              </Group>
-            </Group>
-            <ColorSchemeToggle />
-          </Group>
-        </Container>
-      </Box>
-
-      <Container size="md" py="xl">
-        <Stack gap="xl">
-          {/* User Profile Section */}
-          <Card className={classes.profileCard}>
-            <Group gap="lg">
-              <Avatar src={user?.picture} alt={user?.name} size={80} radius="xl" />
-              <Stack gap={4}>
-                <Title order={3}>{user?.name}</Title>
-                <Text c="dimmed" size="sm">
-                  {user?.email}
-                </Text>
-              </Stack>
-            </Group>
-          </Card>
-
-          <Divider />
-
-          {/* Tenants Section */}
-          <Stack gap="md">
-            <Group justify="space-between" align="center">
-              <Stack gap={4}>
-                <Title order={4}>Mes foyers</Title>
-                <Text c="dimmed" size="sm">
-                  Gérez vos foyers et invitez d'autres personnes à les rejoindre.
-                </Text>
-              </Stack>
-              {myTenantsData?.tenants && myTenantsData.tenants.length > 0 && (
-                <Badge size="lg" variant="light" color="coral" leftSection={<CheckIcon />}>
-                  {myTenantsData.tenants.length} foyer
-                  {myTenantsData.tenants.length > 1 ? 's' : ''}
-                </Badge>
-              )}
-            </Group>
-
-            {tenantsError && (
-              <Alert variant="light" color="red" title="Erreur">
-                Impossible de charger les foyers. Veuillez réessayer.
-              </Alert>
-            )}
-
-            {isLoading ? (
-              <Stack align="center" py="xl">
-                <Loader color="coral" />
-              </Stack>
-            ) : (
-              <Stack gap="md">
-                {myTenantsData?.tenants?.map((tenant) => {
-                  const membership = membershipMap.get(tenant.id);
-                  return (
-                    <TenantCard
-                      key={tenant.id.toString()}
-                      name={tenant.name}
-                      role={membership?.role || 'member'}
-                      isLoading={
-                        leaveTenantMutation.isPending &&
-                        leaveTenantMutation.variables?.tenantId === tenant.id
-                      }
-                      onLeave={() => handleLeave(tenant.id)}
-                      onInvite={() => handleInvite(tenant.id, tenant.name)}
-                    />
-                  );
-                })}
-              </Stack>
-            )}
-
-            {myTenantsData?.tenants?.length === 0 && !isLoading && (
-              <Card className={classes.emptyCard}>
-                <Stack align="center" gap="md" py="xl">
-                  <ThemeIcon size={64} radius="xl" variant="light" color="gray">
-                    <HouseIcon />
-                  </ThemeIcon>
-                  <Text c="dimmed" ta="center">
-                    Vous n'êtes membre d'aucun foyer.
+    <AppLayout title="Paramètres">
+      <Box className={classes.wrapper} data-theme={colorScheme}>
+        <Box className={classes.content}>
+          <Stack gap="xl">
+            {/* User Profile Section */}
+            <Card className={classes.profileCard}>
+              <Group gap="lg">
+                <Avatar src={user?.picture} alt={user?.name} size={80} radius="xl" />
+                <Stack gap={4}>
+                  <Title order={3}>{user?.name}</Title>
+                  <Text c="dimmed" size="sm">
+                    {user?.email}
                   </Text>
                 </Stack>
-              </Card>
-            )}
-          </Stack>
+              </Group>
+            </Card>
 
-          <Divider />
+            <Divider />
 
-          {/* Join with invitation code */}
-          <Stack gap="md">
-            <Stack gap={4}>
-              <Title order={4}>Rejoindre un foyer</Title>
-              <Text c="dimmed" size="sm">
-                Entrez un code d'invitation pour rejoindre un foyer existant.
-              </Text>
+            {/* Tenants Section */}
+            <Stack gap="md">
+              <Group justify="space-between" align="center">
+                <Stack gap={4}>
+                  <Title order={4}>Mes foyers</Title>
+                  <Text c="dimmed" size="sm">
+                    Gérez vos foyers et invitez d'autres personnes à les rejoindre.
+                  </Text>
+                </Stack>
+                {myTenantsData?.tenants && myTenantsData.tenants.length > 0 && (
+                  <Badge size="lg" variant="light" color="coral" leftSection={<CheckIcon />}>
+                    {myTenantsData.tenants.length} foyer
+                    {myTenantsData.tenants.length > 1 ? 's' : ''}
+                  </Badge>
+                )}
+              </Group>
+
+              {tenantsError && (
+                <Alert variant="light" color="red" title="Erreur">
+                  Impossible de charger les foyers. Veuillez réessayer.
+                </Alert>
+              )}
+
+              {isLoading ? (
+                <Stack align="center" py="xl">
+                  <Loader color="coral" />
+                </Stack>
+              ) : (
+                <Stack gap="md">
+                  {myTenantsData?.tenants?.map((tenant) => {
+                    const membership = membershipMap.get(tenant.id);
+                    return (
+                      <TenantCard
+                        key={tenant.id.toString()}
+                        name={tenant.name}
+                        role={membership?.role || 'member'}
+                        isLoading={
+                          leaveTenantMutation.isPending &&
+                          leaveTenantMutation.variables?.tenantId === tenant.id
+                        }
+                        onLeave={() => handleLeave(tenant.id)}
+                        onInvite={() => handleInvite(tenant.id, tenant.name)}
+                      />
+                    );
+                  })}
+                </Stack>
+              )}
+
+              {myTenantsData?.tenants?.length === 0 && !isLoading && (
+                <Card className={classes.emptyCard}>
+                  <Stack align="center" gap="md" py="xl">
+                    <ThemeIcon size={64} radius="xl" variant="light" color="gray">
+                      <HouseIcon />
+                    </ThemeIcon>
+                    <Text c="dimmed" ta="center">
+                      Vous n'êtes membre d'aucun foyer.
+                    </Text>
+                  </Stack>
+                </Card>
+              )}
             </Stack>
 
-            <Group>
-              <TextInput
-                placeholder="Code d'invitation"
-                value={joinCode}
-                onChange={(e) => {
-                  setJoinCode(e.currentTarget.value);
-                  setJoinError(null);
-                }}
-                style={{ flex: 1 }}
-                error={joinError}
-              />
-              <Button
-                color="coral"
-                onClick={handleJoin}
-                loading={acceptInvitationMutation.isPending}
-                disabled={!joinCode.trim()}
-              >
-                Rejoindre
-              </Button>
-            </Group>
-          </Stack>
-        </Stack>
-      </Container>
+            <Divider />
 
-      {/* Invite Modal */}
-      {selectedTenant && (
-        <InviteModal
-          opened={inviteModalOpened}
-          onClose={closeInviteModal}
-          tenantId={selectedTenant.id}
-          tenantName={selectedTenant.name}
-        />
-      )}
-    </Box>
+            {/* Join with invitation code */}
+            <Stack gap="md">
+              <Stack gap={4}>
+                <Title order={4}>Rejoindre un foyer</Title>
+                <Text c="dimmed" size="sm">
+                  Entrez un code d'invitation pour rejoindre un foyer existant.
+                </Text>
+              </Stack>
+
+              <Group>
+                <TextInput
+                  placeholder="Code d'invitation"
+                  value={joinCode}
+                  onChange={(e) => {
+                    setJoinCode(e.currentTarget.value);
+                    setJoinError(null);
+                  }}
+                  style={{ flex: 1 }}
+                  error={joinError}
+                />
+                <Button
+                  color="coral"
+                  onClick={handleJoin}
+                  loading={acceptInvitationMutation.isPending}
+                  disabled={!joinCode.trim()}
+                >
+                  Rejoindre
+                </Button>
+              </Group>
+            </Stack>
+          </Stack>
+        </Box>
+
+        {/* Invite Modal */}
+        {selectedTenant && (
+          <InviteModal
+            opened={inviteModalOpened}
+            onClose={closeInviteModal}
+            tenantId={selectedTenant.id}
+            tenantName={selectedTenant.name}
+          />
+        )}
+      </Box>
+    </AppLayout>
   );
 }
