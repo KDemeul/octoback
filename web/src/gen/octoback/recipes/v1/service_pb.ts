@@ -831,3 +831,178 @@ export class DeleteRecipeIngredientResponse extends Message<DeleteRecipeIngredie
   }
 }
 
+/**
+ * @generated from message octoback.recipes.v1.ImportRecipeFromWebRequest
+ */
+export class ImportRecipeFromWebRequest extends Message<ImportRecipeFromWebRequest> {
+  /**
+   * The URL of the recipe webpage to import.
+   *
+   * @generated from field: string url = 1;
+   */
+  url = "";
+
+  constructor(data?: PartialMessage<ImportRecipeFromWebRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "octoback.recipes.v1.ImportRecipeFromWebRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "url", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ImportRecipeFromWebRequest {
+    return new ImportRecipeFromWebRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ImportRecipeFromWebRequest {
+    return new ImportRecipeFromWebRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ImportRecipeFromWebRequest {
+    return new ImportRecipeFromWebRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: ImportRecipeFromWebRequest | PlainMessage<ImportRecipeFromWebRequest> | undefined, b: ImportRecipeFromWebRequest | PlainMessage<ImportRecipeFromWebRequest> | undefined): boolean {
+    return proto3.util.equals(ImportRecipeFromWebRequest, a, b);
+  }
+}
+
+/**
+ * Parsed ingredient from web import (not yet persisted).
+ *
+ * @generated from message octoback.recipes.v1.ParsedIngredient
+ */
+export class ParsedIngredient extends Message<ParsedIngredient> {
+  /**
+   * The ingredient name.
+   *
+   * @generated from field: string name = 1;
+   */
+  name = "";
+
+  /**
+   * The ingredient quantity.
+   *
+   * @generated from field: int32 quantity = 2;
+   */
+  quantity = 0;
+
+  /**
+   * The ingredient unit (e.g., "cups", "tbsp").
+   *
+   * @generated from field: string unit = 3;
+   */
+  unit = "";
+
+  constructor(data?: PartialMessage<ParsedIngredient>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "octoback.recipes.v1.ParsedIngredient";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "quantity", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
+    { no: 3, name: "unit", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ParsedIngredient {
+    return new ParsedIngredient().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ParsedIngredient {
+    return new ParsedIngredient().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ParsedIngredient {
+    return new ParsedIngredient().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: ParsedIngredient | PlainMessage<ParsedIngredient> | undefined, b: ParsedIngredient | PlainMessage<ParsedIngredient> | undefined): boolean {
+    return proto3.util.equals(ParsedIngredient, a, b);
+  }
+}
+
+/**
+ * @generated from message octoback.recipes.v1.ImportRecipeFromWebResponse
+ */
+export class ImportRecipeFromWebResponse extends Message<ImportRecipeFromWebResponse> {
+  /**
+   * The parsed recipe name.
+   *
+   * @generated from field: string name = 1;
+   */
+  name = "";
+
+  /**
+   * The parsed recipe description.
+   *
+   * @generated from field: string description = 2;
+   */
+  description = "";
+
+  /**
+   * The number of servings.
+   *
+   * @generated from field: int32 servings = 3;
+   */
+  servings = 0;
+
+  /**
+   * Preparation time in minutes.
+   *
+   * @generated from field: int32 prep_time_minutes = 4;
+   */
+  prepTimeMinutes = 0;
+
+  /**
+   * Cooking time in minutes.
+   *
+   * @generated from field: int32 cook_time_minutes = 5;
+   */
+  cookTimeMinutes = 0;
+
+  /**
+   * The parsed ingredients.
+   *
+   * @generated from field: repeated octoback.recipes.v1.ParsedIngredient ingredients = 6;
+   */
+  ingredients: ParsedIngredient[] = [];
+
+  constructor(data?: PartialMessage<ImportRecipeFromWebResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "octoback.recipes.v1.ImportRecipeFromWebResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "description", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "servings", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
+    { no: 4, name: "prep_time_minutes", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
+    { no: 5, name: "cook_time_minutes", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
+    { no: 6, name: "ingredients", kind: "message", T: ParsedIngredient, repeated: true },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ImportRecipeFromWebResponse {
+    return new ImportRecipeFromWebResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): ImportRecipeFromWebResponse {
+    return new ImportRecipeFromWebResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): ImportRecipeFromWebResponse {
+    return new ImportRecipeFromWebResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: ImportRecipeFromWebResponse | PlainMessage<ImportRecipeFromWebResponse> | undefined, b: ImportRecipeFromWebResponse | PlainMessage<ImportRecipeFromWebResponse> | undefined): boolean {
+    return proto3.util.equals(ImportRecipeFromWebResponse, a, b);
+  }
+}
+

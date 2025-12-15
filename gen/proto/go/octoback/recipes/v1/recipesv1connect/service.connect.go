@@ -58,6 +58,9 @@ const (
 	// ServiceDeleteRecipeIngredientProcedure is the fully-qualified name of the Service's
 	// DeleteRecipeIngredient RPC.
 	ServiceDeleteRecipeIngredientProcedure = "/octoback.recipes.v1.Service/DeleteRecipeIngredient"
+	// ServiceImportRecipeFromWebProcedure is the fully-qualified name of the Service's
+	// ImportRecipeFromWeb RPC.
+	ServiceImportRecipeFromWebProcedure = "/octoback.recipes.v1.Service/ImportRecipeFromWeb"
 )
 
 // ServiceClient is a client for the octoback.recipes.v1.Service service.
@@ -82,6 +85,8 @@ type ServiceClient interface {
 	ListRecipeIngredients(context.Context, *connect.Request[v1.ListRecipeIngredientsRequest]) (*connect.Response[v1.ListRecipeIngredientsResponse], error)
 	// Delete a recipe ingredient
 	DeleteRecipeIngredient(context.Context, *connect.Request[v1.DeleteRecipeIngredientRequest]) (*connect.Response[v1.DeleteRecipeIngredientResponse], error)
+	// Import a recipe from a web URL using AI extraction
+	ImportRecipeFromWeb(context.Context, *connect.Request[v1.ImportRecipeFromWebRequest]) (*connect.Response[v1.ImportRecipeFromWebResponse], error)
 }
 
 // NewServiceClient constructs a client for the octoback.recipes.v1.Service service. By default, it
@@ -155,6 +160,12 @@ func NewServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...con
 			connect.WithSchema(serviceMethods.ByName("DeleteRecipeIngredient")),
 			connect.WithClientOptions(opts...),
 		),
+		importRecipeFromWeb: connect.NewClient[v1.ImportRecipeFromWebRequest, v1.ImportRecipeFromWebResponse](
+			httpClient,
+			baseURL+ServiceImportRecipeFromWebProcedure,
+			connect.WithSchema(serviceMethods.ByName("ImportRecipeFromWeb")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -170,6 +181,7 @@ type serviceClient struct {
 	updateRecipeIngredient *connect.Client[v1.UpdateRecipeIngredientRequest, v1.UpdateRecipeIngredientResponse]
 	listRecipeIngredients  *connect.Client[v1.ListRecipeIngredientsRequest, v1.ListRecipeIngredientsResponse]
 	deleteRecipeIngredient *connect.Client[v1.DeleteRecipeIngredientRequest, v1.DeleteRecipeIngredientResponse]
+	importRecipeFromWeb    *connect.Client[v1.ImportRecipeFromWebRequest, v1.ImportRecipeFromWebResponse]
 }
 
 // GetRecipe calls octoback.recipes.v1.Service.GetRecipe.
@@ -222,6 +234,11 @@ func (c *serviceClient) DeleteRecipeIngredient(ctx context.Context, req *connect
 	return c.deleteRecipeIngredient.CallUnary(ctx, req)
 }
 
+// ImportRecipeFromWeb calls octoback.recipes.v1.Service.ImportRecipeFromWeb.
+func (c *serviceClient) ImportRecipeFromWeb(ctx context.Context, req *connect.Request[v1.ImportRecipeFromWebRequest]) (*connect.Response[v1.ImportRecipeFromWebResponse], error) {
+	return c.importRecipeFromWeb.CallUnary(ctx, req)
+}
+
 // ServiceHandler is an implementation of the octoback.recipes.v1.Service service.
 type ServiceHandler interface {
 	// Get a recipe.
@@ -244,6 +261,8 @@ type ServiceHandler interface {
 	ListRecipeIngredients(context.Context, *connect.Request[v1.ListRecipeIngredientsRequest]) (*connect.Response[v1.ListRecipeIngredientsResponse], error)
 	// Delete a recipe ingredient
 	DeleteRecipeIngredient(context.Context, *connect.Request[v1.DeleteRecipeIngredientRequest]) (*connect.Response[v1.DeleteRecipeIngredientResponse], error)
+	// Import a recipe from a web URL using AI extraction
+	ImportRecipeFromWeb(context.Context, *connect.Request[v1.ImportRecipeFromWebRequest]) (*connect.Response[v1.ImportRecipeFromWebResponse], error)
 }
 
 // NewServiceHandler builds an HTTP handler from the service implementation. It returns the path on
@@ -313,6 +332,12 @@ func NewServiceHandler(svc ServiceHandler, opts ...connect.HandlerOption) (strin
 		connect.WithSchema(serviceMethods.ByName("DeleteRecipeIngredient")),
 		connect.WithHandlerOptions(opts...),
 	)
+	serviceImportRecipeFromWebHandler := connect.NewUnaryHandler(
+		ServiceImportRecipeFromWebProcedure,
+		svc.ImportRecipeFromWeb,
+		connect.WithSchema(serviceMethods.ByName("ImportRecipeFromWeb")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/octoback.recipes.v1.Service/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case ServiceGetRecipeProcedure:
@@ -335,6 +360,8 @@ func NewServiceHandler(svc ServiceHandler, opts ...connect.HandlerOption) (strin
 			serviceListRecipeIngredientsHandler.ServeHTTP(w, r)
 		case ServiceDeleteRecipeIngredientProcedure:
 			serviceDeleteRecipeIngredientHandler.ServeHTTP(w, r)
+		case ServiceImportRecipeFromWebProcedure:
+			serviceImportRecipeFromWebHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -382,4 +409,8 @@ func (UnimplementedServiceHandler) ListRecipeIngredients(context.Context, *conne
 
 func (UnimplementedServiceHandler) DeleteRecipeIngredient(context.Context, *connect.Request[v1.DeleteRecipeIngredientRequest]) (*connect.Response[v1.DeleteRecipeIngredientResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("octoback.recipes.v1.Service.DeleteRecipeIngredient is not implemented"))
+}
+
+func (UnimplementedServiceHandler) ImportRecipeFromWeb(context.Context, *connect.Request[v1.ImportRecipeFromWebRequest]) (*connect.Response[v1.ImportRecipeFromWebResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("octoback.recipes.v1.Service.ImportRecipeFromWeb is not implemented"))
 }

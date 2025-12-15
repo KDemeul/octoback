@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { CreateRecipeIngredientRequest, CreateRecipeIngredientResponse, CreateRecipeRequest, CreateRecipeResponse, DeleteRecipeIngredientRequest, DeleteRecipeIngredientResponse, DeleteRecipeRequest, DeleteRecipeResponse, GetRecipeIngredientRequest, GetRecipeIngredientResponse, GetRecipeRequest, GetRecipeResponse, ListRecipeIngredientsRequest, ListRecipeIngredientsResponse, ListRecipesRequest, ListRecipesResponse, UpdateRecipeIngredientRequest, UpdateRecipeIngredientResponse, UpdateRecipeRequest, UpdateRecipeResponse } from "./service_pb.js";
+import { CreateRecipeIngredientRequest, CreateRecipeIngredientResponse, CreateRecipeRequest, CreateRecipeResponse, DeleteRecipeIngredientRequest, DeleteRecipeIngredientResponse, DeleteRecipeRequest, DeleteRecipeResponse, GetRecipeIngredientRequest, GetRecipeIngredientResponse, GetRecipeRequest, GetRecipeResponse, ImportRecipeFromWebRequest, ImportRecipeFromWebResponse, ListRecipeIngredientsRequest, ListRecipeIngredientsResponse, ListRecipesRequest, ListRecipesResponse, UpdateRecipeIngredientRequest, UpdateRecipeIngredientResponse, UpdateRecipeRequest, UpdateRecipeResponse } from "./service_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -122,6 +122,17 @@ export const Service = {
       name: "DeleteRecipeIngredient",
       I: DeleteRecipeIngredientRequest,
       O: DeleteRecipeIngredientResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * Import a recipe from a web URL using AI extraction
+     *
+     * @generated from rpc octoback.recipes.v1.Service.ImportRecipeFromWeb
+     */
+    importRecipeFromWeb: {
+      name: "ImportRecipeFromWeb",
+      I: ImportRecipeFromWebRequest,
+      O: ImportRecipeFromWebResponse,
       kind: MethodKind.Unary,
     },
   }

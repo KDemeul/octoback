@@ -975,6 +975,205 @@ func (*DeleteRecipeIngredientResponse) Descriptor() ([]byte, []int) {
 	return file_octoback_recipes_v1_service_proto_rawDescGZIP(), []int{19}
 }
 
+type ImportRecipeFromWebRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The URL of the recipe webpage to import.
+	Url           string `protobuf:"bytes,1,opt,name=url,proto3" json:"url,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ImportRecipeFromWebRequest) Reset() {
+	*x = ImportRecipeFromWebRequest{}
+	mi := &file_octoback_recipes_v1_service_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ImportRecipeFromWebRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ImportRecipeFromWebRequest) ProtoMessage() {}
+
+func (x *ImportRecipeFromWebRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_octoback_recipes_v1_service_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ImportRecipeFromWebRequest.ProtoReflect.Descriptor instead.
+func (*ImportRecipeFromWebRequest) Descriptor() ([]byte, []int) {
+	return file_octoback_recipes_v1_service_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *ImportRecipeFromWebRequest) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+// Parsed ingredient from web import (not yet persisted).
+type ParsedIngredient struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The ingredient name.
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// The ingredient quantity.
+	Quantity int32 `protobuf:"varint,2,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	// The ingredient unit (e.g., "cups", "tbsp").
+	Unit          string `protobuf:"bytes,3,opt,name=unit,proto3" json:"unit,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ParsedIngredient) Reset() {
+	*x = ParsedIngredient{}
+	mi := &file_octoback_recipes_v1_service_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ParsedIngredient) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ParsedIngredient) ProtoMessage() {}
+
+func (x *ParsedIngredient) ProtoReflect() protoreflect.Message {
+	mi := &file_octoback_recipes_v1_service_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ParsedIngredient.ProtoReflect.Descriptor instead.
+func (*ParsedIngredient) Descriptor() ([]byte, []int) {
+	return file_octoback_recipes_v1_service_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *ParsedIngredient) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ParsedIngredient) GetQuantity() int32 {
+	if x != nil {
+		return x.Quantity
+	}
+	return 0
+}
+
+func (x *ParsedIngredient) GetUnit() string {
+	if x != nil {
+		return x.Unit
+	}
+	return ""
+}
+
+type ImportRecipeFromWebResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The parsed recipe name.
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	// The parsed recipe description.
+	Description string `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	// The number of servings.
+	Servings int32 `protobuf:"varint,3,opt,name=servings,proto3" json:"servings,omitempty"`
+	// Preparation time in minutes.
+	PrepTimeMinutes int32 `protobuf:"varint,4,opt,name=prep_time_minutes,json=prepTimeMinutes,proto3" json:"prep_time_minutes,omitempty"`
+	// Cooking time in minutes.
+	CookTimeMinutes int32 `protobuf:"varint,5,opt,name=cook_time_minutes,json=cookTimeMinutes,proto3" json:"cook_time_minutes,omitempty"`
+	// The parsed ingredients.
+	Ingredients   []*ParsedIngredient `protobuf:"bytes,6,rep,name=ingredients,proto3" json:"ingredients,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ImportRecipeFromWebResponse) Reset() {
+	*x = ImportRecipeFromWebResponse{}
+	mi := &file_octoback_recipes_v1_service_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ImportRecipeFromWebResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ImportRecipeFromWebResponse) ProtoMessage() {}
+
+func (x *ImportRecipeFromWebResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_octoback_recipes_v1_service_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ImportRecipeFromWebResponse.ProtoReflect.Descriptor instead.
+func (*ImportRecipeFromWebResponse) Descriptor() ([]byte, []int) {
+	return file_octoback_recipes_v1_service_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *ImportRecipeFromWebResponse) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ImportRecipeFromWebResponse) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *ImportRecipeFromWebResponse) GetServings() int32 {
+	if x != nil {
+		return x.Servings
+	}
+	return 0
+}
+
+func (x *ImportRecipeFromWebResponse) GetPrepTimeMinutes() int32 {
+	if x != nil {
+		return x.PrepTimeMinutes
+	}
+	return 0
+}
+
+func (x *ImportRecipeFromWebResponse) GetCookTimeMinutes() int32 {
+	if x != nil {
+		return x.CookTimeMinutes
+	}
+	return 0
+}
+
+func (x *ImportRecipeFromWebResponse) GetIngredients() []*ParsedIngredient {
+	if x != nil {
+		return x.Ingredients
+	}
+	return nil
+}
+
 var File_octoback_recipes_v1_service_proto protoreflect.FileDescriptor
 
 const file_octoback_recipes_v1_service_proto_rawDesc = "" +
@@ -1027,7 +1226,20 @@ const file_octoback_recipes_v1_service_proto_rawDesc = "" +
 	"\x12recipe_ingredients\x18\x01 \x03(\v2%.octoback.recipes.v1.RecipeIngredientR\x11recipeIngredients\"/\n" +
 	"\x1dDeleteRecipeIngredientRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\" \n" +
-	"\x1eDeleteRecipeIngredientResponse2\xfc\b\n" +
+	"\x1eDeleteRecipeIngredientResponse\"8\n" +
+	"\x1aImportRecipeFromWebRequest\x12\x1a\n" +
+	"\x03url\x18\x01 \x01(\tB\b\xbaH\x05r\x03\x88\x01\x01R\x03url\"V\n" +
+	"\x10ParsedIngredient\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1a\n" +
+	"\bquantity\x18\x02 \x01(\x05R\bquantity\x12\x12\n" +
+	"\x04unit\x18\x03 \x01(\tR\x04unit\"\x90\x02\n" +
+	"\x1bImportRecipeFromWebResponse\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1a\n" +
+	"\bservings\x18\x03 \x01(\x05R\bservings\x12*\n" +
+	"\x11prep_time_minutes\x18\x04 \x01(\x05R\x0fprepTimeMinutes\x12*\n" +
+	"\x11cook_time_minutes\x18\x05 \x01(\x05R\x0fcookTimeMinutes\x12G\n" +
+	"\vingredients\x18\x06 \x03(\v2%.octoback.recipes.v1.ParsedIngredientR\vingredients2\xf6\t\n" +
 	"\aService\x12Z\n" +
 	"\tGetRecipe\x12%.octoback.recipes.v1.GetRecipeRequest\x1a&.octoback.recipes.v1.GetRecipeResponse\x12c\n" +
 	"\fCreateRecipe\x12(.octoback.recipes.v1.CreateRecipeRequest\x1a).octoback.recipes.v1.CreateRecipeResponse\x12c\n" +
@@ -1038,7 +1250,8 @@ const file_octoback_recipes_v1_service_proto_rawDesc = "" +
 	"\x16CreateRecipeIngredient\x122.octoback.recipes.v1.CreateRecipeIngredientRequest\x1a3.octoback.recipes.v1.CreateRecipeIngredientResponse\x12\x81\x01\n" +
 	"\x16UpdateRecipeIngredient\x122.octoback.recipes.v1.UpdateRecipeIngredientRequest\x1a3.octoback.recipes.v1.UpdateRecipeIngredientResponse\x12~\n" +
 	"\x15ListRecipeIngredients\x121.octoback.recipes.v1.ListRecipeIngredientsRequest\x1a2.octoback.recipes.v1.ListRecipeIngredientsResponse\x12\x81\x01\n" +
-	"\x16DeleteRecipeIngredient\x122.octoback.recipes.v1.DeleteRecipeIngredientRequest\x1a3.octoback.recipes.v1.DeleteRecipeIngredientResponseB\xe4\x01\n" +
+	"\x16DeleteRecipeIngredient\x122.octoback.recipes.v1.DeleteRecipeIngredientRequest\x1a3.octoback.recipes.v1.DeleteRecipeIngredientResponse\x12x\n" +
+	"\x13ImportRecipeFromWeb\x12/.octoback.recipes.v1.ImportRecipeFromWebRequest\x1a0.octoback.recipes.v1.ImportRecipeFromWebResponseB\xe4\x01\n" +
 	"\x17com.octoback.recipes.v1B\fServiceProtoP\x01ZMgithub.com/kiliandbigblue/octoback/gen/proto/go/octoback/recipes/v1;recipesv1\xa2\x02\x03ORX\xaa\x02\x13Octoback.Recipes.V1\xca\x02\x13Octoback\\Recipes\\V1\xe2\x02\x1fOctoback\\Recipes\\V1\\GPBMetadata\xea\x02\x15Octoback::Recipes::V1b\x06proto3"
 
 var (
@@ -1053,7 +1266,7 @@ func file_octoback_recipes_v1_service_proto_rawDescGZIP() []byte {
 	return file_octoback_recipes_v1_service_proto_rawDescData
 }
 
-var file_octoback_recipes_v1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
+var file_octoback_recipes_v1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
 var file_octoback_recipes_v1_service_proto_goTypes = []any{
 	(*GetRecipeRequest)(nil),               // 0: octoback.recipes.v1.GetRecipeRequest
 	(*GetRecipeResponse)(nil),              // 1: octoback.recipes.v1.GetRecipeResponse
@@ -1075,48 +1288,54 @@ var file_octoback_recipes_v1_service_proto_goTypes = []any{
 	(*ListRecipeIngredientsResponse)(nil),  // 17: octoback.recipes.v1.ListRecipeIngredientsResponse
 	(*DeleteRecipeIngredientRequest)(nil),  // 18: octoback.recipes.v1.DeleteRecipeIngredientRequest
 	(*DeleteRecipeIngredientResponse)(nil), // 19: octoback.recipes.v1.DeleteRecipeIngredientResponse
-	(*Recipe)(nil),                         // 20: octoback.recipes.v1.Recipe
-	(*fieldmaskpb.FieldMask)(nil),          // 21: google.protobuf.FieldMask
-	(*RecipeIngredient)(nil),               // 22: octoback.recipes.v1.RecipeIngredient
+	(*ImportRecipeFromWebRequest)(nil),     // 20: octoback.recipes.v1.ImportRecipeFromWebRequest
+	(*ParsedIngredient)(nil),               // 21: octoback.recipes.v1.ParsedIngredient
+	(*ImportRecipeFromWebResponse)(nil),    // 22: octoback.recipes.v1.ImportRecipeFromWebResponse
+	(*Recipe)(nil),                         // 23: octoback.recipes.v1.Recipe
+	(*fieldmaskpb.FieldMask)(nil),          // 24: google.protobuf.FieldMask
+	(*RecipeIngredient)(nil),               // 25: octoback.recipes.v1.RecipeIngredient
 }
 var file_octoback_recipes_v1_service_proto_depIdxs = []int32{
-	20, // 0: octoback.recipes.v1.GetRecipeResponse.recipe:type_name -> octoback.recipes.v1.Recipe
-	20, // 1: octoback.recipes.v1.CreateRecipeResponse.recipe:type_name -> octoback.recipes.v1.Recipe
-	20, // 2: octoback.recipes.v1.UpdateRecipeRequest.recipe:type_name -> octoback.recipes.v1.Recipe
-	21, // 3: octoback.recipes.v1.UpdateRecipeRequest.update_mask:type_name -> google.protobuf.FieldMask
-	20, // 4: octoback.recipes.v1.UpdateRecipeResponse.recipe:type_name -> octoback.recipes.v1.Recipe
-	20, // 5: octoback.recipes.v1.ListRecipesResponse.recipes:type_name -> octoback.recipes.v1.Recipe
-	22, // 6: octoback.recipes.v1.GetRecipeIngredientResponse.recipe_ingredient:type_name -> octoback.recipes.v1.RecipeIngredient
-	22, // 7: octoback.recipes.v1.CreateRecipeIngredientResponse.recipe_ingredient:type_name -> octoback.recipes.v1.RecipeIngredient
-	22, // 8: octoback.recipes.v1.UpdateRecipeIngredientRequest.recipe_ingredient:type_name -> octoback.recipes.v1.RecipeIngredient
-	21, // 9: octoback.recipes.v1.UpdateRecipeIngredientRequest.update_mask:type_name -> google.protobuf.FieldMask
-	22, // 10: octoback.recipes.v1.UpdateRecipeIngredientResponse.recipe_ingredient:type_name -> octoback.recipes.v1.RecipeIngredient
-	22, // 11: octoback.recipes.v1.ListRecipeIngredientsResponse.recipe_ingredients:type_name -> octoback.recipes.v1.RecipeIngredient
-	0,  // 12: octoback.recipes.v1.Service.GetRecipe:input_type -> octoback.recipes.v1.GetRecipeRequest
-	2,  // 13: octoback.recipes.v1.Service.CreateRecipe:input_type -> octoback.recipes.v1.CreateRecipeRequest
-	4,  // 14: octoback.recipes.v1.Service.UpdateRecipe:input_type -> octoback.recipes.v1.UpdateRecipeRequest
-	6,  // 15: octoback.recipes.v1.Service.ListRecipes:input_type -> octoback.recipes.v1.ListRecipesRequest
-	8,  // 16: octoback.recipes.v1.Service.DeleteRecipe:input_type -> octoback.recipes.v1.DeleteRecipeRequest
-	10, // 17: octoback.recipes.v1.Service.GetRecipeIngredient:input_type -> octoback.recipes.v1.GetRecipeIngredientRequest
-	12, // 18: octoback.recipes.v1.Service.CreateRecipeIngredient:input_type -> octoback.recipes.v1.CreateRecipeIngredientRequest
-	14, // 19: octoback.recipes.v1.Service.UpdateRecipeIngredient:input_type -> octoback.recipes.v1.UpdateRecipeIngredientRequest
-	16, // 20: octoback.recipes.v1.Service.ListRecipeIngredients:input_type -> octoback.recipes.v1.ListRecipeIngredientsRequest
-	18, // 21: octoback.recipes.v1.Service.DeleteRecipeIngredient:input_type -> octoback.recipes.v1.DeleteRecipeIngredientRequest
-	1,  // 22: octoback.recipes.v1.Service.GetRecipe:output_type -> octoback.recipes.v1.GetRecipeResponse
-	3,  // 23: octoback.recipes.v1.Service.CreateRecipe:output_type -> octoback.recipes.v1.CreateRecipeResponse
-	5,  // 24: octoback.recipes.v1.Service.UpdateRecipe:output_type -> octoback.recipes.v1.UpdateRecipeResponse
-	7,  // 25: octoback.recipes.v1.Service.ListRecipes:output_type -> octoback.recipes.v1.ListRecipesResponse
-	9,  // 26: octoback.recipes.v1.Service.DeleteRecipe:output_type -> octoback.recipes.v1.DeleteRecipeResponse
-	11, // 27: octoback.recipes.v1.Service.GetRecipeIngredient:output_type -> octoback.recipes.v1.GetRecipeIngredientResponse
-	13, // 28: octoback.recipes.v1.Service.CreateRecipeIngredient:output_type -> octoback.recipes.v1.CreateRecipeIngredientResponse
-	15, // 29: octoback.recipes.v1.Service.UpdateRecipeIngredient:output_type -> octoback.recipes.v1.UpdateRecipeIngredientResponse
-	17, // 30: octoback.recipes.v1.Service.ListRecipeIngredients:output_type -> octoback.recipes.v1.ListRecipeIngredientsResponse
-	19, // 31: octoback.recipes.v1.Service.DeleteRecipeIngredient:output_type -> octoback.recipes.v1.DeleteRecipeIngredientResponse
-	22, // [22:32] is the sub-list for method output_type
-	12, // [12:22] is the sub-list for method input_type
-	12, // [12:12] is the sub-list for extension type_name
-	12, // [12:12] is the sub-list for extension extendee
-	0,  // [0:12] is the sub-list for field type_name
+	23, // 0: octoback.recipes.v1.GetRecipeResponse.recipe:type_name -> octoback.recipes.v1.Recipe
+	23, // 1: octoback.recipes.v1.CreateRecipeResponse.recipe:type_name -> octoback.recipes.v1.Recipe
+	23, // 2: octoback.recipes.v1.UpdateRecipeRequest.recipe:type_name -> octoback.recipes.v1.Recipe
+	24, // 3: octoback.recipes.v1.UpdateRecipeRequest.update_mask:type_name -> google.protobuf.FieldMask
+	23, // 4: octoback.recipes.v1.UpdateRecipeResponse.recipe:type_name -> octoback.recipes.v1.Recipe
+	23, // 5: octoback.recipes.v1.ListRecipesResponse.recipes:type_name -> octoback.recipes.v1.Recipe
+	25, // 6: octoback.recipes.v1.GetRecipeIngredientResponse.recipe_ingredient:type_name -> octoback.recipes.v1.RecipeIngredient
+	25, // 7: octoback.recipes.v1.CreateRecipeIngredientResponse.recipe_ingredient:type_name -> octoback.recipes.v1.RecipeIngredient
+	25, // 8: octoback.recipes.v1.UpdateRecipeIngredientRequest.recipe_ingredient:type_name -> octoback.recipes.v1.RecipeIngredient
+	24, // 9: octoback.recipes.v1.UpdateRecipeIngredientRequest.update_mask:type_name -> google.protobuf.FieldMask
+	25, // 10: octoback.recipes.v1.UpdateRecipeIngredientResponse.recipe_ingredient:type_name -> octoback.recipes.v1.RecipeIngredient
+	25, // 11: octoback.recipes.v1.ListRecipeIngredientsResponse.recipe_ingredients:type_name -> octoback.recipes.v1.RecipeIngredient
+	21, // 12: octoback.recipes.v1.ImportRecipeFromWebResponse.ingredients:type_name -> octoback.recipes.v1.ParsedIngredient
+	0,  // 13: octoback.recipes.v1.Service.GetRecipe:input_type -> octoback.recipes.v1.GetRecipeRequest
+	2,  // 14: octoback.recipes.v1.Service.CreateRecipe:input_type -> octoback.recipes.v1.CreateRecipeRequest
+	4,  // 15: octoback.recipes.v1.Service.UpdateRecipe:input_type -> octoback.recipes.v1.UpdateRecipeRequest
+	6,  // 16: octoback.recipes.v1.Service.ListRecipes:input_type -> octoback.recipes.v1.ListRecipesRequest
+	8,  // 17: octoback.recipes.v1.Service.DeleteRecipe:input_type -> octoback.recipes.v1.DeleteRecipeRequest
+	10, // 18: octoback.recipes.v1.Service.GetRecipeIngredient:input_type -> octoback.recipes.v1.GetRecipeIngredientRequest
+	12, // 19: octoback.recipes.v1.Service.CreateRecipeIngredient:input_type -> octoback.recipes.v1.CreateRecipeIngredientRequest
+	14, // 20: octoback.recipes.v1.Service.UpdateRecipeIngredient:input_type -> octoback.recipes.v1.UpdateRecipeIngredientRequest
+	16, // 21: octoback.recipes.v1.Service.ListRecipeIngredients:input_type -> octoback.recipes.v1.ListRecipeIngredientsRequest
+	18, // 22: octoback.recipes.v1.Service.DeleteRecipeIngredient:input_type -> octoback.recipes.v1.DeleteRecipeIngredientRequest
+	20, // 23: octoback.recipes.v1.Service.ImportRecipeFromWeb:input_type -> octoback.recipes.v1.ImportRecipeFromWebRequest
+	1,  // 24: octoback.recipes.v1.Service.GetRecipe:output_type -> octoback.recipes.v1.GetRecipeResponse
+	3,  // 25: octoback.recipes.v1.Service.CreateRecipe:output_type -> octoback.recipes.v1.CreateRecipeResponse
+	5,  // 26: octoback.recipes.v1.Service.UpdateRecipe:output_type -> octoback.recipes.v1.UpdateRecipeResponse
+	7,  // 27: octoback.recipes.v1.Service.ListRecipes:output_type -> octoback.recipes.v1.ListRecipesResponse
+	9,  // 28: octoback.recipes.v1.Service.DeleteRecipe:output_type -> octoback.recipes.v1.DeleteRecipeResponse
+	11, // 29: octoback.recipes.v1.Service.GetRecipeIngredient:output_type -> octoback.recipes.v1.GetRecipeIngredientResponse
+	13, // 30: octoback.recipes.v1.Service.CreateRecipeIngredient:output_type -> octoback.recipes.v1.CreateRecipeIngredientResponse
+	15, // 31: octoback.recipes.v1.Service.UpdateRecipeIngredient:output_type -> octoback.recipes.v1.UpdateRecipeIngredientResponse
+	17, // 32: octoback.recipes.v1.Service.ListRecipeIngredients:output_type -> octoback.recipes.v1.ListRecipeIngredientsResponse
+	19, // 33: octoback.recipes.v1.Service.DeleteRecipeIngredient:output_type -> octoback.recipes.v1.DeleteRecipeIngredientResponse
+	22, // 34: octoback.recipes.v1.Service.ImportRecipeFromWeb:output_type -> octoback.recipes.v1.ImportRecipeFromWebResponse
+	24, // [24:35] is the sub-list for method output_type
+	13, // [13:24] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_octoback_recipes_v1_service_proto_init() }
@@ -1131,7 +1350,7 @@ func file_octoback_recipes_v1_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_octoback_recipes_v1_service_proto_rawDesc), len(file_octoback_recipes_v1_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   20,
+			NumMessages:   23,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

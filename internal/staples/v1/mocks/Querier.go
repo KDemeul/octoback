@@ -24,6 +24,62 @@ func (_m *Querier) EXPECT() *Querier_Expecter {
 	return &Querier_Expecter{mock: &_m.Mock}
 }
 
+// CountAllUsers provides a mock function with given fields: ctx
+func (_m *Querier) CountAllUsers(ctx context.Context) (int64, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CountAllUsers")
+	}
+
+	var r0 int64
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) (int64, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) int64); ok {
+		r0 = rf(ctx)
+	} else {
+		r0 = ret.Get(0).(int64)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_CountAllUsers_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CountAllUsers'
+type Querier_CountAllUsers_Call struct {
+	*mock.Call
+}
+
+// CountAllUsers is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *Querier_Expecter) CountAllUsers(ctx interface{}) *Querier_CountAllUsers_Call {
+	return &Querier_CountAllUsers_Call{Call: _e.mock.On("CountAllUsers", ctx)}
+}
+
+func (_c *Querier_CountAllUsers_Call) Run(run func(ctx context.Context)) *Querier_CountAllUsers_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *Querier_CountAllUsers_Call) Return(_a0 int64, _a1 error) *Querier_CountAllUsers_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_CountAllUsers_Call) RunAndReturn(run func(context.Context) (int64, error)) *Querier_CountAllUsers_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // CountUserTenants provides a mock function with given fields: ctx, userID
 func (_m *Querier) CountUserTenants(ctx context.Context, userID string) (int64, error) {
 	ret := _m.Called(ctx, userID)
@@ -2633,6 +2689,64 @@ func (_c *Querier_IsTenantMember_Call) Return(_a0 bool, _a1 error) *Querier_IsTe
 }
 
 func (_c *Querier_IsTenantMember_Call) RunAndReturn(run func(context.Context, v1.IsTenantMemberParams) (bool, error)) *Querier_IsTenantMember_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ListAllTenantMembers provides a mock function with given fields: ctx
+func (_m *Querier) ListAllTenantMembers(ctx context.Context) ([]v1.ListAllTenantMembersRow, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListAllTenantMembers")
+	}
+
+	var r0 []v1.ListAllTenantMembersRow
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]v1.ListAllTenantMembersRow, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []v1.ListAllTenantMembersRow); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]v1.ListAllTenantMembersRow)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_ListAllTenantMembers_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListAllTenantMembers'
+type Querier_ListAllTenantMembers_Call struct {
+	*mock.Call
+}
+
+// ListAllTenantMembers is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *Querier_Expecter) ListAllTenantMembers(ctx interface{}) *Querier_ListAllTenantMembers_Call {
+	return &Querier_ListAllTenantMembers_Call{Call: _e.mock.On("ListAllTenantMembers", ctx)}
+}
+
+func (_c *Querier_ListAllTenantMembers_Call) Run(run func(ctx context.Context)) *Querier_ListAllTenantMembers_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *Querier_ListAllTenantMembers_Call) Return(_a0 []v1.ListAllTenantMembersRow, _a1 error) *Querier_ListAllTenantMembers_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_ListAllTenantMembers_Call) RunAndReturn(run func(context.Context) ([]v1.ListAllTenantMembersRow, error)) *Querier_ListAllTenantMembers_Call {
 	_c.Call.Return(run)
 	return _c
 }

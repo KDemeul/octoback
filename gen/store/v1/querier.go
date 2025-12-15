@@ -10,6 +10,7 @@ import (
 )
 
 type Querier interface {
+	CountAllUsers(ctx context.Context) (int64, error)
 	CountUserTenants(ctx context.Context, userID string) (int64, error)
 	CreateGroceryItem(ctx context.Context, arg CreateGroceryItemParams) (GroceryItem, error)
 	CreateGroceryList(ctx context.Context, arg CreateGroceryListParams) (GroceryList, error)
@@ -57,6 +58,7 @@ type Querier interface {
 	GetTenantMemberByUserAndTenant(ctx context.Context, arg GetTenantMemberByUserAndTenantParams) (TenantMember, error)
 	GetTenantsByUserId(ctx context.Context, userID string) ([]Tenant, error)
 	IsTenantMember(ctx context.Context, arg IsTenantMemberParams) (bool, error)
+	ListAllTenantMembers(ctx context.Context) ([]ListAllTenantMembersRow, error)
 	ListGroceryItemsByGroceryList(ctx context.Context, arg ListGroceryItemsByGroceryListParams) ([]GroceryItem, error)
 	ListGroceryLists(ctx context.Context, tenantID sql.NullInt64) ([]GroceryList, error)
 	ListMealPlanEntries(ctx context.Context, arg ListMealPlanEntriesParams) ([]MealPlanEntry, error)
