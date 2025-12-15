@@ -92,9 +92,24 @@ interface StapleItemRowProps {
   delay: number;
 }
 
+// Hook to detect touch devices
+function useIsTouchDevice() {
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  
+  useEffect(() => {
+    const hasTouch = window.matchMedia('(hover: none)').matches;
+    setIsTouchDevice(hasTouch);
+  }, []);
+  
+  return isTouchDevice;
+}
+
 function StapleItemRow({ item, onDelete, delay }: StapleItemRowProps) {
   const { colorScheme } = useMantineColorScheme();
   const [isHovered, setIsHovered] = useState(false);
+  const isTouchDevice = useIsTouchDevice();
+
+  const showDelete = isHovered || isTouchDevice;
 
   return (
     <Paper
@@ -120,13 +135,13 @@ function StapleItemRow({ item, onDelete, delay }: StapleItemRowProps) {
           )}
         </Box>
 
-        <Transition mounted={isHovered} transition="fade" duration={150}>
+        <Transition mounted={showDelete} transition="fade" duration={150}>
           {(styles) => (
             <ActionIcon
               variant="subtle"
               color="red"
               size="md"
-              style={styles}
+              style={{ ...styles, opacity: isTouchDevice && !isHovered ? 0.6 : styles.opacity }}
               onClick={(e) => {
                 e.stopPropagation();
                 onDelete(item.id);

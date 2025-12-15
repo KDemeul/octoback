@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ActionIcon,
   Badge,
@@ -97,8 +97,18 @@ interface GroceryListCardProps {
 function GroceryListCard({ list, onDelete, delay }: GroceryListCardProps) {
   const { colorScheme } = useMantineColorScheme();
   const [isHovered, setIsHovered] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  
+  useEffect(() => {
+    // Detect touch device
+    const hasTouch = window.matchMedia('(hover: none)').matches;
+    setIsTouchDevice(hasTouch);
+  }, []);
   
   const createTime = list.createTime ? new Date(Number(list.createTime.seconds) * 1000) : new Date();
+  
+  // Show delete button on hover OR always on touch devices
+  const showDelete = isHovered || isTouchDevice;
 
   return (
     <UnstyledButton
@@ -123,7 +133,7 @@ function GroceryListCard({ list, onDelete, delay }: GroceryListCardProps) {
           <CartIcon size={24} />
         </ThemeIcon>
         
-        {isHovered && (
+        {showDelete && (
           <ActionIcon
             variant="subtle"
             color="red"

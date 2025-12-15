@@ -101,16 +101,31 @@ interface GroceryItemRowProps {
   delay: number;
 }
 
+// Hook to detect touch devices
+function useIsTouchDevice() {
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  
+  useEffect(() => {
+    const hasTouch = window.matchMedia('(hover: none)').matches;
+    setIsTouchDevice(hasTouch);
+  }, []);
+  
+  return isTouchDevice;
+}
+
 function GroceryItemRow({ item, onToggle, onDelete, delay }: GroceryItemRowProps) {
   const { colorScheme } = useMantineColorScheme();
   const [isHovered, setIsHovered] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const isTouchDevice = useIsTouchDevice();
 
   const handleToggle = () => {
     setIsAnimating(true);
     setTimeout(() => setIsAnimating(false), 400);
     onToggle(item);
   };
+
+  const showDelete = isHovered || isTouchDevice;
 
   return (
     <Paper
@@ -142,13 +157,13 @@ function GroceryItemRow({ item, onToggle, onDelete, delay }: GroceryItemRowProps
           )}
         </Box>
 
-        <Transition mounted={isHovered} transition="fade" duration={150}>
+        <Transition mounted={showDelete} transition="fade" duration={150}>
           {(styles) => (
             <ActionIcon
               variant="subtle"
               color="red"
               size="md"
-              style={styles}
+              style={{ ...styles, opacity: isTouchDevice && !isHovered ? 0.6 : styles.opacity }}
               onClick={(e) => {
                 e.stopPropagation();
                 onDelete(item.id);

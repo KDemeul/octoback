@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ActionIcon,
   Badge,
@@ -105,7 +105,14 @@ interface RecipeCardProps {
 function RecipeCard({ recipe, onDelete, delay }: RecipeCardProps) {
   const { colorScheme } = useMantineColorScheme();
   const [isHovered, setIsHovered] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
+  useEffect(() => {
+    const hasTouch = window.matchMedia('(hover: none)').matches;
+    setIsTouchDevice(hasTouch);
+  }, []);
+
+  const showDelete = isHovered || isTouchDevice;
   const totalTime = recipe.prepTimeMinutes + recipe.cookTimeMinutes;
 
   return (
@@ -131,7 +138,7 @@ function RecipeCard({ recipe, onDelete, delay }: RecipeCardProps) {
           <ChefHatIcon size={24} />
         </ThemeIcon>
 
-        {isHovered && (
+        {showDelete && (
           <ActionIcon
             variant="subtle"
             color="red"

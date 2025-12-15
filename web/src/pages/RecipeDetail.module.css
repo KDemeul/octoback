@@ -218,6 +218,17 @@
   flex-shrink: 0;
 }
 
+/* On touch devices, always show the delete button */
+@media (hover: none) {
+  .deleteButton {
+    opacity: 0.6;
+  }
+  
+  .deleteButton:active {
+    opacity: 1;
+  }
+}
+
 /* Modal */
 .modalTitle {
   font-size: 1.25rem;

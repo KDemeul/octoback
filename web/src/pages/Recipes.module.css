@@ -163,6 +163,35 @@
   animation: fadeIn 0.2s ease-out;
 }
 
+/* On touch devices, always show the delete button */
+@media (hover: none) {
+  .deleteButton {
+    opacity: 0.6;
+  }
+  
+  .deleteButton:active {
+    opacity: 1;
+  }
+  
+  /* Disable hover transforms on touch */
+  .recipeCard:hover {
+    transform: none;
+  }
+  
+  .recipeCard:active {
+    transform: scale(0.98);
+  }
+  
+  .recipeCard:hover .cardIcon {
+    transform: none;
+  }
+  
+  .recipeCard:hover .cardArrow {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+}
+
 /* Add card */
 .addCard {
   display: flex;

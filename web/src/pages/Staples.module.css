@@ -153,6 +153,35 @@
   animation: fadeIn 0.2s ease-out;
 }
 
+/* On touch devices, always show the delete button */
+@media (hover: none) {
+  .deleteButton {
+    opacity: 0.6;
+  }
+  
+  .deleteButton:active {
+    opacity: 1;
+  }
+  
+  /* Disable hover transforms on touch */
+  .listCard:hover {
+    transform: none;
+  }
+  
+  .listCard:active {
+    transform: scale(0.98);
+  }
+  
+  .listCard:hover .cardIcon {
+    transform: none;
+  }
+  
+  .listCard:hover .cardArrow {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+}
+
 /* Add card */
 .addCard {
   display: flex;

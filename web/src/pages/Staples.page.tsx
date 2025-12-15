@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   ActionIcon,
   Badge,
@@ -93,6 +93,14 @@ interface StapleListCardProps {
 function StapleListCard({ list, groceryListName, onDelete, delay }: StapleListCardProps) {
   const { colorScheme } = useMantineColorScheme();
   const [isHovered, setIsHovered] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    const hasTouch = window.matchMedia('(hover: none)').matches;
+    setIsTouchDevice(hasTouch);
+  }, []);
+
+  const showDelete = isHovered || isTouchDevice;
 
   return (
     <UnstyledButton
@@ -117,7 +125,7 @@ function StapleListCard({ list, groceryListName, onDelete, delay }: StapleListCa
           <SaltIcon size={24} />
         </ThemeIcon>
 
-        {isHovered && (
+        {showDelete && (
           <ActionIcon
             variant="subtle"
             color="red"
