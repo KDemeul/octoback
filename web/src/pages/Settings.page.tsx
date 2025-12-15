@@ -21,13 +21,14 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AppLayout } from '../components/AppLayout/AppLayout';
 import {
   useAcceptInvitation,
   useCreateInvitation,
   useLeaveTenant,
   useMyTenants,
+  useUpdateTenant,
 } from '../hooks';
 import { useAuth0 } from '../lib/auth0';
 import classes from './Settings.module.css';
@@ -85,6 +86,15 @@ function CopyIcon() {
 }
 
 
+function PencilIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+      <path d="m15 5 4 4" />
+    </svg>
+  );
+}
+
 const roleLabels: Record<string, string> = {
   owner: 'Propriétaire',
   admin: 'Admin',
@@ -103,14 +113,17 @@ function TenantCard({
   isLoading,
   onLeave,
   onInvite,
+  onRename,
 }: {
   name: string;
   role: string;
   isLoading: boolean;
   onLeave: () => void;
   onInvite: () => void;
+  onRename: () => void;
 }) {
   const canInvite = role === 'owner' || role === 'admin';
+  const canRename = role === 'owner' || role === 'admin';
   const canLeave = role !== 'owner';
 
   return (
@@ -131,6 +144,13 @@ function TenantCard({
         </Group>
 
         <Group gap="xs">
+          {canRename && (
+            <Tooltip label="Renommer le foyer">
+              <ActionIcon variant="light" color="gray" size="lg" radius="xl" onClick={onRename}>
+                <PencilIcon />
+              </ActionIcon>
+            </Tooltip>
+          )}
           {canInvite && (
             <Tooltip label="Inviter quelqu'un">
               <ActionIcon variant="light" color="coral" size="lg" radius="xl" onClick={onInvite}>
@@ -232,6 +252,73 @@ function InviteModal({
   );
 }
 
+function RenameModal({
+  opened,
+  onClose,
+  tenantId,
+  tenantName,
+  tenantVersion,
+  onSuccess,
+}: {
+  opened: boolean;
+  onClose: () => void;
+  tenantId: bigint;
+  tenantName: string;
+  tenantVersion: number;
+  onSuccess: () => void;
+}) {
+  const updateTenantMutation = useUpdateTenant();
+  const [newName, setNewName] = useState(tenantName);
+
+  // Reset name when modal opens with a different tenant
+  useEffect(() => {
+    if (opened) {
+      setNewName(tenantName);
+    }
+  }, [opened, tenantName]);
+
+  const handleRename = async () => {
+    if (!newName.trim() || newName.trim() === tenantName) {
+      return;
+    }
+
+    await updateTenantMutation.mutateAsync({
+      tenantId,
+      name: newName.trim(),
+      version: tenantVersion,
+    });
+
+    onSuccess();
+    onClose();
+  };
+
+  return (
+    <Modal opened={opened} onClose={onClose} title="Renommer le foyer" centered>
+      <Stack>
+        <TextInput
+          label="Nom du foyer"
+          placeholder="Mon foyer"
+          value={newName}
+          onChange={(e) => setNewName(e.currentTarget.value)}
+          data-autofocus
+        />
+        <Group justify="flex-end">
+          <Button variant="subtle" onClick={onClose}>
+            Annuler
+          </Button>
+          <Button
+            onClick={handleRename}
+            loading={updateTenantMutation.isPending}
+            disabled={!newName.trim() || newName.trim() === tenantName}
+          >
+            Renommer
+          </Button>
+        </Group>
+      </Stack>
+    </Modal>
+  );
+}
+
 function SettingsIcon() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -252,7 +339,9 @@ export function SettingsPage() {
 
   const [inviteModalOpened, { open: openInviteModal, close: closeInviteModal }] =
     useDisclosure(false);
-  const [selectedTenant, setSelectedTenant] = useState<{ id: bigint; name: string } | null>(null);
+  const [renameModalOpened, { open: openRenameModal, close: closeRenameModal }] =
+    useDisclosure(false);
+  const [selectedTenant, setSelectedTenant] = useState<{ id: bigint; name: string; version: number } | null>(null);
   const [joinCode, setJoinCode] = useState('');
   const [joinError, setJoinError] = useState<string | null>(null);
 
@@ -261,9 +350,14 @@ export function SettingsPage() {
     queryClient.invalidateQueries({ queryKey: ['octoback.tenants.v1.Service'] });
   };
 
-  const handleInvite = (tenantId: bigint, tenantName: string) => {
-    setSelectedTenant({ id: tenantId, name: tenantName });
+  const handleInvite = (tenantId: bigint, tenantName: string, tenantVersion: number) => {
+    setSelectedTenant({ id: tenantId, name: tenantName, version: tenantVersion });
     openInviteModal();
+  };
+
+  const handleRename = (tenantId: bigint, tenantName: string, tenantVersion: number) => {
+    setSelectedTenant({ id: tenantId, name: tenantName, version: tenantVersion });
+    openRenameModal();
   };
 
   const handleJoin = async () => {
@@ -394,7 +488,8 @@ export function SettingsPage() {
                           leaveTenantMutation.variables?.tenantId === tenant.id
                         }
                         onLeave={() => handleLeave(tenant.id)}
-                        onInvite={() => handleInvite(tenant.id, tenant.name)}
+                        onInvite={() => handleInvite(tenant.id, tenant.name, tenant.version)}
+                        onRename={() => handleRename(tenant.id, tenant.name, tenant.version)}
                       />
                     );
                   })}
@@ -457,6 +552,18 @@ export function SettingsPage() {
             onClose={closeInviteModal}
             tenantId={selectedTenant.id}
             tenantName={selectedTenant.name}
+          />
+        )}
+
+        {/* Rename Modal */}
+        {selectedTenant && (
+          <RenameModal
+            opened={renameModalOpened}
+            onClose={closeRenameModal}
+            tenantId={selectedTenant.id}
+            tenantName={selectedTenant.name}
+            tenantVersion={selectedTenant.version}
+            onSuccess={() => queryClient.invalidateQueries({ queryKey: ['octoback.tenants.v1.Service'] })}
           />
         )}
       </Box>
