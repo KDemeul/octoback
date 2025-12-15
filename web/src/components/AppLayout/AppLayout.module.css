@@ -257,8 +257,50 @@
     display: flex;
   }
 
+  .pageHeader {
+    padding: 12px 0;
+  }
+
   .pageTitle {
-    font-size: 1.35rem;
+    font-size: 1.15rem;
+  }
+
+  .backButton {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+}
+
+/* Extra compact for small phones */
+@media (max-width: 480px) {
+  .pageHeader {
+    padding: 8px 0;
+  }
+
+  .pageTitle {
+    font-size: 1.05rem;
+  }
+
+  .backButton {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Reduce content padding on mobile */
+@media (max-width: 768px) {
+  .content > div {
+    padding-top: var(--mantine-spacing-md);
+    padding-bottom: var(--mantine-spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .content > div {
+    padding-top: var(--mantine-spacing-sm);
+    padding-bottom: var(--mantine-spacing-sm);
   }
 }
 
