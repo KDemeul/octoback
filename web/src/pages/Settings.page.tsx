@@ -24,7 +24,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { AppLayout } from '../components/AppLayout/AppLayout';
 import {
-  useAcceptInvitation,
   useCreateInvitation,
   useLeaveTenant,
   useMyTenants,
@@ -177,6 +176,27 @@ function TenantCard({
   );
 }
 
+function LinkIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function InviteModal({
   opened,
   onClose,
@@ -189,60 +209,77 @@ function InviteModal({
   tenantName: string;
 }) {
   const createInvitationMutation = useCreateInvitation();
-  const [inviteCode, setInviteCode] = useState<string | null>(null);
+  const [inviteLink, setInviteLink] = useState<string | null>(null);
 
   const handleCreate = async () => {
     const result = await createInvitationMutation.mutateAsync({ tenantId });
     if (result.invitation?.inviteCode) {
-      setInviteCode(result.invitation.inviteCode);
+      // Generate the full invite link
+      const link = `${window.location.origin}/invite/${result.invitation.inviteCode}`;
+      setInviteLink(link);
     }
   };
 
   const handleClose = () => {
-    setInviteCode(null);
+    setInviteLink(null);
     onClose();
   };
 
   return (
     <Modal opened={opened} onClose={handleClose} title={`Inviter dans "${tenantName}"`} centered>
       <Stack gap="md">
-        {!inviteCode ? (
+        {!inviteLink ? (
           <>
             <Text size="sm" c="dimmed">
-              Créez un code d'invitation à partager avec la personne que vous souhaitez inviter.
-              Le code expire après 7 jours.
+              Créez un lien d'invitation à partager avec la personne que vous souhaitez inviter.
+              Le lien expire après 7 jours et ne peut être utilisé qu'une seule fois.
             </Text>
             <Button
               color="coral"
               onClick={handleCreate}
               loading={createInvitationMutation.isPending}
               fullWidth
+              leftSection={<LinkIcon />}
             >
-              Créer un code d'invitation
+              Créer un lien d'invitation
             </Button>
           </>
         ) : (
           <>
             <Text size="sm" c="dimmed">
-              Partagez ce code avec la personne que vous souhaitez inviter :
+              Partagez ce lien avec la personne que vous souhaitez inviter :
             </Text>
             <Card withBorder p="md">
-              <Group justify="space-between">
-                <Text fw={600} size="lg" ff="monospace">
-                  {inviteCode}
+              <Stack gap="sm">
+                <Text
+                  size="sm"
+                  ff="monospace"
+                  style={{
+                    wordBreak: 'break-all',
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {inviteLink}
                 </Text>
-                <CopyButton value={inviteCode}>
+                <CopyButton value={inviteLink}>
                   {({ copied, copy }) => (
-                    <Tooltip label={copied ? 'Copié !' : 'Copier'}>
-                      <ActionIcon color={copied ? 'teal' : 'coral'} variant="light" onClick={copy}>
-                        {copied ? <CheckIcon /> : <CopyIcon />}
-                      </ActionIcon>
-                    </Tooltip>
+                    <Button
+                      color={copied ? 'teal' : 'coral'}
+                      variant="light"
+                      onClick={copy}
+                      fullWidth
+                      leftSection={copied ? <CheckIcon /> : <CopyIcon />}
+                    >
+                      {copied ? 'Lien copié !' : 'Copier le lien'}
+                    </Button>
                   )}
                 </CopyButton>
-              </Group>
+              </Stack>
             </Card>
-            <Button variant="light" color="coral" onClick={handleClose} fullWidth>
+            <Text size="xs" c="dimmed" ta="center">
+              La personne invitée pourra cliquer sur ce lien pour rejoindre automatiquement votre foyer.
+            </Text>
+            <Button variant="subtle" color="gray" onClick={handleClose} fullWidth>
               Fermer
             </Button>
           </>
@@ -335,15 +372,12 @@ export function SettingsPage() {
 
   const { data: myTenantsData, isLoading: myTenantsLoading, error: tenantsError } = useMyTenants();
   const leaveTenantMutation = useLeaveTenant();
-  const acceptInvitationMutation = useAcceptInvitation();
 
   const [inviteModalOpened, { open: openInviteModal, close: closeInviteModal }] =
     useDisclosure(false);
   const [renameModalOpened, { open: openRenameModal, close: closeRenameModal }] =
     useDisclosure(false);
   const [selectedTenant, setSelectedTenant] = useState<{ id: bigint; name: string; version: number } | null>(null);
-  const [joinCode, setJoinCode] = useState('');
-  const [joinError, setJoinError] = useState<string | null>(null);
 
   const handleLeave = async (tenantId: bigint) => {
     await leaveTenantMutation.mutateAsync({ tenantId });
@@ -358,30 +392,6 @@ export function SettingsPage() {
   const handleRename = (tenantId: bigint, tenantName: string, tenantVersion: number) => {
     setSelectedTenant({ id: tenantId, name: tenantName, version: tenantVersion });
     openRenameModal();
-  };
-
-  const handleJoin = async () => {
-    if (!joinCode.trim()) {
-      return;
-    }
-    setJoinError(null);
-    try {
-      await acceptInvitationMutation.mutateAsync({ inviteCode: joinCode.trim() });
-      setJoinCode('');
-      queryClient.invalidateQueries({ queryKey: ['octoback.tenants.v1.Service'] });
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        if (error.message.includes('not found')) {
-          setJoinError('Code d\'invitation invalide ou expiré');
-        } else if (error.message.includes('already')) {
-          setJoinError('Vous êtes déjà membre de ce foyer');
-        } else if (error.message.includes('expired')) {
-          setJoinError('Ce code d\'invitation a expiré');
-        } else {
-          setJoinError('Une erreur est survenue');
-        }
-      }
-    }
   };
 
   // Create a map of tenant ID to membership for quick lookup
@@ -508,39 +518,6 @@ export function SettingsPage() {
                   </Stack>
                 </Card>
               )}
-            </Stack>
-
-            <Divider />
-
-            {/* Join with invitation code */}
-            <Stack gap="md">
-              <Stack gap={4}>
-                <Title order={4}>Rejoindre un foyer</Title>
-                <Text c="dimmed" size="sm">
-                  Entrez un code d'invitation pour rejoindre un foyer existant.
-                </Text>
-              </Stack>
-
-              <Group>
-                <TextInput
-                  placeholder="Code d'invitation"
-                  value={joinCode}
-                  onChange={(e) => {
-                    setJoinCode(e.currentTarget.value);
-                    setJoinError(null);
-                  }}
-                  style={{ flex: 1 }}
-                  error={joinError}
-                />
-                <Button
-                  color="coral"
-                  onClick={handleJoin}
-                  loading={acceptInvitationMutation.isPending}
-                  disabled={!joinCode.trim()}
-                >
-                  Rejoindre
-                </Button>
-              </Group>
             </Stack>
           </Stack>
         </Box>

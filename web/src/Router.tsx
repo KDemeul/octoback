@@ -8,11 +8,16 @@ import { RecipeDetailPage } from './pages/RecipeDetail.page';
 import { MealPlanPage } from './pages/MealPlan.page';
 import { StaplesPage } from './pages/Staples.page';
 import { StapleListDetailPage } from './pages/StapleListDetail.page';
+import { InviteAcceptPage } from './pages/InviteAccept.page';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <HomePage />,
+  },
+  {
+    path: '/invite/:code',
+    element: <InviteAcceptPage />,
   },
   {
     path: '/settings',
