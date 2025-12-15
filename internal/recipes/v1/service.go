@@ -391,7 +391,7 @@ func (s *Service) ImportRecipeFromWeb(ctx context.Context, r *connect.Request[mo
 
 	return connect.NewResponse(&models.ImportRecipeFromWebResponse{
 		Name:            recipe.Name,
-		Description:     recipe.Description,
+		Description:     r.Msg.GetUrl(),
 		Servings:        recipe.Servings,
 		PrepTimeMinutes: recipe.PrepTimeMinutes,
 		CookTimeMinutes: recipe.CookTimeMinutes,

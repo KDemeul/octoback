@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import {
   ActionIcon,
   Alert,
+  Anchor,
   Badge,
   Box,
   Button,
@@ -129,6 +130,40 @@ function formatTime(minutes: number): string {
   return mins > 0 ? `${hours}h ${mins}min` : `${hours}h`;
 }
 
+const URL_REGEX = /https?:\/\/[^\s<>"{}|\\^`[\]]+/g;
+
+function TextWithLinks({ text }: { text: string }) {
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = URL_REGEX.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    const url = match[0];
+    parts.push(
+      <Anchor
+        key={match.index}
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={(e) => e.stopPropagation()}
+        size="sm"
+      >
+        {url}
+      </Anchor>
+    );
+    lastIndex = match.index + url.length;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return <>{parts}</>;
+}
+
 interface RecipeCardProps {
   recipe: Recipe;
   onDelete: (id: bigint) => void;
@@ -192,7 +227,7 @@ function RecipeCard({ recipe, onDelete, delay }: RecipeCardProps) {
         <Text className={classes.cardTitle}>{recipe.name}</Text>
         {recipe.description && (
           <Text className={classes.cardDescription} lineClamp={2}>
-            {recipe.description}
+            <TextWithLinks text={recipe.description} />
           </Text>
         )}
         <Group gap="md" mt="xs">

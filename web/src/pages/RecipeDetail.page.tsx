@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import {
   ActionIcon,
+  Anchor,
   Badge,
   Box,
   Button,
@@ -80,6 +81,33 @@ function ServingsIcon() {
       <path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </svg>
   );
+}
+
+const URL_REGEX = /https?:\/\/[^\s<>"{}|\\^`[\]]+/g;
+
+function TextWithLinks({ text }: { text: string }) {
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = URL_REGEX.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    const url = match[0];
+    parts.push(
+      <Anchor key={match.index} href={url} target="_blank" rel="noopener noreferrer">
+        {url}
+      </Anchor>
+    );
+    lastIndex = match.index + url.length;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return <>{parts}</>;
 }
 
 function IngredientIcon() {
@@ -372,7 +400,7 @@ export function RecipeDetailPage() {
                 </Title>
                 {recipe.description && (
                   <Text c="dimmed" mt="xs" lh={1.6}>
-                    {recipe.description}
+                    <TextWithLinks text={recipe.description} />
                   </Text>
                 )}
                 <Group gap="lg" mt="md">
