@@ -20,67 +20,73 @@ function OctopusLogo({ size = 48 }: { size?: number }) {
     <svg
       width={size}
       height={size}
-      viewBox="0 0 64 64"
+      viewBox="0 0 100 100"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Tentacles */}
-      <path
-        d="M10 44C10 44 6 54 10 58C12 60 16 58 16 54C16 50 14 46 18 42"
-        stroke="currentColor"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M18 46C18 46 16 56 20 60C22 62 26 60 26 56C26 52 24 48 26 44"
-        stroke="currentColor"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M38 44C38 44 40 56 44 60C46 62 42 62 40 58C38 54 40 50 38 44"
-        stroke="currentColor"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M46 42C46 42 50 54 54 58C56 60 52 60 50 56C48 52 50 46 46 42"
-        stroke="currentColor"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
+      {/* Left outer tentacle */}
+      <path d="M28 48 Q12 52 8 65 Q5 75 12 78 Q18 80 20 72 Q22 64 28 55" fill="currentColor" stroke="#1e2a3a" strokeWidth="1.5"/>
+      <ellipse cx="14" cy="68" rx="2.5" ry="1.8" fill="#f5a89a"/>
+      <ellipse cx="18" cy="74" rx="2" ry="1.5" fill="#f5a89a"/>
+      
+      {/* Left inner tentacle */}
+      <path d="M35 55 Q25 62 22 75 Q20 85 28 87 Q35 88 36 78 Q37 68 38 58" fill="currentColor" stroke="#1e2a3a" strokeWidth="1.5"/>
+      <ellipse cx="26" cy="76" rx="2.5" ry="1.8" fill="#f5a89a"/>
+      <ellipse cx="30" cy="82" rx="2" ry="1.5" fill="#f5a89a"/>
 
-      {/* Chef hat - puffy top with outline for visibility */}
-      <ellipse cx="32" cy="12" rx="10" ry="5" fill="white" stroke="#ddd" strokeWidth="1" />
-      <circle cx="24" cy="10" r="5" fill="white" stroke="#ddd" strokeWidth="1" />
-      <circle cx="40" cy="10" r="5" fill="white" stroke="#ddd" strokeWidth="1" />
-      <circle cx="32" cy="7" r="5" fill="white" stroke="#ddd" strokeWidth="1" />
-      {/* Hat band */}
-      <rect x="22" y="14" width="20" height="5" rx="1" fill="white" stroke="#ddd" strokeWidth="1" />
+      {/* Right outer tentacle */}
+      <path d="M72 48 Q88 52 92 65 Q95 75 88 78 Q82 80 80 72 Q78 64 72 55" fill="currentColor" stroke="#1e2a3a" strokeWidth="1.5"/>
+      <ellipse cx="86" cy="68" rx="2.5" ry="1.8" fill="#f5a89a"/>
+      <ellipse cx="82" cy="74" rx="2" ry="1.5" fill="#f5a89a"/>
 
-      {/* Head */}
-      <ellipse cx="32" cy="32" rx="16" ry="14" fill="currentColor" />
+      {/* Right inner tentacle */}
+      <path d="M65 55 Q75 62 78 75 Q80 85 72 87 Q65 88 64 78 Q63 68 62 58" fill="currentColor" stroke="#1e2a3a" strokeWidth="1.5"/>
+      <ellipse cx="74" cy="76" rx="2.5" ry="1.8" fill="#f5a89a"/>
+      <ellipse cx="70" cy="82" rx="2" ry="1.5" fill="#f5a89a"/>
 
-      {/* Eyes */}
-      <ellipse cx="26" cy="30" rx="4" ry="5" fill="white" />
-      <ellipse cx="38" cy="30" rx="4" ry="5" fill="white" />
-      <circle cx="27" cy="31" r="2" fill="#2d3436" />
-      <circle cx="39" cy="31" r="2" fill="#2d3436" />
-      <circle cx="27.5" cy="30" r="0.8" fill="white" />
-      <circle cx="39.5" cy="30" r="0.8" fill="white" />
+      {/* Bottom left tentacle */}
+      <path d="M42 58 Q38 70 40 82 Q42 92 50 90 Q56 88 52 78 Q48 68 46 58" fill="currentColor" stroke="#1e2a3a" strokeWidth="1.5"/>
+      <ellipse cx="44" cy="78" rx="2.5" ry="1.8" fill="#f5a89a"/>
+      <ellipse cx="48" cy="85" rx="2" ry="1.5" fill="#f5a89a"/>
+
+      {/* Bottom right tentacle */}
+      <path d="M58 58 Q62 70 60 82 Q58 92 50 90 Q44 88 48 78 Q52 68 54 58" fill="currentColor" stroke="#1e2a3a" strokeWidth="1.5"/>
+      <ellipse cx="56" cy="78" rx="2.5" ry="1.8" fill="#f5a89a"/>
+      <ellipse cx="52" cy="85" rx="2" ry="1.5" fill="#f5a89a"/>
+
+      {/* Octopus head */}
+      <ellipse cx="50" cy="42" rx="24" ry="22" fill="currentColor" stroke="#1e2a3a" strokeWidth="1.5"/>
+
+      {/* Eyes - white part */}
+      <ellipse cx="40" cy="42" rx="7" ry="8" fill="white" stroke="#1e2a3a" strokeWidth="1"/>
+      <ellipse cx="60" cy="42" rx="7" ry="8" fill="white" stroke="#1e2a3a" strokeWidth="1"/>
+
+      {/* Eyes - pupils */}
+      <circle cx="41" cy="43" r="3.5" fill="#1e2a3a"/>
+      <circle cx="61" cy="43" r="3.5" fill="#1e2a3a"/>
+
+      {/* Eye shine */}
+      <circle cx="43" cy="41" r="1.2" fill="white"/>
+      <circle cx="63" cy="41" r="1.2" fill="white"/>
 
       {/* Smile */}
-      <path
-        d="M27 37 Q32 42 37 37"
-        stroke="#2d3436"
-        strokeWidth="2"
-        strokeLinecap="round"
-        fill="none"
-      />
+      <path d="M42 52 Q50 58 58 52" stroke="#1e2a3a" strokeWidth="2" strokeLinecap="round" fill="none"/>
 
       {/* Rosy cheeks */}
-      <ellipse cx="20" cy="34" rx="2.5" ry="1.5" fill="#f68f71" opacity="0.5" />
-      <ellipse cx="44" cy="34" rx="2.5" ry="1.5" fill="#f68f71" opacity="0.5" />
+      <ellipse cx="30" cy="48" rx="4" ry="2.5" fill="#f5a89a" opacity="0.7"/>
+      <ellipse cx="70" cy="48" rx="4" ry="2.5" fill="#f5a89a" opacity="0.7"/>
+
+      {/* Chef hat - puffy top */}
+      <ellipse cx="50" cy="18" rx="14" ry="8" fill="white" stroke="#1e2a3a" strokeWidth="1"/>
+      <circle cx="38" cy="14" r="8" fill="white" stroke="#1e2a3a" strokeWidth="1"/>
+      <circle cx="62" cy="14" r="8" fill="white" stroke="#1e2a3a" strokeWidth="1"/>
+      <circle cx="50" cy="10" r="8" fill="white" stroke="#1e2a3a" strokeWidth="1"/>
+
+      {/* Hat band */}
+      <rect x="36" y="22" width="28" height="6" rx="1" fill="white" stroke="#1e2a3a" strokeWidth="1"/>
+
+      {/* Cover hat seams */}
+      <ellipse cx="50" cy="16" rx="10" ry="6" fill="white"/>
     </svg>
   );
 }
