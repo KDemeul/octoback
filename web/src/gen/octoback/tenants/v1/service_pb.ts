@@ -172,6 +172,102 @@ export class GetMyTenantsResponse extends Message<GetMyTenantsResponse> {
 }
 
 /**
+ * UpdateTenant
+ *
+ * @generated from message octoback.tenants.v1.UpdateTenantRequest
+ */
+export class UpdateTenantRequest extends Message<UpdateTenantRequest> {
+  /**
+   * The ID of the tenant to update.
+   *
+   * @generated from field: int64 tenant_id = 1;
+   */
+  tenantId = protoInt64.zero;
+
+  /**
+   * The new display name for the tenant.
+   *
+   * @generated from field: string name = 2;
+   */
+  name = "";
+
+  /**
+   * The current version of the tenant (for optimistic locking).
+   *
+   * @generated from field: int32 version = 3;
+   */
+  version = 0;
+
+  constructor(data?: PartialMessage<UpdateTenantRequest>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "octoback.tenants.v1.UpdateTenantRequest";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "tenant_id", kind: "scalar", T: 3 /* ScalarType.INT64 */ },
+    { no: 2, name: "name", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "version", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): UpdateTenantRequest {
+    return new UpdateTenantRequest().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): UpdateTenantRequest {
+    return new UpdateTenantRequest().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): UpdateTenantRequest {
+    return new UpdateTenantRequest().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: UpdateTenantRequest | PlainMessage<UpdateTenantRequest> | undefined, b: UpdateTenantRequest | PlainMessage<UpdateTenantRequest> | undefined): boolean {
+    return proto3.util.equals(UpdateTenantRequest, a, b);
+  }
+}
+
+/**
+ * @generated from message octoback.tenants.v1.UpdateTenantResponse
+ */
+export class UpdateTenantResponse extends Message<UpdateTenantResponse> {
+  /**
+   * The updated tenant.
+   *
+   * @generated from field: octoback.tenants.v1.Tenant tenant = 1;
+   */
+  tenant?: Tenant;
+
+  constructor(data?: PartialMessage<UpdateTenantResponse>) {
+    super();
+    proto3.util.initPartial(data, this);
+  }
+
+  static readonly runtime: typeof proto3 = proto3;
+  static readonly typeName = "octoback.tenants.v1.UpdateTenantResponse";
+  static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "tenant", kind: "message", T: Tenant },
+  ]);
+
+  static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): UpdateTenantResponse {
+    return new UpdateTenantResponse().fromBinary(bytes, options);
+  }
+
+  static fromJson(jsonValue: JsonValue, options?: Partial<JsonReadOptions>): UpdateTenantResponse {
+    return new UpdateTenantResponse().fromJson(jsonValue, options);
+  }
+
+  static fromJsonString(jsonString: string, options?: Partial<JsonReadOptions>): UpdateTenantResponse {
+    return new UpdateTenantResponse().fromJsonString(jsonString, options);
+  }
+
+  static equals(a: UpdateTenantResponse | PlainMessage<UpdateTenantResponse> | undefined, b: UpdateTenantResponse | PlainMessage<UpdateTenantResponse> | undefined): boolean {
+    return proto3.util.equals(UpdateTenantResponse, a, b);
+  }
+}
+
+/**
  * LeaveTenant
  *
  * @generated from message octoback.tenants.v1.LeaveTenantRequest

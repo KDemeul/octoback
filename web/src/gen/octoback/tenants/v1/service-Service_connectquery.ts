@@ -4,7 +4,7 @@
 // @ts-nocheck
 
 import { MethodKind } from "@bufbuild/protobuf";
-import { AcceptInvitationRequest, AcceptInvitationResponse, CreateInvitationRequest, CreateInvitationResponse, EnsureUserTenantRequest, EnsureUserTenantResponse, GetMyTenantsRequest, GetMyTenantsResponse, LeaveTenantRequest, LeaveTenantResponse, ListInvitationsRequest, ListInvitationsResponse, RevokeInvitationRequest, RevokeInvitationResponse } from "./service_pb.js";
+import { AcceptInvitationRequest, AcceptInvitationResponse, CreateInvitationRequest, CreateInvitationResponse, EnsureUserTenantRequest, EnsureUserTenantResponse, GetMyTenantsRequest, GetMyTenantsResponse, LeaveTenantRequest, LeaveTenantResponse, ListInvitationsRequest, ListInvitationsResponse, RevokeInvitationRequest, RevokeInvitationResponse, UpdateTenantRequest, UpdateTenantResponse } from "./service_pb.js";
 
 /**
  * EnsureUserTenant ensures the current user has at least one tenant.
@@ -34,6 +34,22 @@ export const getMyTenants = {
   kind: MethodKind.Unary,
   I: GetMyTenantsRequest,
   O: GetMyTenantsResponse,
+  service: {
+    typeName: "octoback.tenants.v1.Service"
+  }
+} as const;
+
+/**
+ * UpdateTenant updates a tenant's details (owner/admin only).
+ *
+ * @generated from rpc octoback.tenants.v1.Service.UpdateTenant
+ */
+export const updateTenant = {
+  localName: "updateTenant",
+  name: "UpdateTenant",
+  kind: MethodKind.Unary,
+  I: UpdateTenantRequest,
+  O: UpdateTenantResponse,
   service: {
     typeName: "octoback.tenants.v1.Service"
   }

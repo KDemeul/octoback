@@ -24,6 +24,63 @@ func (_m *Querier) EXPECT() *Querier_Expecter {
 	return &Querier_Expecter{mock: &_m.Mock}
 }
 
+// CountUserTenants provides a mock function with given fields: ctx, userID
+func (_m *Querier) CountUserTenants(ctx context.Context, userID string) (int64, error) {
+	ret := _m.Called(ctx, userID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CountUserTenants")
+	}
+
+	var r0 int64
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) (int64, error)); ok {
+		return rf(ctx, userID)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string) int64); ok {
+		r0 = rf(ctx, userID)
+	} else {
+		r0 = ret.Get(0).(int64)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, userID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_CountUserTenants_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CountUserTenants'
+type Querier_CountUserTenants_Call struct {
+	*mock.Call
+}
+
+// CountUserTenants is a helper method to define mock.On call
+//   - ctx context.Context
+//   - userID string
+func (_e *Querier_Expecter) CountUserTenants(ctx interface{}, userID interface{}) *Querier_CountUserTenants_Call {
+	return &Querier_CountUserTenants_Call{Call: _e.mock.On("CountUserTenants", ctx, userID)}
+}
+
+func (_c *Querier_CountUserTenants_Call) Run(run func(ctx context.Context, userID string)) *Querier_CountUserTenants_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string))
+	})
+	return _c
+}
+
+func (_c *Querier_CountUserTenants_Call) Return(_a0 int64, _a1 error) *Querier_CountUserTenants_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_CountUserTenants_Call) RunAndReturn(run func(context.Context, string) (int64, error)) *Querier_CountUserTenants_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // CreateGroceryItem provides a mock function with given fields: ctx, arg
 func (_m *Querier) CreateGroceryItem(ctx context.Context, arg v1.CreateGroceryItemParams) (v1.GroceryItem, error) {
 	ret := _m.Called(ctx, arg)
@@ -134,6 +191,120 @@ func (_c *Querier_CreateGroceryList_Call) Return(_a0 v1.GroceryList, _a1 error) 
 }
 
 func (_c *Querier_CreateGroceryList_Call) RunAndReturn(run func(context.Context, v1.CreateGroceryListParams) (v1.GroceryList, error)) *Querier_CreateGroceryList_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// CreateMealPlan provides a mock function with given fields: ctx, arg
+func (_m *Querier) CreateMealPlan(ctx context.Context, arg v1.CreateMealPlanParams) (v1.MealPlan, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreateMealPlan")
+	}
+
+	var r0 v1.MealPlan
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.CreateMealPlanParams) (v1.MealPlan, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.CreateMealPlanParams) v1.MealPlan); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.MealPlan)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.CreateMealPlanParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_CreateMealPlan_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateMealPlan'
+type Querier_CreateMealPlan_Call struct {
+	*mock.Call
+}
+
+// CreateMealPlan is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.CreateMealPlanParams
+func (_e *Querier_Expecter) CreateMealPlan(ctx interface{}, arg interface{}) *Querier_CreateMealPlan_Call {
+	return &Querier_CreateMealPlan_Call{Call: _e.mock.On("CreateMealPlan", ctx, arg)}
+}
+
+func (_c *Querier_CreateMealPlan_Call) Run(run func(ctx context.Context, arg v1.CreateMealPlanParams)) *Querier_CreateMealPlan_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.CreateMealPlanParams))
+	})
+	return _c
+}
+
+func (_c *Querier_CreateMealPlan_Call) Return(_a0 v1.MealPlan, _a1 error) *Querier_CreateMealPlan_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_CreateMealPlan_Call) RunAndReturn(run func(context.Context, v1.CreateMealPlanParams) (v1.MealPlan, error)) *Querier_CreateMealPlan_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// CreateMealPlanEntry provides a mock function with given fields: ctx, arg
+func (_m *Querier) CreateMealPlanEntry(ctx context.Context, arg v1.CreateMealPlanEntryParams) (v1.MealPlanEntry, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreateMealPlanEntry")
+	}
+
+	var r0 v1.MealPlanEntry
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.CreateMealPlanEntryParams) (v1.MealPlanEntry, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.CreateMealPlanEntryParams) v1.MealPlanEntry); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.MealPlanEntry)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.CreateMealPlanEntryParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_CreateMealPlanEntry_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateMealPlanEntry'
+type Querier_CreateMealPlanEntry_Call struct {
+	*mock.Call
+}
+
+// CreateMealPlanEntry is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.CreateMealPlanEntryParams
+func (_e *Querier_Expecter) CreateMealPlanEntry(ctx interface{}, arg interface{}) *Querier_CreateMealPlanEntry_Call {
+	return &Querier_CreateMealPlanEntry_Call{Call: _e.mock.On("CreateMealPlanEntry", ctx, arg)}
+}
+
+func (_c *Querier_CreateMealPlanEntry_Call) Run(run func(ctx context.Context, arg v1.CreateMealPlanEntryParams)) *Querier_CreateMealPlanEntry_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.CreateMealPlanEntryParams))
+	})
+	return _c
+}
+
+func (_c *Querier_CreateMealPlanEntry_Call) Return(_a0 v1.MealPlanEntry, _a1 error) *Querier_CreateMealPlanEntry_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_CreateMealPlanEntry_Call) RunAndReturn(run func(context.Context, v1.CreateMealPlanEntryParams) (v1.MealPlanEntry, error)) *Querier_CreateMealPlanEntry_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -252,6 +423,120 @@ func (_c *Querier_CreateRecipeIngredient_Call) RunAndReturn(run func(context.Con
 	return _c
 }
 
+// CreateStapleItem provides a mock function with given fields: ctx, arg
+func (_m *Querier) CreateStapleItem(ctx context.Context, arg v1.CreateStapleItemParams) (v1.StapleItem, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreateStapleItem")
+	}
+
+	var r0 v1.StapleItem
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.CreateStapleItemParams) (v1.StapleItem, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.CreateStapleItemParams) v1.StapleItem); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.StapleItem)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.CreateStapleItemParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_CreateStapleItem_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateStapleItem'
+type Querier_CreateStapleItem_Call struct {
+	*mock.Call
+}
+
+// CreateStapleItem is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.CreateStapleItemParams
+func (_e *Querier_Expecter) CreateStapleItem(ctx interface{}, arg interface{}) *Querier_CreateStapleItem_Call {
+	return &Querier_CreateStapleItem_Call{Call: _e.mock.On("CreateStapleItem", ctx, arg)}
+}
+
+func (_c *Querier_CreateStapleItem_Call) Run(run func(ctx context.Context, arg v1.CreateStapleItemParams)) *Querier_CreateStapleItem_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.CreateStapleItemParams))
+	})
+	return _c
+}
+
+func (_c *Querier_CreateStapleItem_Call) Return(_a0 v1.StapleItem, _a1 error) *Querier_CreateStapleItem_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_CreateStapleItem_Call) RunAndReturn(run func(context.Context, v1.CreateStapleItemParams) (v1.StapleItem, error)) *Querier_CreateStapleItem_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// CreateStapleList provides a mock function with given fields: ctx, arg
+func (_m *Querier) CreateStapleList(ctx context.Context, arg v1.CreateStapleListParams) (v1.StapleList, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreateStapleList")
+	}
+
+	var r0 v1.StapleList
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.CreateStapleListParams) (v1.StapleList, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.CreateStapleListParams) v1.StapleList); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.StapleList)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.CreateStapleListParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_CreateStapleList_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateStapleList'
+type Querier_CreateStapleList_Call struct {
+	*mock.Call
+}
+
+// CreateStapleList is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.CreateStapleListParams
+func (_e *Querier_Expecter) CreateStapleList(ctx interface{}, arg interface{}) *Querier_CreateStapleList_Call {
+	return &Querier_CreateStapleList_Call{Call: _e.mock.On("CreateStapleList", ctx, arg)}
+}
+
+func (_c *Querier_CreateStapleList_Call) Run(run func(ctx context.Context, arg v1.CreateStapleListParams)) *Querier_CreateStapleList_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.CreateStapleListParams))
+	})
+	return _c
+}
+
+func (_c *Querier_CreateStapleList_Call) Return(_a0 v1.StapleList, _a1 error) *Querier_CreateStapleList_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_CreateStapleList_Call) RunAndReturn(run func(context.Context, v1.CreateStapleListParams) (v1.StapleList, error)) *Querier_CreateStapleList_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // CreateTenant provides a mock function with given fields: ctx, name
 func (_m *Querier) CreateTenant(ctx context.Context, name string) (v1.Tenant, error) {
 	ret := _m.Called(ctx, name)
@@ -309,6 +594,63 @@ func (_c *Querier_CreateTenant_Call) RunAndReturn(run func(context.Context, stri
 	return _c
 }
 
+// CreateTenantInvitation provides a mock function with given fields: ctx, arg
+func (_m *Querier) CreateTenantInvitation(ctx context.Context, arg v1.CreateTenantInvitationParams) (v1.TenantInvitation, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreateTenantInvitation")
+	}
+
+	var r0 v1.TenantInvitation
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.CreateTenantInvitationParams) (v1.TenantInvitation, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.CreateTenantInvitationParams) v1.TenantInvitation); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.TenantInvitation)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.CreateTenantInvitationParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_CreateTenantInvitation_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateTenantInvitation'
+type Querier_CreateTenantInvitation_Call struct {
+	*mock.Call
+}
+
+// CreateTenantInvitation is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.CreateTenantInvitationParams
+func (_e *Querier_Expecter) CreateTenantInvitation(ctx interface{}, arg interface{}) *Querier_CreateTenantInvitation_Call {
+	return &Querier_CreateTenantInvitation_Call{Call: _e.mock.On("CreateTenantInvitation", ctx, arg)}
+}
+
+func (_c *Querier_CreateTenantInvitation_Call) Run(run func(ctx context.Context, arg v1.CreateTenantInvitationParams)) *Querier_CreateTenantInvitation_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.CreateTenantInvitationParams))
+	})
+	return _c
+}
+
+func (_c *Querier_CreateTenantInvitation_Call) Return(_a0 v1.TenantInvitation, _a1 error) *Querier_CreateTenantInvitation_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_CreateTenantInvitation_Call) RunAndReturn(run func(context.Context, v1.CreateTenantInvitationParams) (v1.TenantInvitation, error)) *Querier_CreateTenantInvitation_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // CreateTenantMember provides a mock function with given fields: ctx, arg
 func (_m *Querier) CreateTenantMember(ctx context.Context, arg v1.CreateTenantMemberParams) (v1.TenantMember, error) {
 	ret := _m.Called(ctx, arg)
@@ -362,6 +704,52 @@ func (_c *Querier_CreateTenantMember_Call) Return(_a0 v1.TenantMember, _a1 error
 }
 
 func (_c *Querier_CreateTenantMember_Call) RunAndReturn(run func(context.Context, v1.CreateTenantMemberParams) (v1.TenantMember, error)) *Querier_CreateTenantMember_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// DeleteExpiredInvitations provides a mock function with given fields: ctx
+func (_m *Querier) DeleteExpiredInvitations(ctx context.Context) error {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteExpiredInvitations")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context) error); ok {
+		r0 = rf(ctx)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// Querier_DeleteExpiredInvitations_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DeleteExpiredInvitations'
+type Querier_DeleteExpiredInvitations_Call struct {
+	*mock.Call
+}
+
+// DeleteExpiredInvitations is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *Querier_Expecter) DeleteExpiredInvitations(ctx interface{}) *Querier_DeleteExpiredInvitations_Call {
+	return &Querier_DeleteExpiredInvitations_Call{Call: _e.mock.On("DeleteExpiredInvitations", ctx)}
+}
+
+func (_c *Querier_DeleteExpiredInvitations_Call) Run(run func(ctx context.Context)) *Querier_DeleteExpiredInvitations_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *Querier_DeleteExpiredInvitations_Call) Return(_a0 error) *Querier_DeleteExpiredInvitations_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *Querier_DeleteExpiredInvitations_Call) RunAndReturn(run func(context.Context) error) *Querier_DeleteExpiredInvitations_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -480,6 +868,177 @@ func (_c *Querier_DeleteGroceryList_Call) RunAndReturn(run func(context.Context,
 	return _c
 }
 
+// DeleteMealPlan provides a mock function with given fields: ctx, arg
+func (_m *Querier) DeleteMealPlan(ctx context.Context, arg v1.DeleteMealPlanParams) (v1.MealPlan, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteMealPlan")
+	}
+
+	var r0 v1.MealPlan
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.DeleteMealPlanParams) (v1.MealPlan, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.DeleteMealPlanParams) v1.MealPlan); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.MealPlan)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.DeleteMealPlanParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_DeleteMealPlan_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DeleteMealPlan'
+type Querier_DeleteMealPlan_Call struct {
+	*mock.Call
+}
+
+// DeleteMealPlan is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.DeleteMealPlanParams
+func (_e *Querier_Expecter) DeleteMealPlan(ctx interface{}, arg interface{}) *Querier_DeleteMealPlan_Call {
+	return &Querier_DeleteMealPlan_Call{Call: _e.mock.On("DeleteMealPlan", ctx, arg)}
+}
+
+func (_c *Querier_DeleteMealPlan_Call) Run(run func(ctx context.Context, arg v1.DeleteMealPlanParams)) *Querier_DeleteMealPlan_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.DeleteMealPlanParams))
+	})
+	return _c
+}
+
+func (_c *Querier_DeleteMealPlan_Call) Return(_a0 v1.MealPlan, _a1 error) *Querier_DeleteMealPlan_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_DeleteMealPlan_Call) RunAndReturn(run func(context.Context, v1.DeleteMealPlanParams) (v1.MealPlan, error)) *Querier_DeleteMealPlan_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// DeleteMealPlanEntry provides a mock function with given fields: ctx, id
+func (_m *Querier) DeleteMealPlanEntry(ctx context.Context, id int64) (v1.MealPlanEntry, error) {
+	ret := _m.Called(ctx, id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteMealPlanEntry")
+	}
+
+	var r0 v1.MealPlanEntry
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64) (v1.MealPlanEntry, error)); ok {
+		return rf(ctx, id)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int64) v1.MealPlanEntry); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Get(0).(v1.MealPlanEntry)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_DeleteMealPlanEntry_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DeleteMealPlanEntry'
+type Querier_DeleteMealPlanEntry_Call struct {
+	*mock.Call
+}
+
+// DeleteMealPlanEntry is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id int64
+func (_e *Querier_Expecter) DeleteMealPlanEntry(ctx interface{}, id interface{}) *Querier_DeleteMealPlanEntry_Call {
+	return &Querier_DeleteMealPlanEntry_Call{Call: _e.mock.On("DeleteMealPlanEntry", ctx, id)}
+}
+
+func (_c *Querier_DeleteMealPlanEntry_Call) Run(run func(ctx context.Context, id int64)) *Querier_DeleteMealPlanEntry_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64))
+	})
+	return _c
+}
+
+func (_c *Querier_DeleteMealPlanEntry_Call) Return(_a0 v1.MealPlanEntry, _a1 error) *Querier_DeleteMealPlanEntry_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_DeleteMealPlanEntry_Call) RunAndReturn(run func(context.Context, int64) (v1.MealPlanEntry, error)) *Querier_DeleteMealPlanEntry_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// DeleteMealPlanEntryByDay provides a mock function with given fields: ctx, arg
+func (_m *Querier) DeleteMealPlanEntryByDay(ctx context.Context, arg v1.DeleteMealPlanEntryByDayParams) (v1.MealPlanEntry, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteMealPlanEntryByDay")
+	}
+
+	var r0 v1.MealPlanEntry
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.DeleteMealPlanEntryByDayParams) (v1.MealPlanEntry, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.DeleteMealPlanEntryByDayParams) v1.MealPlanEntry); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.MealPlanEntry)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.DeleteMealPlanEntryByDayParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_DeleteMealPlanEntryByDay_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DeleteMealPlanEntryByDay'
+type Querier_DeleteMealPlanEntryByDay_Call struct {
+	*mock.Call
+}
+
+// DeleteMealPlanEntryByDay is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.DeleteMealPlanEntryByDayParams
+func (_e *Querier_Expecter) DeleteMealPlanEntryByDay(ctx interface{}, arg interface{}) *Querier_DeleteMealPlanEntryByDay_Call {
+	return &Querier_DeleteMealPlanEntryByDay_Call{Call: _e.mock.On("DeleteMealPlanEntryByDay", ctx, arg)}
+}
+
+func (_c *Querier_DeleteMealPlanEntryByDay_Call) Run(run func(ctx context.Context, arg v1.DeleteMealPlanEntryByDayParams)) *Querier_DeleteMealPlanEntryByDay_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.DeleteMealPlanEntryByDayParams))
+	})
+	return _c
+}
+
+func (_c *Querier_DeleteMealPlanEntryByDay_Call) Return(_a0 v1.MealPlanEntry, _a1 error) *Querier_DeleteMealPlanEntryByDay_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_DeleteMealPlanEntryByDay_Call) RunAndReturn(run func(context.Context, v1.DeleteMealPlanEntryByDayParams) (v1.MealPlanEntry, error)) *Querier_DeleteMealPlanEntryByDay_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // DeleteRecipe provides a mock function with given fields: ctx, arg
 func (_m *Querier) DeleteRecipe(ctx context.Context, arg v1.DeleteRecipeParams) (v1.Recipe, error) {
 	ret := _m.Called(ctx, arg)
@@ -594,6 +1153,120 @@ func (_c *Querier_DeleteRecipeIngredient_Call) RunAndReturn(run func(context.Con
 	return _c
 }
 
+// DeleteStapleItem provides a mock function with given fields: ctx, id
+func (_m *Querier) DeleteStapleItem(ctx context.Context, id int64) (v1.StapleItem, error) {
+	ret := _m.Called(ctx, id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteStapleItem")
+	}
+
+	var r0 v1.StapleItem
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64) (v1.StapleItem, error)); ok {
+		return rf(ctx, id)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int64) v1.StapleItem); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Get(0).(v1.StapleItem)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_DeleteStapleItem_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DeleteStapleItem'
+type Querier_DeleteStapleItem_Call struct {
+	*mock.Call
+}
+
+// DeleteStapleItem is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id int64
+func (_e *Querier_Expecter) DeleteStapleItem(ctx interface{}, id interface{}) *Querier_DeleteStapleItem_Call {
+	return &Querier_DeleteStapleItem_Call{Call: _e.mock.On("DeleteStapleItem", ctx, id)}
+}
+
+func (_c *Querier_DeleteStapleItem_Call) Run(run func(ctx context.Context, id int64)) *Querier_DeleteStapleItem_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64))
+	})
+	return _c
+}
+
+func (_c *Querier_DeleteStapleItem_Call) Return(_a0 v1.StapleItem, _a1 error) *Querier_DeleteStapleItem_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_DeleteStapleItem_Call) RunAndReturn(run func(context.Context, int64) (v1.StapleItem, error)) *Querier_DeleteStapleItem_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// DeleteStapleList provides a mock function with given fields: ctx, arg
+func (_m *Querier) DeleteStapleList(ctx context.Context, arg v1.DeleteStapleListParams) (v1.StapleList, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteStapleList")
+	}
+
+	var r0 v1.StapleList
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.DeleteStapleListParams) (v1.StapleList, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.DeleteStapleListParams) v1.StapleList); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.StapleList)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.DeleteStapleListParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_DeleteStapleList_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DeleteStapleList'
+type Querier_DeleteStapleList_Call struct {
+	*mock.Call
+}
+
+// DeleteStapleList is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.DeleteStapleListParams
+func (_e *Querier_Expecter) DeleteStapleList(ctx interface{}, arg interface{}) *Querier_DeleteStapleList_Call {
+	return &Querier_DeleteStapleList_Call{Call: _e.mock.On("DeleteStapleList", ctx, arg)}
+}
+
+func (_c *Querier_DeleteStapleList_Call) Run(run func(ctx context.Context, arg v1.DeleteStapleListParams)) *Querier_DeleteStapleList_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.DeleteStapleListParams))
+	})
+	return _c
+}
+
+func (_c *Querier_DeleteStapleList_Call) Return(_a0 v1.StapleList, _a1 error) *Querier_DeleteStapleList_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_DeleteStapleList_Call) RunAndReturn(run func(context.Context, v1.DeleteStapleListParams) (v1.StapleList, error)) *Querier_DeleteStapleList_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // DeleteTenant provides a mock function with given fields: ctx, id
 func (_m *Querier) DeleteTenant(ctx context.Context, id int64) (v1.Tenant, error) {
 	ret := _m.Called(ctx, id)
@@ -647,6 +1320,63 @@ func (_c *Querier_DeleteTenant_Call) Return(_a0 v1.Tenant, _a1 error) *Querier_D
 }
 
 func (_c *Querier_DeleteTenant_Call) RunAndReturn(run func(context.Context, int64) (v1.Tenant, error)) *Querier_DeleteTenant_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// DeleteTenantInvitation provides a mock function with given fields: ctx, id
+func (_m *Querier) DeleteTenantInvitation(ctx context.Context, id int64) (v1.TenantInvitation, error) {
+	ret := _m.Called(ctx, id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteTenantInvitation")
+	}
+
+	var r0 v1.TenantInvitation
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64) (v1.TenantInvitation, error)); ok {
+		return rf(ctx, id)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int64) v1.TenantInvitation); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Get(0).(v1.TenantInvitation)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_DeleteTenantInvitation_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DeleteTenantInvitation'
+type Querier_DeleteTenantInvitation_Call struct {
+	*mock.Call
+}
+
+// DeleteTenantInvitation is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id int64
+func (_e *Querier_Expecter) DeleteTenantInvitation(ctx interface{}, id interface{}) *Querier_DeleteTenantInvitation_Call {
+	return &Querier_DeleteTenantInvitation_Call{Call: _e.mock.On("DeleteTenantInvitation", ctx, id)}
+}
+
+func (_c *Querier_DeleteTenantInvitation_Call) Run(run func(ctx context.Context, id int64)) *Querier_DeleteTenantInvitation_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64))
+	})
+	return _c
+}
+
+func (_c *Querier_DeleteTenantInvitation_Call) Return(_a0 v1.TenantInvitation, _a1 error) *Querier_DeleteTenantInvitation_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_DeleteTenantInvitation_Call) RunAndReturn(run func(context.Context, int64) (v1.TenantInvitation, error)) *Querier_DeleteTenantInvitation_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -879,6 +1609,291 @@ func (_c *Querier_GetGroceryList_Call) RunAndReturn(run func(context.Context, v1
 	return _c
 }
 
+// GetMealPlan provides a mock function with given fields: ctx, tenantID
+func (_m *Querier) GetMealPlan(ctx context.Context, tenantID int64) (v1.MealPlan, error) {
+	ret := _m.Called(ctx, tenantID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetMealPlan")
+	}
+
+	var r0 v1.MealPlan
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64) (v1.MealPlan, error)); ok {
+		return rf(ctx, tenantID)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int64) v1.MealPlan); ok {
+		r0 = rf(ctx, tenantID)
+	} else {
+		r0 = ret.Get(0).(v1.MealPlan)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, tenantID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_GetMealPlan_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetMealPlan'
+type Querier_GetMealPlan_Call struct {
+	*mock.Call
+}
+
+// GetMealPlan is a helper method to define mock.On call
+//   - ctx context.Context
+//   - tenantID int64
+func (_e *Querier_Expecter) GetMealPlan(ctx interface{}, tenantID interface{}) *Querier_GetMealPlan_Call {
+	return &Querier_GetMealPlan_Call{Call: _e.mock.On("GetMealPlan", ctx, tenantID)}
+}
+
+func (_c *Querier_GetMealPlan_Call) Run(run func(ctx context.Context, tenantID int64)) *Querier_GetMealPlan_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64))
+	})
+	return _c
+}
+
+func (_c *Querier_GetMealPlan_Call) Return(_a0 v1.MealPlan, _a1 error) *Querier_GetMealPlan_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_GetMealPlan_Call) RunAndReturn(run func(context.Context, int64) (v1.MealPlan, error)) *Querier_GetMealPlan_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetMealPlanByGroceryList provides a mock function with given fields: ctx, groceryListID
+func (_m *Querier) GetMealPlanByGroceryList(ctx context.Context, groceryListID sql.NullInt64) (v1.MealPlan, error) {
+	ret := _m.Called(ctx, groceryListID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetMealPlanByGroceryList")
+	}
+
+	var r0 v1.MealPlan
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, sql.NullInt64) (v1.MealPlan, error)); ok {
+		return rf(ctx, groceryListID)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, sql.NullInt64) v1.MealPlan); ok {
+		r0 = rf(ctx, groceryListID)
+	} else {
+		r0 = ret.Get(0).(v1.MealPlan)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, sql.NullInt64) error); ok {
+		r1 = rf(ctx, groceryListID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_GetMealPlanByGroceryList_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetMealPlanByGroceryList'
+type Querier_GetMealPlanByGroceryList_Call struct {
+	*mock.Call
+}
+
+// GetMealPlanByGroceryList is a helper method to define mock.On call
+//   - ctx context.Context
+//   - groceryListID sql.NullInt64
+func (_e *Querier_Expecter) GetMealPlanByGroceryList(ctx interface{}, groceryListID interface{}) *Querier_GetMealPlanByGroceryList_Call {
+	return &Querier_GetMealPlanByGroceryList_Call{Call: _e.mock.On("GetMealPlanByGroceryList", ctx, groceryListID)}
+}
+
+func (_c *Querier_GetMealPlanByGroceryList_Call) Run(run func(ctx context.Context, groceryListID sql.NullInt64)) *Querier_GetMealPlanByGroceryList_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(sql.NullInt64))
+	})
+	return _c
+}
+
+func (_c *Querier_GetMealPlanByGroceryList_Call) Return(_a0 v1.MealPlan, _a1 error) *Querier_GetMealPlanByGroceryList_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_GetMealPlanByGroceryList_Call) RunAndReturn(run func(context.Context, sql.NullInt64) (v1.MealPlan, error)) *Querier_GetMealPlanByGroceryList_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetMealPlanEntry provides a mock function with given fields: ctx, arg
+func (_m *Querier) GetMealPlanEntry(ctx context.Context, arg v1.GetMealPlanEntryParams) (v1.MealPlanEntry, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetMealPlanEntry")
+	}
+
+	var r0 v1.MealPlanEntry
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.GetMealPlanEntryParams) (v1.MealPlanEntry, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.GetMealPlanEntryParams) v1.MealPlanEntry); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.MealPlanEntry)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.GetMealPlanEntryParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_GetMealPlanEntry_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetMealPlanEntry'
+type Querier_GetMealPlanEntry_Call struct {
+	*mock.Call
+}
+
+// GetMealPlanEntry is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.GetMealPlanEntryParams
+func (_e *Querier_Expecter) GetMealPlanEntry(ctx interface{}, arg interface{}) *Querier_GetMealPlanEntry_Call {
+	return &Querier_GetMealPlanEntry_Call{Call: _e.mock.On("GetMealPlanEntry", ctx, arg)}
+}
+
+func (_c *Querier_GetMealPlanEntry_Call) Run(run func(ctx context.Context, arg v1.GetMealPlanEntryParams)) *Querier_GetMealPlanEntry_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.GetMealPlanEntryParams))
+	})
+	return _c
+}
+
+func (_c *Querier_GetMealPlanEntry_Call) Return(_a0 v1.MealPlanEntry, _a1 error) *Querier_GetMealPlanEntry_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_GetMealPlanEntry_Call) RunAndReturn(run func(context.Context, v1.GetMealPlanEntryParams) (v1.MealPlanEntry, error)) *Querier_GetMealPlanEntry_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetMealPlanEntryByDay provides a mock function with given fields: ctx, arg
+func (_m *Querier) GetMealPlanEntryByDay(ctx context.Context, arg v1.GetMealPlanEntryByDayParams) (v1.MealPlanEntry, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetMealPlanEntryByDay")
+	}
+
+	var r0 v1.MealPlanEntry
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.GetMealPlanEntryByDayParams) (v1.MealPlanEntry, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.GetMealPlanEntryByDayParams) v1.MealPlanEntry); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.MealPlanEntry)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.GetMealPlanEntryByDayParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_GetMealPlanEntryByDay_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetMealPlanEntryByDay'
+type Querier_GetMealPlanEntryByDay_Call struct {
+	*mock.Call
+}
+
+// GetMealPlanEntryByDay is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.GetMealPlanEntryByDayParams
+func (_e *Querier_Expecter) GetMealPlanEntryByDay(ctx interface{}, arg interface{}) *Querier_GetMealPlanEntryByDay_Call {
+	return &Querier_GetMealPlanEntryByDay_Call{Call: _e.mock.On("GetMealPlanEntryByDay", ctx, arg)}
+}
+
+func (_c *Querier_GetMealPlanEntryByDay_Call) Run(run func(ctx context.Context, arg v1.GetMealPlanEntryByDayParams)) *Querier_GetMealPlanEntryByDay_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.GetMealPlanEntryByDayParams))
+	})
+	return _c
+}
+
+func (_c *Querier_GetMealPlanEntryByDay_Call) Return(_a0 v1.MealPlanEntry, _a1 error) *Querier_GetMealPlanEntryByDay_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_GetMealPlanEntryByDay_Call) RunAndReturn(run func(context.Context, v1.GetMealPlanEntryByDayParams) (v1.MealPlanEntry, error)) *Querier_GetMealPlanEntryByDay_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetMealPlanItemCheck provides a mock function with given fields: ctx, arg
+func (_m *Querier) GetMealPlanItemCheck(ctx context.Context, arg v1.GetMealPlanItemCheckParams) (v1.MealPlanItemCheck, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetMealPlanItemCheck")
+	}
+
+	var r0 v1.MealPlanItemCheck
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.GetMealPlanItemCheckParams) (v1.MealPlanItemCheck, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.GetMealPlanItemCheckParams) v1.MealPlanItemCheck); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.MealPlanItemCheck)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.GetMealPlanItemCheckParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_GetMealPlanItemCheck_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetMealPlanItemCheck'
+type Querier_GetMealPlanItemCheck_Call struct {
+	*mock.Call
+}
+
+// GetMealPlanItemCheck is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.GetMealPlanItemCheckParams
+func (_e *Querier_Expecter) GetMealPlanItemCheck(ctx interface{}, arg interface{}) *Querier_GetMealPlanItemCheck_Call {
+	return &Querier_GetMealPlanItemCheck_Call{Call: _e.mock.On("GetMealPlanItemCheck", ctx, arg)}
+}
+
+func (_c *Querier_GetMealPlanItemCheck_Call) Run(run func(ctx context.Context, arg v1.GetMealPlanItemCheckParams)) *Querier_GetMealPlanItemCheck_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.GetMealPlanItemCheckParams))
+	})
+	return _c
+}
+
+func (_c *Querier_GetMealPlanItemCheck_Call) Return(_a0 v1.MealPlanItemCheck, _a1 error) *Querier_GetMealPlanItemCheck_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_GetMealPlanItemCheck_Call) RunAndReturn(run func(context.Context, v1.GetMealPlanItemCheckParams) (v1.MealPlanItemCheck, error)) *Querier_GetMealPlanItemCheck_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetRecipe provides a mock function with given fields: ctx, arg
 func (_m *Querier) GetRecipe(ctx context.Context, arg v1.GetRecipeParams) (v1.Recipe, error) {
 	ret := _m.Called(ctx, arg)
@@ -993,6 +2008,234 @@ func (_c *Querier_GetRecipeIngredient_Call) RunAndReturn(run func(context.Contex
 	return _c
 }
 
+// GetStapleItem provides a mock function with given fields: ctx, arg
+func (_m *Querier) GetStapleItem(ctx context.Context, arg v1.GetStapleItemParams) (v1.StapleItem, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetStapleItem")
+	}
+
+	var r0 v1.StapleItem
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.GetStapleItemParams) (v1.StapleItem, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.GetStapleItemParams) v1.StapleItem); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.StapleItem)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.GetStapleItemParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_GetStapleItem_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetStapleItem'
+type Querier_GetStapleItem_Call struct {
+	*mock.Call
+}
+
+// GetStapleItem is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.GetStapleItemParams
+func (_e *Querier_Expecter) GetStapleItem(ctx interface{}, arg interface{}) *Querier_GetStapleItem_Call {
+	return &Querier_GetStapleItem_Call{Call: _e.mock.On("GetStapleItem", ctx, arg)}
+}
+
+func (_c *Querier_GetStapleItem_Call) Run(run func(ctx context.Context, arg v1.GetStapleItemParams)) *Querier_GetStapleItem_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.GetStapleItemParams))
+	})
+	return _c
+}
+
+func (_c *Querier_GetStapleItem_Call) Return(_a0 v1.StapleItem, _a1 error) *Querier_GetStapleItem_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_GetStapleItem_Call) RunAndReturn(run func(context.Context, v1.GetStapleItemParams) (v1.StapleItem, error)) *Querier_GetStapleItem_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetStapleItemCheck provides a mock function with given fields: ctx, arg
+func (_m *Querier) GetStapleItemCheck(ctx context.Context, arg v1.GetStapleItemCheckParams) (v1.StapleItemCheck, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetStapleItemCheck")
+	}
+
+	var r0 v1.StapleItemCheck
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.GetStapleItemCheckParams) (v1.StapleItemCheck, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.GetStapleItemCheckParams) v1.StapleItemCheck); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.StapleItemCheck)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.GetStapleItemCheckParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_GetStapleItemCheck_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetStapleItemCheck'
+type Querier_GetStapleItemCheck_Call struct {
+	*mock.Call
+}
+
+// GetStapleItemCheck is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.GetStapleItemCheckParams
+func (_e *Querier_Expecter) GetStapleItemCheck(ctx interface{}, arg interface{}) *Querier_GetStapleItemCheck_Call {
+	return &Querier_GetStapleItemCheck_Call{Call: _e.mock.On("GetStapleItemCheck", ctx, arg)}
+}
+
+func (_c *Querier_GetStapleItemCheck_Call) Run(run func(ctx context.Context, arg v1.GetStapleItemCheckParams)) *Querier_GetStapleItemCheck_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.GetStapleItemCheckParams))
+	})
+	return _c
+}
+
+func (_c *Querier_GetStapleItemCheck_Call) Return(_a0 v1.StapleItemCheck, _a1 error) *Querier_GetStapleItemCheck_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_GetStapleItemCheck_Call) RunAndReturn(run func(context.Context, v1.GetStapleItemCheckParams) (v1.StapleItemCheck, error)) *Querier_GetStapleItemCheck_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetStapleList provides a mock function with given fields: ctx, arg
+func (_m *Querier) GetStapleList(ctx context.Context, arg v1.GetStapleListParams) (v1.StapleList, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetStapleList")
+	}
+
+	var r0 v1.StapleList
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.GetStapleListParams) (v1.StapleList, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.GetStapleListParams) v1.StapleList); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.StapleList)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.GetStapleListParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_GetStapleList_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetStapleList'
+type Querier_GetStapleList_Call struct {
+	*mock.Call
+}
+
+// GetStapleList is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.GetStapleListParams
+func (_e *Querier_Expecter) GetStapleList(ctx interface{}, arg interface{}) *Querier_GetStapleList_Call {
+	return &Querier_GetStapleList_Call{Call: _e.mock.On("GetStapleList", ctx, arg)}
+}
+
+func (_c *Querier_GetStapleList_Call) Run(run func(ctx context.Context, arg v1.GetStapleListParams)) *Querier_GetStapleList_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.GetStapleListParams))
+	})
+	return _c
+}
+
+func (_c *Querier_GetStapleList_Call) Return(_a0 v1.StapleList, _a1 error) *Querier_GetStapleList_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_GetStapleList_Call) RunAndReturn(run func(context.Context, v1.GetStapleListParams) (v1.StapleList, error)) *Querier_GetStapleList_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetStapleListByGroceryList provides a mock function with given fields: ctx, arg
+func (_m *Querier) GetStapleListByGroceryList(ctx context.Context, arg v1.GetStapleListByGroceryListParams) (v1.StapleList, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetStapleListByGroceryList")
+	}
+
+	var r0 v1.StapleList
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.GetStapleListByGroceryListParams) (v1.StapleList, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.GetStapleListByGroceryListParams) v1.StapleList); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.StapleList)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.GetStapleListByGroceryListParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_GetStapleListByGroceryList_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetStapleListByGroceryList'
+type Querier_GetStapleListByGroceryList_Call struct {
+	*mock.Call
+}
+
+// GetStapleListByGroceryList is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.GetStapleListByGroceryListParams
+func (_e *Querier_Expecter) GetStapleListByGroceryList(ctx interface{}, arg interface{}) *Querier_GetStapleListByGroceryList_Call {
+	return &Querier_GetStapleListByGroceryList_Call{Call: _e.mock.On("GetStapleListByGroceryList", ctx, arg)}
+}
+
+func (_c *Querier_GetStapleListByGroceryList_Call) Run(run func(ctx context.Context, arg v1.GetStapleListByGroceryListParams)) *Querier_GetStapleListByGroceryList_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.GetStapleListByGroceryListParams))
+	})
+	return _c
+}
+
+func (_c *Querier_GetStapleListByGroceryList_Call) Return(_a0 v1.StapleList, _a1 error) *Querier_GetStapleListByGroceryList_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_GetStapleListByGroceryList_Call) RunAndReturn(run func(context.Context, v1.GetStapleListByGroceryListParams) (v1.StapleList, error)) *Querier_GetStapleListByGroceryList_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetTenant provides a mock function with given fields: ctx, id
 func (_m *Querier) GetTenant(ctx context.Context, id int64) (v1.Tenant, error) {
 	ret := _m.Called(ctx, id)
@@ -1046,6 +2289,120 @@ func (_c *Querier_GetTenant_Call) Return(_a0 v1.Tenant, _a1 error) *Querier_GetT
 }
 
 func (_c *Querier_GetTenant_Call) RunAndReturn(run func(context.Context, int64) (v1.Tenant, error)) *Querier_GetTenant_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetTenantInvitation provides a mock function with given fields: ctx, id
+func (_m *Querier) GetTenantInvitation(ctx context.Context, id int64) (v1.TenantInvitation, error) {
+	ret := _m.Called(ctx, id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetTenantInvitation")
+	}
+
+	var r0 v1.TenantInvitation
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64) (v1.TenantInvitation, error)); ok {
+		return rf(ctx, id)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int64) v1.TenantInvitation); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Get(0).(v1.TenantInvitation)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_GetTenantInvitation_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetTenantInvitation'
+type Querier_GetTenantInvitation_Call struct {
+	*mock.Call
+}
+
+// GetTenantInvitation is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id int64
+func (_e *Querier_Expecter) GetTenantInvitation(ctx interface{}, id interface{}) *Querier_GetTenantInvitation_Call {
+	return &Querier_GetTenantInvitation_Call{Call: _e.mock.On("GetTenantInvitation", ctx, id)}
+}
+
+func (_c *Querier_GetTenantInvitation_Call) Run(run func(ctx context.Context, id int64)) *Querier_GetTenantInvitation_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64))
+	})
+	return _c
+}
+
+func (_c *Querier_GetTenantInvitation_Call) Return(_a0 v1.TenantInvitation, _a1 error) *Querier_GetTenantInvitation_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_GetTenantInvitation_Call) RunAndReturn(run func(context.Context, int64) (v1.TenantInvitation, error)) *Querier_GetTenantInvitation_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetTenantInvitationByCode provides a mock function with given fields: ctx, inviteCode
+func (_m *Querier) GetTenantInvitationByCode(ctx context.Context, inviteCode string) (v1.TenantInvitation, error) {
+	ret := _m.Called(ctx, inviteCode)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetTenantInvitationByCode")
+	}
+
+	var r0 v1.TenantInvitation
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) (v1.TenantInvitation, error)); ok {
+		return rf(ctx, inviteCode)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string) v1.TenantInvitation); ok {
+		r0 = rf(ctx, inviteCode)
+	} else {
+		r0 = ret.Get(0).(v1.TenantInvitation)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, inviteCode)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_GetTenantInvitationByCode_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetTenantInvitationByCode'
+type Querier_GetTenantInvitationByCode_Call struct {
+	*mock.Call
+}
+
+// GetTenantInvitationByCode is a helper method to define mock.On call
+//   - ctx context.Context
+//   - inviteCode string
+func (_e *Querier_Expecter) GetTenantInvitationByCode(ctx interface{}, inviteCode interface{}) *Querier_GetTenantInvitationByCode_Call {
+	return &Querier_GetTenantInvitationByCode_Call{Call: _e.mock.On("GetTenantInvitationByCode", ctx, inviteCode)}
+}
+
+func (_c *Querier_GetTenantInvitationByCode_Call) Run(run func(ctx context.Context, inviteCode string)) *Querier_GetTenantInvitationByCode_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(string))
+	})
+	return _c
+}
+
+func (_c *Querier_GetTenantInvitationByCode_Call) Return(_a0 v1.TenantInvitation, _a1 error) *Querier_GetTenantInvitationByCode_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_GetTenantInvitationByCode_Call) RunAndReturn(run func(context.Context, string) (v1.TenantInvitation, error)) *Querier_GetTenantInvitationByCode_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -1398,6 +2755,183 @@ func (_c *Querier_ListGroceryLists_Call) RunAndReturn(run func(context.Context, 
 	return _c
 }
 
+// ListMealPlanEntries provides a mock function with given fields: ctx, arg
+func (_m *Querier) ListMealPlanEntries(ctx context.Context, arg v1.ListMealPlanEntriesParams) ([]v1.MealPlanEntry, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListMealPlanEntries")
+	}
+
+	var r0 []v1.MealPlanEntry
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.ListMealPlanEntriesParams) ([]v1.MealPlanEntry, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.ListMealPlanEntriesParams) []v1.MealPlanEntry); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]v1.MealPlanEntry)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.ListMealPlanEntriesParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_ListMealPlanEntries_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListMealPlanEntries'
+type Querier_ListMealPlanEntries_Call struct {
+	*mock.Call
+}
+
+// ListMealPlanEntries is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.ListMealPlanEntriesParams
+func (_e *Querier_Expecter) ListMealPlanEntries(ctx interface{}, arg interface{}) *Querier_ListMealPlanEntries_Call {
+	return &Querier_ListMealPlanEntries_Call{Call: _e.mock.On("ListMealPlanEntries", ctx, arg)}
+}
+
+func (_c *Querier_ListMealPlanEntries_Call) Run(run func(ctx context.Context, arg v1.ListMealPlanEntriesParams)) *Querier_ListMealPlanEntries_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.ListMealPlanEntriesParams))
+	})
+	return _c
+}
+
+func (_c *Querier_ListMealPlanEntries_Call) Return(_a0 []v1.MealPlanEntry, _a1 error) *Querier_ListMealPlanEntries_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_ListMealPlanEntries_Call) RunAndReturn(run func(context.Context, v1.ListMealPlanEntriesParams) ([]v1.MealPlanEntry, error)) *Querier_ListMealPlanEntries_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ListMealPlanItemChecksByEntry provides a mock function with given fields: ctx, mealPlanEntryID
+func (_m *Querier) ListMealPlanItemChecksByEntry(ctx context.Context, mealPlanEntryID int64) ([]v1.MealPlanItemCheck, error) {
+	ret := _m.Called(ctx, mealPlanEntryID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListMealPlanItemChecksByEntry")
+	}
+
+	var r0 []v1.MealPlanItemCheck
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64) ([]v1.MealPlanItemCheck, error)); ok {
+		return rf(ctx, mealPlanEntryID)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int64) []v1.MealPlanItemCheck); ok {
+		r0 = rf(ctx, mealPlanEntryID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]v1.MealPlanItemCheck)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, mealPlanEntryID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_ListMealPlanItemChecksByEntry_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListMealPlanItemChecksByEntry'
+type Querier_ListMealPlanItemChecksByEntry_Call struct {
+	*mock.Call
+}
+
+// ListMealPlanItemChecksByEntry is a helper method to define mock.On call
+//   - ctx context.Context
+//   - mealPlanEntryID int64
+func (_e *Querier_Expecter) ListMealPlanItemChecksByEntry(ctx interface{}, mealPlanEntryID interface{}) *Querier_ListMealPlanItemChecksByEntry_Call {
+	return &Querier_ListMealPlanItemChecksByEntry_Call{Call: _e.mock.On("ListMealPlanItemChecksByEntry", ctx, mealPlanEntryID)}
+}
+
+func (_c *Querier_ListMealPlanItemChecksByEntry_Call) Run(run func(ctx context.Context, mealPlanEntryID int64)) *Querier_ListMealPlanItemChecksByEntry_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64))
+	})
+	return _c
+}
+
+func (_c *Querier_ListMealPlanItemChecksByEntry_Call) Return(_a0 []v1.MealPlanItemCheck, _a1 error) *Querier_ListMealPlanItemChecksByEntry_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_ListMealPlanItemChecksByEntry_Call) RunAndReturn(run func(context.Context, int64) ([]v1.MealPlanItemCheck, error)) *Querier_ListMealPlanItemChecksByEntry_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ListMealPlanItemChecksByMealPlan provides a mock function with given fields: ctx, mealPlanID
+func (_m *Querier) ListMealPlanItemChecksByMealPlan(ctx context.Context, mealPlanID int64) ([]v1.MealPlanItemCheck, error) {
+	ret := _m.Called(ctx, mealPlanID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListMealPlanItemChecksByMealPlan")
+	}
+
+	var r0 []v1.MealPlanItemCheck
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64) ([]v1.MealPlanItemCheck, error)); ok {
+		return rf(ctx, mealPlanID)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int64) []v1.MealPlanItemCheck); ok {
+		r0 = rf(ctx, mealPlanID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]v1.MealPlanItemCheck)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, mealPlanID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_ListMealPlanItemChecksByMealPlan_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListMealPlanItemChecksByMealPlan'
+type Querier_ListMealPlanItemChecksByMealPlan_Call struct {
+	*mock.Call
+}
+
+// ListMealPlanItemChecksByMealPlan is a helper method to define mock.On call
+//   - ctx context.Context
+//   - mealPlanID int64
+func (_e *Querier_Expecter) ListMealPlanItemChecksByMealPlan(ctx interface{}, mealPlanID interface{}) *Querier_ListMealPlanItemChecksByMealPlan_Call {
+	return &Querier_ListMealPlanItemChecksByMealPlan_Call{Call: _e.mock.On("ListMealPlanItemChecksByMealPlan", ctx, mealPlanID)}
+}
+
+func (_c *Querier_ListMealPlanItemChecksByMealPlan_Call) Run(run func(ctx context.Context, mealPlanID int64)) *Querier_ListMealPlanItemChecksByMealPlan_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64))
+	})
+	return _c
+}
+
+func (_c *Querier_ListMealPlanItemChecksByMealPlan_Call) Return(_a0 []v1.MealPlanItemCheck, _a1 error) *Querier_ListMealPlanItemChecksByMealPlan_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_ListMealPlanItemChecksByMealPlan_Call) RunAndReturn(run func(context.Context, int64) ([]v1.MealPlanItemCheck, error)) *Querier_ListMealPlanItemChecksByMealPlan_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // ListRecipeIngredientsByRecipe provides a mock function with given fields: ctx, arg
 func (_m *Querier) ListRecipeIngredientsByRecipe(ctx context.Context, arg v1.ListRecipeIngredientsByRecipeParams) ([]v1.RecipeIngredient, error) {
 	ret := _m.Called(ctx, arg)
@@ -1512,6 +3046,242 @@ func (_c *Querier_ListRecipes_Call) Return(_a0 []v1.Recipe, _a1 error) *Querier_
 }
 
 func (_c *Querier_ListRecipes_Call) RunAndReturn(run func(context.Context, sql.NullInt64) ([]v1.Recipe, error)) *Querier_ListRecipes_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ListStapleItemChecksByGroceryList provides a mock function with given fields: ctx, groceryListID
+func (_m *Querier) ListStapleItemChecksByGroceryList(ctx context.Context, groceryListID int64) ([]v1.StapleItemCheck, error) {
+	ret := _m.Called(ctx, groceryListID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListStapleItemChecksByGroceryList")
+	}
+
+	var r0 []v1.StapleItemCheck
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64) ([]v1.StapleItemCheck, error)); ok {
+		return rf(ctx, groceryListID)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int64) []v1.StapleItemCheck); ok {
+		r0 = rf(ctx, groceryListID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]v1.StapleItemCheck)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, groceryListID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_ListStapleItemChecksByGroceryList_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListStapleItemChecksByGroceryList'
+type Querier_ListStapleItemChecksByGroceryList_Call struct {
+	*mock.Call
+}
+
+// ListStapleItemChecksByGroceryList is a helper method to define mock.On call
+//   - ctx context.Context
+//   - groceryListID int64
+func (_e *Querier_Expecter) ListStapleItemChecksByGroceryList(ctx interface{}, groceryListID interface{}) *Querier_ListStapleItemChecksByGroceryList_Call {
+	return &Querier_ListStapleItemChecksByGroceryList_Call{Call: _e.mock.On("ListStapleItemChecksByGroceryList", ctx, groceryListID)}
+}
+
+func (_c *Querier_ListStapleItemChecksByGroceryList_Call) Run(run func(ctx context.Context, groceryListID int64)) *Querier_ListStapleItemChecksByGroceryList_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64))
+	})
+	return _c
+}
+
+func (_c *Querier_ListStapleItemChecksByGroceryList_Call) Return(_a0 []v1.StapleItemCheck, _a1 error) *Querier_ListStapleItemChecksByGroceryList_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_ListStapleItemChecksByGroceryList_Call) RunAndReturn(run func(context.Context, int64) ([]v1.StapleItemCheck, error)) *Querier_ListStapleItemChecksByGroceryList_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ListStapleItemsByList provides a mock function with given fields: ctx, stapleListID
+func (_m *Querier) ListStapleItemsByList(ctx context.Context, stapleListID int64) ([]v1.StapleItem, error) {
+	ret := _m.Called(ctx, stapleListID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListStapleItemsByList")
+	}
+
+	var r0 []v1.StapleItem
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64) ([]v1.StapleItem, error)); ok {
+		return rf(ctx, stapleListID)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int64) []v1.StapleItem); ok {
+		r0 = rf(ctx, stapleListID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]v1.StapleItem)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, stapleListID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_ListStapleItemsByList_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListStapleItemsByList'
+type Querier_ListStapleItemsByList_Call struct {
+	*mock.Call
+}
+
+// ListStapleItemsByList is a helper method to define mock.On call
+//   - ctx context.Context
+//   - stapleListID int64
+func (_e *Querier_Expecter) ListStapleItemsByList(ctx interface{}, stapleListID interface{}) *Querier_ListStapleItemsByList_Call {
+	return &Querier_ListStapleItemsByList_Call{Call: _e.mock.On("ListStapleItemsByList", ctx, stapleListID)}
+}
+
+func (_c *Querier_ListStapleItemsByList_Call) Run(run func(ctx context.Context, stapleListID int64)) *Querier_ListStapleItemsByList_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64))
+	})
+	return _c
+}
+
+func (_c *Querier_ListStapleItemsByList_Call) Return(_a0 []v1.StapleItem, _a1 error) *Querier_ListStapleItemsByList_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_ListStapleItemsByList_Call) RunAndReturn(run func(context.Context, int64) ([]v1.StapleItem, error)) *Querier_ListStapleItemsByList_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ListStapleLists provides a mock function with given fields: ctx, tenantID
+func (_m *Querier) ListStapleLists(ctx context.Context, tenantID int64) ([]v1.StapleList, error) {
+	ret := _m.Called(ctx, tenantID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListStapleLists")
+	}
+
+	var r0 []v1.StapleList
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64) ([]v1.StapleList, error)); ok {
+		return rf(ctx, tenantID)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int64) []v1.StapleList); ok {
+		r0 = rf(ctx, tenantID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]v1.StapleList)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, tenantID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_ListStapleLists_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListStapleLists'
+type Querier_ListStapleLists_Call struct {
+	*mock.Call
+}
+
+// ListStapleLists is a helper method to define mock.On call
+//   - ctx context.Context
+//   - tenantID int64
+func (_e *Querier_Expecter) ListStapleLists(ctx interface{}, tenantID interface{}) *Querier_ListStapleLists_Call {
+	return &Querier_ListStapleLists_Call{Call: _e.mock.On("ListStapleLists", ctx, tenantID)}
+}
+
+func (_c *Querier_ListStapleLists_Call) Run(run func(ctx context.Context, tenantID int64)) *Querier_ListStapleLists_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64))
+	})
+	return _c
+}
+
+func (_c *Querier_ListStapleLists_Call) Return(_a0 []v1.StapleList, _a1 error) *Querier_ListStapleLists_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_ListStapleLists_Call) RunAndReturn(run func(context.Context, int64) ([]v1.StapleList, error)) *Querier_ListStapleLists_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ListTenantInvitations provides a mock function with given fields: ctx, tenantID
+func (_m *Querier) ListTenantInvitations(ctx context.Context, tenantID int64) ([]v1.TenantInvitation, error) {
+	ret := _m.Called(ctx, tenantID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListTenantInvitations")
+	}
+
+	var r0 []v1.TenantInvitation
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64) ([]v1.TenantInvitation, error)); ok {
+		return rf(ctx, tenantID)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int64) []v1.TenantInvitation); ok {
+		r0 = rf(ctx, tenantID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]v1.TenantInvitation)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, tenantID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_ListTenantInvitations_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListTenantInvitations'
+type Querier_ListTenantInvitations_Call struct {
+	*mock.Call
+}
+
+// ListTenantInvitations is a helper method to define mock.On call
+//   - ctx context.Context
+//   - tenantID int64
+func (_e *Querier_Expecter) ListTenantInvitations(ctx interface{}, tenantID interface{}) *Querier_ListTenantInvitations_Call {
+	return &Querier_ListTenantInvitations_Call{Call: _e.mock.On("ListTenantInvitations", ctx, tenantID)}
+}
+
+func (_c *Querier_ListTenantInvitations_Call) Run(run func(ctx context.Context, tenantID int64)) *Querier_ListTenantInvitations_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64))
+	})
+	return _c
+}
+
+func (_c *Querier_ListTenantInvitations_Call) Return(_a0 []v1.TenantInvitation, _a1 error) *Querier_ListTenantInvitations_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_ListTenantInvitations_Call) RunAndReturn(run func(context.Context, int64) ([]v1.TenantInvitation, error)) *Querier_ListTenantInvitations_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -1633,6 +3403,228 @@ func (_c *Querier_ListTenants_Call) RunAndReturn(run func(context.Context) ([]v1
 	return _c
 }
 
+// ListVirtualGroceryItems provides a mock function with given fields: ctx, arg
+func (_m *Querier) ListVirtualGroceryItems(ctx context.Context, arg v1.ListVirtualGroceryItemsParams) ([]v1.ListVirtualGroceryItemsRow, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListVirtualGroceryItems")
+	}
+
+	var r0 []v1.ListVirtualGroceryItemsRow
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.ListVirtualGroceryItemsParams) ([]v1.ListVirtualGroceryItemsRow, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.ListVirtualGroceryItemsParams) []v1.ListVirtualGroceryItemsRow); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]v1.ListVirtualGroceryItemsRow)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.ListVirtualGroceryItemsParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_ListVirtualGroceryItems_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListVirtualGroceryItems'
+type Querier_ListVirtualGroceryItems_Call struct {
+	*mock.Call
+}
+
+// ListVirtualGroceryItems is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.ListVirtualGroceryItemsParams
+func (_e *Querier_Expecter) ListVirtualGroceryItems(ctx interface{}, arg interface{}) *Querier_ListVirtualGroceryItems_Call {
+	return &Querier_ListVirtualGroceryItems_Call{Call: _e.mock.On("ListVirtualGroceryItems", ctx, arg)}
+}
+
+func (_c *Querier_ListVirtualGroceryItems_Call) Run(run func(ctx context.Context, arg v1.ListVirtualGroceryItemsParams)) *Querier_ListVirtualGroceryItems_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.ListVirtualGroceryItemsParams))
+	})
+	return _c
+}
+
+func (_c *Querier_ListVirtualGroceryItems_Call) Return(_a0 []v1.ListVirtualGroceryItemsRow, _a1 error) *Querier_ListVirtualGroceryItems_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_ListVirtualGroceryItems_Call) RunAndReturn(run func(context.Context, v1.ListVirtualGroceryItemsParams) ([]v1.ListVirtualGroceryItemsRow, error)) *Querier_ListVirtualGroceryItems_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ListVirtualStapleItems provides a mock function with given fields: ctx, arg
+func (_m *Querier) ListVirtualStapleItems(ctx context.Context, arg v1.ListVirtualStapleItemsParams) ([]v1.ListVirtualStapleItemsRow, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListVirtualStapleItems")
+	}
+
+	var r0 []v1.ListVirtualStapleItemsRow
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.ListVirtualStapleItemsParams) ([]v1.ListVirtualStapleItemsRow, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.ListVirtualStapleItemsParams) []v1.ListVirtualStapleItemsRow); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]v1.ListVirtualStapleItemsRow)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.ListVirtualStapleItemsParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_ListVirtualStapleItems_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListVirtualStapleItems'
+type Querier_ListVirtualStapleItems_Call struct {
+	*mock.Call
+}
+
+// ListVirtualStapleItems is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.ListVirtualStapleItemsParams
+func (_e *Querier_Expecter) ListVirtualStapleItems(ctx interface{}, arg interface{}) *Querier_ListVirtualStapleItems_Call {
+	return &Querier_ListVirtualStapleItems_Call{Call: _e.mock.On("ListVirtualStapleItems", ctx, arg)}
+}
+
+func (_c *Querier_ListVirtualStapleItems_Call) Run(run func(ctx context.Context, arg v1.ListVirtualStapleItemsParams)) *Querier_ListVirtualStapleItems_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.ListVirtualStapleItemsParams))
+	})
+	return _c
+}
+
+func (_c *Querier_ListVirtualStapleItems_Call) Return(_a0 []v1.ListVirtualStapleItemsRow, _a1 error) *Querier_ListVirtualStapleItems_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_ListVirtualStapleItems_Call) RunAndReturn(run func(context.Context, v1.ListVirtualStapleItemsParams) ([]v1.ListVirtualStapleItemsRow, error)) *Querier_ListVirtualStapleItems_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// MarkInvitationUsed provides a mock function with given fields: ctx, arg
+func (_m *Querier) MarkInvitationUsed(ctx context.Context, arg v1.MarkInvitationUsedParams) (v1.TenantInvitation, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for MarkInvitationUsed")
+	}
+
+	var r0 v1.TenantInvitation
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.MarkInvitationUsedParams) (v1.TenantInvitation, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.MarkInvitationUsedParams) v1.TenantInvitation); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.TenantInvitation)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.MarkInvitationUsedParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_MarkInvitationUsed_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'MarkInvitationUsed'
+type Querier_MarkInvitationUsed_Call struct {
+	*mock.Call
+}
+
+// MarkInvitationUsed is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.MarkInvitationUsedParams
+func (_e *Querier_Expecter) MarkInvitationUsed(ctx interface{}, arg interface{}) *Querier_MarkInvitationUsed_Call {
+	return &Querier_MarkInvitationUsed_Call{Call: _e.mock.On("MarkInvitationUsed", ctx, arg)}
+}
+
+func (_c *Querier_MarkInvitationUsed_Call) Run(run func(ctx context.Context, arg v1.MarkInvitationUsedParams)) *Querier_MarkInvitationUsed_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.MarkInvitationUsedParams))
+	})
+	return _c
+}
+
+func (_c *Querier_MarkInvitationUsed_Call) Return(_a0 v1.TenantInvitation, _a1 error) *Querier_MarkInvitationUsed_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_MarkInvitationUsed_Call) RunAndReturn(run func(context.Context, v1.MarkInvitationUsedParams) (v1.TenantInvitation, error)) *Querier_MarkInvitationUsed_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ResetStapleItemChecks provides a mock function with given fields: ctx, groceryListID
+func (_m *Querier) ResetStapleItemChecks(ctx context.Context, groceryListID int64) error {
+	ret := _m.Called(ctx, groceryListID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ResetStapleItemChecks")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, int64) error); ok {
+		r0 = rf(ctx, groceryListID)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// Querier_ResetStapleItemChecks_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ResetStapleItemChecks'
+type Querier_ResetStapleItemChecks_Call struct {
+	*mock.Call
+}
+
+// ResetStapleItemChecks is a helper method to define mock.On call
+//   - ctx context.Context
+//   - groceryListID int64
+func (_e *Querier_Expecter) ResetStapleItemChecks(ctx interface{}, groceryListID interface{}) *Querier_ResetStapleItemChecks_Call {
+	return &Querier_ResetStapleItemChecks_Call{Call: _e.mock.On("ResetStapleItemChecks", ctx, groceryListID)}
+}
+
+func (_c *Querier_ResetStapleItemChecks_Call) Run(run func(ctx context.Context, groceryListID int64)) *Querier_ResetStapleItemChecks_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int64))
+	})
+	return _c
+}
+
+func (_c *Querier_ResetStapleItemChecks_Call) Return(_a0 error) *Querier_ResetStapleItemChecks_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *Querier_ResetStapleItemChecks_Call) RunAndReturn(run func(context.Context, int64) error) *Querier_ResetStapleItemChecks_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // UpdateGroceryItem provides a mock function with given fields: ctx, arg
 func (_m *Querier) UpdateGroceryItem(ctx context.Context, arg v1.UpdateGroceryItemParams) (v1.GroceryItem, error) {
 	ret := _m.Called(ctx, arg)
@@ -1743,6 +3735,63 @@ func (_c *Querier_UpdateGroceryList_Call) Return(_a0 v1.GroceryList, _a1 error) 
 }
 
 func (_c *Querier_UpdateGroceryList_Call) RunAndReturn(run func(context.Context, v1.UpdateGroceryListParams) (v1.GroceryList, error)) *Querier_UpdateGroceryList_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateMealPlan provides a mock function with given fields: ctx, arg
+func (_m *Querier) UpdateMealPlan(ctx context.Context, arg v1.UpdateMealPlanParams) (v1.MealPlan, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateMealPlan")
+	}
+
+	var r0 v1.MealPlan
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.UpdateMealPlanParams) (v1.MealPlan, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.UpdateMealPlanParams) v1.MealPlan); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.MealPlan)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.UpdateMealPlanParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_UpdateMealPlan_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateMealPlan'
+type Querier_UpdateMealPlan_Call struct {
+	*mock.Call
+}
+
+// UpdateMealPlan is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.UpdateMealPlanParams
+func (_e *Querier_Expecter) UpdateMealPlan(ctx interface{}, arg interface{}) *Querier_UpdateMealPlan_Call {
+	return &Querier_UpdateMealPlan_Call{Call: _e.mock.On("UpdateMealPlan", ctx, arg)}
+}
+
+func (_c *Querier_UpdateMealPlan_Call) Run(run func(ctx context.Context, arg v1.UpdateMealPlanParams)) *Querier_UpdateMealPlan_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.UpdateMealPlanParams))
+	})
+	return _c
+}
+
+func (_c *Querier_UpdateMealPlan_Call) Return(_a0 v1.MealPlan, _a1 error) *Querier_UpdateMealPlan_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_UpdateMealPlan_Call) RunAndReturn(run func(context.Context, v1.UpdateMealPlanParams) (v1.MealPlan, error)) *Querier_UpdateMealPlan_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -1861,6 +3910,120 @@ func (_c *Querier_UpdateRecipeIngredient_Call) RunAndReturn(run func(context.Con
 	return _c
 }
 
+// UpdateStapleItem provides a mock function with given fields: ctx, arg
+func (_m *Querier) UpdateStapleItem(ctx context.Context, arg v1.UpdateStapleItemParams) (v1.StapleItem, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateStapleItem")
+	}
+
+	var r0 v1.StapleItem
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.UpdateStapleItemParams) (v1.StapleItem, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.UpdateStapleItemParams) v1.StapleItem); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.StapleItem)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.UpdateStapleItemParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_UpdateStapleItem_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateStapleItem'
+type Querier_UpdateStapleItem_Call struct {
+	*mock.Call
+}
+
+// UpdateStapleItem is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.UpdateStapleItemParams
+func (_e *Querier_Expecter) UpdateStapleItem(ctx interface{}, arg interface{}) *Querier_UpdateStapleItem_Call {
+	return &Querier_UpdateStapleItem_Call{Call: _e.mock.On("UpdateStapleItem", ctx, arg)}
+}
+
+func (_c *Querier_UpdateStapleItem_Call) Run(run func(ctx context.Context, arg v1.UpdateStapleItemParams)) *Querier_UpdateStapleItem_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.UpdateStapleItemParams))
+	})
+	return _c
+}
+
+func (_c *Querier_UpdateStapleItem_Call) Return(_a0 v1.StapleItem, _a1 error) *Querier_UpdateStapleItem_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_UpdateStapleItem_Call) RunAndReturn(run func(context.Context, v1.UpdateStapleItemParams) (v1.StapleItem, error)) *Querier_UpdateStapleItem_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateStapleList provides a mock function with given fields: ctx, arg
+func (_m *Querier) UpdateStapleList(ctx context.Context, arg v1.UpdateStapleListParams) (v1.StapleList, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateStapleList")
+	}
+
+	var r0 v1.StapleList
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.UpdateStapleListParams) (v1.StapleList, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.UpdateStapleListParams) v1.StapleList); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.StapleList)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.UpdateStapleListParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_UpdateStapleList_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateStapleList'
+type Querier_UpdateStapleList_Call struct {
+	*mock.Call
+}
+
+// UpdateStapleList is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.UpdateStapleListParams
+func (_e *Querier_Expecter) UpdateStapleList(ctx interface{}, arg interface{}) *Querier_UpdateStapleList_Call {
+	return &Querier_UpdateStapleList_Call{Call: _e.mock.On("UpdateStapleList", ctx, arg)}
+}
+
+func (_c *Querier_UpdateStapleList_Call) Run(run func(ctx context.Context, arg v1.UpdateStapleListParams)) *Querier_UpdateStapleList_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.UpdateStapleListParams))
+	})
+	return _c
+}
+
+func (_c *Querier_UpdateStapleList_Call) Return(_a0 v1.StapleList, _a1 error) *Querier_UpdateStapleList_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_UpdateStapleList_Call) RunAndReturn(run func(context.Context, v1.UpdateStapleListParams) (v1.StapleList, error)) *Querier_UpdateStapleList_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // UpdateTenant provides a mock function with given fields: ctx, arg
 func (_m *Querier) UpdateTenant(ctx context.Context, arg v1.UpdateTenantParams) (v1.Tenant, error) {
 	ret := _m.Called(ctx, arg)
@@ -1971,6 +4134,120 @@ func (_c *Querier_UpdateTenantMemberRole_Call) Return(_a0 v1.TenantMember, _a1 e
 }
 
 func (_c *Querier_UpdateTenantMemberRole_Call) RunAndReturn(run func(context.Context, v1.UpdateTenantMemberRoleParams) (v1.TenantMember, error)) *Querier_UpdateTenantMemberRole_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpsertMealPlanItemCheck provides a mock function with given fields: ctx, arg
+func (_m *Querier) UpsertMealPlanItemCheck(ctx context.Context, arg v1.UpsertMealPlanItemCheckParams) (v1.MealPlanItemCheck, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpsertMealPlanItemCheck")
+	}
+
+	var r0 v1.MealPlanItemCheck
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.UpsertMealPlanItemCheckParams) (v1.MealPlanItemCheck, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.UpsertMealPlanItemCheckParams) v1.MealPlanItemCheck); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.MealPlanItemCheck)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.UpsertMealPlanItemCheckParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_UpsertMealPlanItemCheck_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpsertMealPlanItemCheck'
+type Querier_UpsertMealPlanItemCheck_Call struct {
+	*mock.Call
+}
+
+// UpsertMealPlanItemCheck is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.UpsertMealPlanItemCheckParams
+func (_e *Querier_Expecter) UpsertMealPlanItemCheck(ctx interface{}, arg interface{}) *Querier_UpsertMealPlanItemCheck_Call {
+	return &Querier_UpsertMealPlanItemCheck_Call{Call: _e.mock.On("UpsertMealPlanItemCheck", ctx, arg)}
+}
+
+func (_c *Querier_UpsertMealPlanItemCheck_Call) Run(run func(ctx context.Context, arg v1.UpsertMealPlanItemCheckParams)) *Querier_UpsertMealPlanItemCheck_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.UpsertMealPlanItemCheckParams))
+	})
+	return _c
+}
+
+func (_c *Querier_UpsertMealPlanItemCheck_Call) Return(_a0 v1.MealPlanItemCheck, _a1 error) *Querier_UpsertMealPlanItemCheck_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_UpsertMealPlanItemCheck_Call) RunAndReturn(run func(context.Context, v1.UpsertMealPlanItemCheckParams) (v1.MealPlanItemCheck, error)) *Querier_UpsertMealPlanItemCheck_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpsertStapleItemCheck provides a mock function with given fields: ctx, arg
+func (_m *Querier) UpsertStapleItemCheck(ctx context.Context, arg v1.UpsertStapleItemCheckParams) (v1.StapleItemCheck, error) {
+	ret := _m.Called(ctx, arg)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpsertStapleItemCheck")
+	}
+
+	var r0 v1.StapleItemCheck
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, v1.UpsertStapleItemCheckParams) (v1.StapleItemCheck, error)); ok {
+		return rf(ctx, arg)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, v1.UpsertStapleItemCheckParams) v1.StapleItemCheck); ok {
+		r0 = rf(ctx, arg)
+	} else {
+		r0 = ret.Get(0).(v1.StapleItemCheck)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, v1.UpsertStapleItemCheckParams) error); ok {
+		r1 = rf(ctx, arg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Querier_UpsertStapleItemCheck_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpsertStapleItemCheck'
+type Querier_UpsertStapleItemCheck_Call struct {
+	*mock.Call
+}
+
+// UpsertStapleItemCheck is a helper method to define mock.On call
+//   - ctx context.Context
+//   - arg v1.UpsertStapleItemCheckParams
+func (_e *Querier_Expecter) UpsertStapleItemCheck(ctx interface{}, arg interface{}) *Querier_UpsertStapleItemCheck_Call {
+	return &Querier_UpsertStapleItemCheck_Call{Call: _e.mock.On("UpsertStapleItemCheck", ctx, arg)}
+}
+
+func (_c *Querier_UpsertStapleItemCheck_Call) Run(run func(ctx context.Context, arg v1.UpsertStapleItemCheckParams)) *Querier_UpsertStapleItemCheck_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(v1.UpsertStapleItemCheckParams))
+	})
+	return _c
+}
+
+func (_c *Querier_UpsertStapleItemCheck_Call) Return(_a0 v1.StapleItemCheck, _a1 error) *Querier_UpsertStapleItemCheck_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Querier_UpsertStapleItemCheck_Call) RunAndReturn(run func(context.Context, v1.UpsertStapleItemCheckParams) (v1.StapleItemCheck, error)) *Querier_UpsertStapleItemCheck_Call {
 	_c.Call.Return(run)
 	return _c
 }

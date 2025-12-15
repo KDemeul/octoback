@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { AcceptInvitationRequest, AcceptInvitationResponse, CreateInvitationRequest, CreateInvitationResponse, EnsureUserTenantRequest, EnsureUserTenantResponse, GetMyTenantsRequest, GetMyTenantsResponse, LeaveTenantRequest, LeaveTenantResponse, ListInvitationsRequest, ListInvitationsResponse, RevokeInvitationRequest, RevokeInvitationResponse } from "./service_pb.js";
+import { AcceptInvitationRequest, AcceptInvitationResponse, CreateInvitationRequest, CreateInvitationResponse, EnsureUserTenantRequest, EnsureUserTenantResponse, GetMyTenantsRequest, GetMyTenantsResponse, LeaveTenantRequest, LeaveTenantResponse, ListInvitationsRequest, ListInvitationsResponse, RevokeInvitationRequest, RevokeInvitationResponse, UpdateTenantRequest, UpdateTenantResponse } from "./service_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -35,6 +35,17 @@ export const Service = {
       name: "GetMyTenants",
       I: GetMyTenantsRequest,
       O: GetMyTenantsResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * UpdateTenant updates a tenant's details (owner/admin only).
+     *
+     * @generated from rpc octoback.tenants.v1.Service.UpdateTenant
+     */
+    updateTenant: {
+      name: "UpdateTenant",
+      I: UpdateTenantRequest,
+      O: UpdateTenantResponse,
       kind: MethodKind.Unary,
     },
     /**

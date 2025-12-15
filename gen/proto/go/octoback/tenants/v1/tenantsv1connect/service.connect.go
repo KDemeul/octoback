@@ -38,6 +38,8 @@ const (
 	ServiceEnsureUserTenantProcedure = "/octoback.tenants.v1.Service/EnsureUserTenant"
 	// ServiceGetMyTenantsProcedure is the fully-qualified name of the Service's GetMyTenants RPC.
 	ServiceGetMyTenantsProcedure = "/octoback.tenants.v1.Service/GetMyTenants"
+	// ServiceUpdateTenantProcedure is the fully-qualified name of the Service's UpdateTenant RPC.
+	ServiceUpdateTenantProcedure = "/octoback.tenants.v1.Service/UpdateTenant"
 	// ServiceLeaveTenantProcedure is the fully-qualified name of the Service's LeaveTenant RPC.
 	ServiceLeaveTenantProcedure = "/octoback.tenants.v1.Service/LeaveTenant"
 	// ServiceCreateInvitationProcedure is the fully-qualified name of the Service's CreateInvitation
@@ -60,6 +62,8 @@ type ServiceClient interface {
 	EnsureUserTenant(context.Context, *connect.Request[v1.EnsureUserTenantRequest]) (*connect.Response[v1.EnsureUserTenantResponse], error)
 	// GetMyTenants lists tenants the current user is a member of.
 	GetMyTenants(context.Context, *connect.Request[v1.GetMyTenantsRequest]) (*connect.Response[v1.GetMyTenantsResponse], error)
+	// UpdateTenant updates a tenant's details (owner/admin only).
+	UpdateTenant(context.Context, *connect.Request[v1.UpdateTenantRequest]) (*connect.Response[v1.UpdateTenantResponse], error)
 	// LeaveTenant removes the current user from a tenant.
 	LeaveTenant(context.Context, *connect.Request[v1.LeaveTenantRequest]) (*connect.Response[v1.LeaveTenantResponse], error)
 	// CreateInvitation creates an invitation code for a tenant.
@@ -93,6 +97,12 @@ func NewServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...con
 			httpClient,
 			baseURL+ServiceGetMyTenantsProcedure,
 			connect.WithSchema(serviceMethods.ByName("GetMyTenants")),
+			connect.WithClientOptions(opts...),
+		),
+		updateTenant: connect.NewClient[v1.UpdateTenantRequest, v1.UpdateTenantResponse](
+			httpClient,
+			baseURL+ServiceUpdateTenantProcedure,
+			connect.WithSchema(serviceMethods.ByName("UpdateTenant")),
 			connect.WithClientOptions(opts...),
 		),
 		leaveTenant: connect.NewClient[v1.LeaveTenantRequest, v1.LeaveTenantResponse](
@@ -132,6 +142,7 @@ func NewServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...con
 type serviceClient struct {
 	ensureUserTenant *connect.Client[v1.EnsureUserTenantRequest, v1.EnsureUserTenantResponse]
 	getMyTenants     *connect.Client[v1.GetMyTenantsRequest, v1.GetMyTenantsResponse]
+	updateTenant     *connect.Client[v1.UpdateTenantRequest, v1.UpdateTenantResponse]
 	leaveTenant      *connect.Client[v1.LeaveTenantRequest, v1.LeaveTenantResponse]
 	createInvitation *connect.Client[v1.CreateInvitationRequest, v1.CreateInvitationResponse]
 	acceptInvitation *connect.Client[v1.AcceptInvitationRequest, v1.AcceptInvitationResponse]
@@ -147,6 +158,11 @@ func (c *serviceClient) EnsureUserTenant(ctx context.Context, req *connect.Reque
 // GetMyTenants calls octoback.tenants.v1.Service.GetMyTenants.
 func (c *serviceClient) GetMyTenants(ctx context.Context, req *connect.Request[v1.GetMyTenantsRequest]) (*connect.Response[v1.GetMyTenantsResponse], error) {
 	return c.getMyTenants.CallUnary(ctx, req)
+}
+
+// UpdateTenant calls octoback.tenants.v1.Service.UpdateTenant.
+func (c *serviceClient) UpdateTenant(ctx context.Context, req *connect.Request[v1.UpdateTenantRequest]) (*connect.Response[v1.UpdateTenantResponse], error) {
+	return c.updateTenant.CallUnary(ctx, req)
 }
 
 // LeaveTenant calls octoback.tenants.v1.Service.LeaveTenant.
@@ -181,6 +197,8 @@ type ServiceHandler interface {
 	EnsureUserTenant(context.Context, *connect.Request[v1.EnsureUserTenantRequest]) (*connect.Response[v1.EnsureUserTenantResponse], error)
 	// GetMyTenants lists tenants the current user is a member of.
 	GetMyTenants(context.Context, *connect.Request[v1.GetMyTenantsRequest]) (*connect.Response[v1.GetMyTenantsResponse], error)
+	// UpdateTenant updates a tenant's details (owner/admin only).
+	UpdateTenant(context.Context, *connect.Request[v1.UpdateTenantRequest]) (*connect.Response[v1.UpdateTenantResponse], error)
 	// LeaveTenant removes the current user from a tenant.
 	LeaveTenant(context.Context, *connect.Request[v1.LeaveTenantRequest]) (*connect.Response[v1.LeaveTenantResponse], error)
 	// CreateInvitation creates an invitation code for a tenant.
@@ -210,6 +228,12 @@ func NewServiceHandler(svc ServiceHandler, opts ...connect.HandlerOption) (strin
 		ServiceGetMyTenantsProcedure,
 		svc.GetMyTenants,
 		connect.WithSchema(serviceMethods.ByName("GetMyTenants")),
+		connect.WithHandlerOptions(opts...),
+	)
+	serviceUpdateTenantHandler := connect.NewUnaryHandler(
+		ServiceUpdateTenantProcedure,
+		svc.UpdateTenant,
+		connect.WithSchema(serviceMethods.ByName("UpdateTenant")),
 		connect.WithHandlerOptions(opts...),
 	)
 	serviceLeaveTenantHandler := connect.NewUnaryHandler(
@@ -248,6 +272,8 @@ func NewServiceHandler(svc ServiceHandler, opts ...connect.HandlerOption) (strin
 			serviceEnsureUserTenantHandler.ServeHTTP(w, r)
 		case ServiceGetMyTenantsProcedure:
 			serviceGetMyTenantsHandler.ServeHTTP(w, r)
+		case ServiceUpdateTenantProcedure:
+			serviceUpdateTenantHandler.ServeHTTP(w, r)
 		case ServiceLeaveTenantProcedure:
 			serviceLeaveTenantHandler.ServeHTTP(w, r)
 		case ServiceCreateInvitationProcedure:
@@ -273,6 +299,10 @@ func (UnimplementedServiceHandler) EnsureUserTenant(context.Context, *connect.Re
 
 func (UnimplementedServiceHandler) GetMyTenants(context.Context, *connect.Request[v1.GetMyTenantsRequest]) (*connect.Response[v1.GetMyTenantsResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("octoback.tenants.v1.Service.GetMyTenants is not implemented"))
+}
+
+func (UnimplementedServiceHandler) UpdateTenant(context.Context, *connect.Request[v1.UpdateTenantRequest]) (*connect.Response[v1.UpdateTenantResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("octoback.tenants.v1.Service.UpdateTenant is not implemented"))
 }
 
 func (UnimplementedServiceHandler) LeaveTenant(context.Context, *connect.Request[v1.LeaveTenantRequest]) (*connect.Response[v1.LeaveTenantResponse], error) {

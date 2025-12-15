@@ -210,6 +210,115 @@ func (x *GetMyTenantsResponse) GetTenants() []*Tenant {
 	return nil
 }
 
+// UpdateTenant
+type UpdateTenantRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The ID of the tenant to update.
+	TenantId int64 `protobuf:"varint,1,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`
+	// The new display name for the tenant.
+	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	// The current version of the tenant (for optimistic locking).
+	Version       int32 `protobuf:"varint,3,opt,name=version,proto3" json:"version,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateTenantRequest) Reset() {
+	*x = UpdateTenantRequest{}
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateTenantRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateTenantRequest) ProtoMessage() {}
+
+func (x *UpdateTenantRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateTenantRequest.ProtoReflect.Descriptor instead.
+func (*UpdateTenantRequest) Descriptor() ([]byte, []int) {
+	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *UpdateTenantRequest) GetTenantId() int64 {
+	if x != nil {
+		return x.TenantId
+	}
+	return 0
+}
+
+func (x *UpdateTenantRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *UpdateTenantRequest) GetVersion() int32 {
+	if x != nil {
+		return x.Version
+	}
+	return 0
+}
+
+type UpdateTenantResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The updated tenant.
+	Tenant        *Tenant `protobuf:"bytes,1,opt,name=tenant,proto3" json:"tenant,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateTenantResponse) Reset() {
+	*x = UpdateTenantResponse{}
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateTenantResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateTenantResponse) ProtoMessage() {}
+
+func (x *UpdateTenantResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateTenantResponse.ProtoReflect.Descriptor instead.
+func (*UpdateTenantResponse) Descriptor() ([]byte, []int) {
+	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *UpdateTenantResponse) GetTenant() *Tenant {
+	if x != nil {
+		return x.Tenant
+	}
+	return nil
+}
+
 // LeaveTenant
 type LeaveTenantRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -221,7 +330,7 @@ type LeaveTenantRequest struct {
 
 func (x *LeaveTenantRequest) Reset() {
 	*x = LeaveTenantRequest{}
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[4]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -233,7 +342,7 @@ func (x *LeaveTenantRequest) String() string {
 func (*LeaveTenantRequest) ProtoMessage() {}
 
 func (x *LeaveTenantRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[4]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -246,7 +355,7 @@ func (x *LeaveTenantRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LeaveTenantRequest.ProtoReflect.Descriptor instead.
 func (*LeaveTenantRequest) Descriptor() ([]byte, []int) {
-	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{4}
+	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *LeaveTenantRequest) GetTenantId() int64 {
@@ -264,7 +373,7 @@ type LeaveTenantResponse struct {
 
 func (x *LeaveTenantResponse) Reset() {
 	*x = LeaveTenantResponse{}
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[5]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -276,7 +385,7 @@ func (x *LeaveTenantResponse) String() string {
 func (*LeaveTenantResponse) ProtoMessage() {}
 
 func (x *LeaveTenantResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[5]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -289,7 +398,7 @@ func (x *LeaveTenantResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LeaveTenantResponse.ProtoReflect.Descriptor instead.
 func (*LeaveTenantResponse) Descriptor() ([]byte, []int) {
-	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{5}
+	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{7}
 }
 
 // CreateInvitation
@@ -303,7 +412,7 @@ type CreateInvitationRequest struct {
 
 func (x *CreateInvitationRequest) Reset() {
 	*x = CreateInvitationRequest{}
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[6]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -315,7 +424,7 @@ func (x *CreateInvitationRequest) String() string {
 func (*CreateInvitationRequest) ProtoMessage() {}
 
 func (x *CreateInvitationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[6]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -328,7 +437,7 @@ func (x *CreateInvitationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateInvitationRequest.ProtoReflect.Descriptor instead.
 func (*CreateInvitationRequest) Descriptor() ([]byte, []int) {
-	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{6}
+	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *CreateInvitationRequest) GetTenantId() int64 {
@@ -348,7 +457,7 @@ type CreateInvitationResponse struct {
 
 func (x *CreateInvitationResponse) Reset() {
 	*x = CreateInvitationResponse{}
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[7]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -360,7 +469,7 @@ func (x *CreateInvitationResponse) String() string {
 func (*CreateInvitationResponse) ProtoMessage() {}
 
 func (x *CreateInvitationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[7]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -373,7 +482,7 @@ func (x *CreateInvitationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateInvitationResponse.ProtoReflect.Descriptor instead.
 func (*CreateInvitationResponse) Descriptor() ([]byte, []int) {
-	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{7}
+	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *CreateInvitationResponse) GetInvitation() *TenantInvitation {
@@ -394,7 +503,7 @@ type AcceptInvitationRequest struct {
 
 func (x *AcceptInvitationRequest) Reset() {
 	*x = AcceptInvitationRequest{}
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[8]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -406,7 +515,7 @@ func (x *AcceptInvitationRequest) String() string {
 func (*AcceptInvitationRequest) ProtoMessage() {}
 
 func (x *AcceptInvitationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[8]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -419,7 +528,7 @@ func (x *AcceptInvitationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AcceptInvitationRequest.ProtoReflect.Descriptor instead.
 func (*AcceptInvitationRequest) Descriptor() ([]byte, []int) {
-	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{8}
+	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *AcceptInvitationRequest) GetInviteCode() string {
@@ -441,7 +550,7 @@ type AcceptInvitationResponse struct {
 
 func (x *AcceptInvitationResponse) Reset() {
 	*x = AcceptInvitationResponse{}
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[9]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -453,7 +562,7 @@ func (x *AcceptInvitationResponse) String() string {
 func (*AcceptInvitationResponse) ProtoMessage() {}
 
 func (x *AcceptInvitationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[9]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -466,7 +575,7 @@ func (x *AcceptInvitationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AcceptInvitationResponse.ProtoReflect.Descriptor instead.
 func (*AcceptInvitationResponse) Descriptor() ([]byte, []int) {
-	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{9}
+	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *AcceptInvitationResponse) GetTenant() *Tenant {
@@ -494,7 +603,7 @@ type ListInvitationsRequest struct {
 
 func (x *ListInvitationsRequest) Reset() {
 	*x = ListInvitationsRequest{}
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[10]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -506,7 +615,7 @@ func (x *ListInvitationsRequest) String() string {
 func (*ListInvitationsRequest) ProtoMessage() {}
 
 func (x *ListInvitationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[10]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -519,7 +628,7 @@ func (x *ListInvitationsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListInvitationsRequest.ProtoReflect.Descriptor instead.
 func (*ListInvitationsRequest) Descriptor() ([]byte, []int) {
-	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{10}
+	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *ListInvitationsRequest) GetTenantId() int64 {
@@ -538,7 +647,7 @@ type ListInvitationsResponse struct {
 
 func (x *ListInvitationsResponse) Reset() {
 	*x = ListInvitationsResponse{}
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[11]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -550,7 +659,7 @@ func (x *ListInvitationsResponse) String() string {
 func (*ListInvitationsResponse) ProtoMessage() {}
 
 func (x *ListInvitationsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[11]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -563,7 +672,7 @@ func (x *ListInvitationsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListInvitationsResponse.ProtoReflect.Descriptor instead.
 func (*ListInvitationsResponse) Descriptor() ([]byte, []int) {
-	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{11}
+	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ListInvitationsResponse) GetInvitations() []*TenantInvitation {
@@ -584,7 +693,7 @@ type RevokeInvitationRequest struct {
 
 func (x *RevokeInvitationRequest) Reset() {
 	*x = RevokeInvitationRequest{}
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[12]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -596,7 +705,7 @@ func (x *RevokeInvitationRequest) String() string {
 func (*RevokeInvitationRequest) ProtoMessage() {}
 
 func (x *RevokeInvitationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[12]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -609,7 +718,7 @@ func (x *RevokeInvitationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RevokeInvitationRequest.ProtoReflect.Descriptor instead.
 func (*RevokeInvitationRequest) Descriptor() ([]byte, []int) {
-	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{12}
+	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *RevokeInvitationRequest) GetInvitationId() int64 {
@@ -627,7 +736,7 @@ type RevokeInvitationResponse struct {
 
 func (x *RevokeInvitationResponse) Reset() {
 	*x = RevokeInvitationResponse{}
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[13]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -639,7 +748,7 @@ func (x *RevokeInvitationResponse) String() string {
 func (*RevokeInvitationResponse) ProtoMessage() {}
 
 func (x *RevokeInvitationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_octoback_tenants_v1_service_proto_msgTypes[13]
+	mi := &file_octoback_tenants_v1_service_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -652,7 +761,7 @@ func (x *RevokeInvitationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RevokeInvitationResponse.ProtoReflect.Descriptor instead.
 func (*RevokeInvitationResponse) Descriptor() ([]byte, []int) {
-	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{13}
+	return file_octoback_tenants_v1_service_proto_rawDescGZIP(), []int{15}
 }
 
 var File_octoback_tenants_v1_service_proto protoreflect.FileDescriptor
@@ -670,7 +779,13 @@ const file_octoback_tenants_v1_service_proto_rawDesc = "" +
 	"\x13GetMyTenantsRequest\"\x96\x01\n" +
 	"\x14GetMyTenantsResponse\x12G\n" +
 	"\vmemberships\x18\x01 \x03(\v2%.octoback.tenants.v1.TenantMembershipR\vmemberships\x125\n" +
-	"\atenants\x18\x02 \x03(\v2\x1b.octoback.tenants.v1.TenantR\atenants\"1\n" +
+	"\atenants\x18\x02 \x03(\v2\x1b.octoback.tenants.v1.TenantR\atenants\"`\n" +
+	"\x13UpdateTenantRequest\x12\x1b\n" +
+	"\ttenant_id\x18\x01 \x01(\x03R\btenantId\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
+	"\aversion\x18\x03 \x01(\x05R\aversion\"K\n" +
+	"\x14UpdateTenantResponse\x123\n" +
+	"\x06tenant\x18\x01 \x01(\v2\x1b.octoback.tenants.v1.TenantR\x06tenant\"1\n" +
 	"\x12LeaveTenantRequest\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\x03R\btenantId\"\x15\n" +
 	"\x13LeaveTenantResponse\"6\n" +
@@ -694,10 +809,11 @@ const file_octoback_tenants_v1_service_proto_rawDesc = "" +
 	"\vinvitations\x18\x01 \x03(\v2%.octoback.tenants.v1.TenantInvitationR\vinvitations\">\n" +
 	"\x17RevokeInvitationRequest\x12#\n" +
 	"\rinvitation_id\x18\x01 \x01(\x03R\finvitationId\"\x1a\n" +
-	"\x18RevokeInvitationResponse2\x82\x06\n" +
+	"\x18RevokeInvitationResponse2\xe7\x06\n" +
 	"\aService\x12o\n" +
 	"\x10EnsureUserTenant\x12,.octoback.tenants.v1.EnsureUserTenantRequest\x1a-.octoback.tenants.v1.EnsureUserTenantResponse\x12c\n" +
-	"\fGetMyTenants\x12(.octoback.tenants.v1.GetMyTenantsRequest\x1a).octoback.tenants.v1.GetMyTenantsResponse\x12`\n" +
+	"\fGetMyTenants\x12(.octoback.tenants.v1.GetMyTenantsRequest\x1a).octoback.tenants.v1.GetMyTenantsResponse\x12c\n" +
+	"\fUpdateTenant\x12(.octoback.tenants.v1.UpdateTenantRequest\x1a).octoback.tenants.v1.UpdateTenantResponse\x12`\n" +
 	"\vLeaveTenant\x12'.octoback.tenants.v1.LeaveTenantRequest\x1a(.octoback.tenants.v1.LeaveTenantResponse\x12o\n" +
 	"\x10CreateInvitation\x12,.octoback.tenants.v1.CreateInvitationRequest\x1a-.octoback.tenants.v1.CreateInvitationResponse\x12o\n" +
 	"\x10AcceptInvitation\x12,.octoback.tenants.v1.AcceptInvitationRequest\x1a-.octoback.tenants.v1.AcceptInvitationResponse\x12l\n" +
@@ -717,54 +833,59 @@ func file_octoback_tenants_v1_service_proto_rawDescGZIP() []byte {
 	return file_octoback_tenants_v1_service_proto_rawDescData
 }
 
-var file_octoback_tenants_v1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_octoback_tenants_v1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_octoback_tenants_v1_service_proto_goTypes = []any{
 	(*EnsureUserTenantRequest)(nil),  // 0: octoback.tenants.v1.EnsureUserTenantRequest
 	(*EnsureUserTenantResponse)(nil), // 1: octoback.tenants.v1.EnsureUserTenantResponse
 	(*GetMyTenantsRequest)(nil),      // 2: octoback.tenants.v1.GetMyTenantsRequest
 	(*GetMyTenantsResponse)(nil),     // 3: octoback.tenants.v1.GetMyTenantsResponse
-	(*LeaveTenantRequest)(nil),       // 4: octoback.tenants.v1.LeaveTenantRequest
-	(*LeaveTenantResponse)(nil),      // 5: octoback.tenants.v1.LeaveTenantResponse
-	(*CreateInvitationRequest)(nil),  // 6: octoback.tenants.v1.CreateInvitationRequest
-	(*CreateInvitationResponse)(nil), // 7: octoback.tenants.v1.CreateInvitationResponse
-	(*AcceptInvitationRequest)(nil),  // 8: octoback.tenants.v1.AcceptInvitationRequest
-	(*AcceptInvitationResponse)(nil), // 9: octoback.tenants.v1.AcceptInvitationResponse
-	(*ListInvitationsRequest)(nil),   // 10: octoback.tenants.v1.ListInvitationsRequest
-	(*ListInvitationsResponse)(nil),  // 11: octoback.tenants.v1.ListInvitationsResponse
-	(*RevokeInvitationRequest)(nil),  // 12: octoback.tenants.v1.RevokeInvitationRequest
-	(*RevokeInvitationResponse)(nil), // 13: octoback.tenants.v1.RevokeInvitationResponse
-	(*Tenant)(nil),                   // 14: octoback.tenants.v1.Tenant
-	(*TenantMembership)(nil),         // 15: octoback.tenants.v1.TenantMembership
-	(*TenantInvitation)(nil),         // 16: octoback.tenants.v1.TenantInvitation
+	(*UpdateTenantRequest)(nil),      // 4: octoback.tenants.v1.UpdateTenantRequest
+	(*UpdateTenantResponse)(nil),     // 5: octoback.tenants.v1.UpdateTenantResponse
+	(*LeaveTenantRequest)(nil),       // 6: octoback.tenants.v1.LeaveTenantRequest
+	(*LeaveTenantResponse)(nil),      // 7: octoback.tenants.v1.LeaveTenantResponse
+	(*CreateInvitationRequest)(nil),  // 8: octoback.tenants.v1.CreateInvitationRequest
+	(*CreateInvitationResponse)(nil), // 9: octoback.tenants.v1.CreateInvitationResponse
+	(*AcceptInvitationRequest)(nil),  // 10: octoback.tenants.v1.AcceptInvitationRequest
+	(*AcceptInvitationResponse)(nil), // 11: octoback.tenants.v1.AcceptInvitationResponse
+	(*ListInvitationsRequest)(nil),   // 12: octoback.tenants.v1.ListInvitationsRequest
+	(*ListInvitationsResponse)(nil),  // 13: octoback.tenants.v1.ListInvitationsResponse
+	(*RevokeInvitationRequest)(nil),  // 14: octoback.tenants.v1.RevokeInvitationRequest
+	(*RevokeInvitationResponse)(nil), // 15: octoback.tenants.v1.RevokeInvitationResponse
+	(*Tenant)(nil),                   // 16: octoback.tenants.v1.Tenant
+	(*TenantMembership)(nil),         // 17: octoback.tenants.v1.TenantMembership
+	(*TenantInvitation)(nil),         // 18: octoback.tenants.v1.TenantInvitation
 }
 var file_octoback_tenants_v1_service_proto_depIdxs = []int32{
-	14, // 0: octoback.tenants.v1.EnsureUserTenantResponse.tenant:type_name -> octoback.tenants.v1.Tenant
-	15, // 1: octoback.tenants.v1.EnsureUserTenantResponse.membership:type_name -> octoback.tenants.v1.TenantMembership
-	15, // 2: octoback.tenants.v1.GetMyTenantsResponse.memberships:type_name -> octoback.tenants.v1.TenantMembership
-	14, // 3: octoback.tenants.v1.GetMyTenantsResponse.tenants:type_name -> octoback.tenants.v1.Tenant
-	16, // 4: octoback.tenants.v1.CreateInvitationResponse.invitation:type_name -> octoback.tenants.v1.TenantInvitation
-	14, // 5: octoback.tenants.v1.AcceptInvitationResponse.tenant:type_name -> octoback.tenants.v1.Tenant
-	15, // 6: octoback.tenants.v1.AcceptInvitationResponse.membership:type_name -> octoback.tenants.v1.TenantMembership
-	16, // 7: octoback.tenants.v1.ListInvitationsResponse.invitations:type_name -> octoback.tenants.v1.TenantInvitation
-	0,  // 8: octoback.tenants.v1.Service.EnsureUserTenant:input_type -> octoback.tenants.v1.EnsureUserTenantRequest
-	2,  // 9: octoback.tenants.v1.Service.GetMyTenants:input_type -> octoback.tenants.v1.GetMyTenantsRequest
-	4,  // 10: octoback.tenants.v1.Service.LeaveTenant:input_type -> octoback.tenants.v1.LeaveTenantRequest
-	6,  // 11: octoback.tenants.v1.Service.CreateInvitation:input_type -> octoback.tenants.v1.CreateInvitationRequest
-	8,  // 12: octoback.tenants.v1.Service.AcceptInvitation:input_type -> octoback.tenants.v1.AcceptInvitationRequest
-	10, // 13: octoback.tenants.v1.Service.ListInvitations:input_type -> octoback.tenants.v1.ListInvitationsRequest
-	12, // 14: octoback.tenants.v1.Service.RevokeInvitation:input_type -> octoback.tenants.v1.RevokeInvitationRequest
-	1,  // 15: octoback.tenants.v1.Service.EnsureUserTenant:output_type -> octoback.tenants.v1.EnsureUserTenantResponse
-	3,  // 16: octoback.tenants.v1.Service.GetMyTenants:output_type -> octoback.tenants.v1.GetMyTenantsResponse
-	5,  // 17: octoback.tenants.v1.Service.LeaveTenant:output_type -> octoback.tenants.v1.LeaveTenantResponse
-	7,  // 18: octoback.tenants.v1.Service.CreateInvitation:output_type -> octoback.tenants.v1.CreateInvitationResponse
-	9,  // 19: octoback.tenants.v1.Service.AcceptInvitation:output_type -> octoback.tenants.v1.AcceptInvitationResponse
-	11, // 20: octoback.tenants.v1.Service.ListInvitations:output_type -> octoback.tenants.v1.ListInvitationsResponse
-	13, // 21: octoback.tenants.v1.Service.RevokeInvitation:output_type -> octoback.tenants.v1.RevokeInvitationResponse
-	15, // [15:22] is the sub-list for method output_type
-	8,  // [8:15] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	16, // 0: octoback.tenants.v1.EnsureUserTenantResponse.tenant:type_name -> octoback.tenants.v1.Tenant
+	17, // 1: octoback.tenants.v1.EnsureUserTenantResponse.membership:type_name -> octoback.tenants.v1.TenantMembership
+	17, // 2: octoback.tenants.v1.GetMyTenantsResponse.memberships:type_name -> octoback.tenants.v1.TenantMembership
+	16, // 3: octoback.tenants.v1.GetMyTenantsResponse.tenants:type_name -> octoback.tenants.v1.Tenant
+	16, // 4: octoback.tenants.v1.UpdateTenantResponse.tenant:type_name -> octoback.tenants.v1.Tenant
+	18, // 5: octoback.tenants.v1.CreateInvitationResponse.invitation:type_name -> octoback.tenants.v1.TenantInvitation
+	16, // 6: octoback.tenants.v1.AcceptInvitationResponse.tenant:type_name -> octoback.tenants.v1.Tenant
+	17, // 7: octoback.tenants.v1.AcceptInvitationResponse.membership:type_name -> octoback.tenants.v1.TenantMembership
+	18, // 8: octoback.tenants.v1.ListInvitationsResponse.invitations:type_name -> octoback.tenants.v1.TenantInvitation
+	0,  // 9: octoback.tenants.v1.Service.EnsureUserTenant:input_type -> octoback.tenants.v1.EnsureUserTenantRequest
+	2,  // 10: octoback.tenants.v1.Service.GetMyTenants:input_type -> octoback.tenants.v1.GetMyTenantsRequest
+	4,  // 11: octoback.tenants.v1.Service.UpdateTenant:input_type -> octoback.tenants.v1.UpdateTenantRequest
+	6,  // 12: octoback.tenants.v1.Service.LeaveTenant:input_type -> octoback.tenants.v1.LeaveTenantRequest
+	8,  // 13: octoback.tenants.v1.Service.CreateInvitation:input_type -> octoback.tenants.v1.CreateInvitationRequest
+	10, // 14: octoback.tenants.v1.Service.AcceptInvitation:input_type -> octoback.tenants.v1.AcceptInvitationRequest
+	12, // 15: octoback.tenants.v1.Service.ListInvitations:input_type -> octoback.tenants.v1.ListInvitationsRequest
+	14, // 16: octoback.tenants.v1.Service.RevokeInvitation:input_type -> octoback.tenants.v1.RevokeInvitationRequest
+	1,  // 17: octoback.tenants.v1.Service.EnsureUserTenant:output_type -> octoback.tenants.v1.EnsureUserTenantResponse
+	3,  // 18: octoback.tenants.v1.Service.GetMyTenants:output_type -> octoback.tenants.v1.GetMyTenantsResponse
+	5,  // 19: octoback.tenants.v1.Service.UpdateTenant:output_type -> octoback.tenants.v1.UpdateTenantResponse
+	7,  // 20: octoback.tenants.v1.Service.LeaveTenant:output_type -> octoback.tenants.v1.LeaveTenantResponse
+	9,  // 21: octoback.tenants.v1.Service.CreateInvitation:output_type -> octoback.tenants.v1.CreateInvitationResponse
+	11, // 22: octoback.tenants.v1.Service.AcceptInvitation:output_type -> octoback.tenants.v1.AcceptInvitationResponse
+	13, // 23: octoback.tenants.v1.Service.ListInvitations:output_type -> octoback.tenants.v1.ListInvitationsResponse
+	15, // 24: octoback.tenants.v1.Service.RevokeInvitation:output_type -> octoback.tenants.v1.RevokeInvitationResponse
+	17, // [17:25] is the sub-list for method output_type
+	9,  // [9:17] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_octoback_tenants_v1_service_proto_init() }
@@ -779,7 +900,7 @@ func file_octoback_tenants_v1_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_octoback_tenants_v1_service_proto_rawDesc), len(file_octoback_tenants_v1_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   14,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

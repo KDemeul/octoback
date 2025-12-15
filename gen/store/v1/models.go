@@ -71,6 +71,30 @@ type RecipeIngredient struct {
 	Version   int64
 }
 
+type StapleItem struct {
+	ID           int64
+	StapleListID int64
+	Name         string
+	Quantity     int64
+	CreatedAt    string
+	Version      int64
+}
+
+type StapleItemCheck struct {
+	GroceryListID int64
+	StapleItemID  int64
+	Checked       int64
+}
+
+type StapleList struct {
+	ID            int64
+	TenantID      int64
+	Name          string
+	GroceryListID sql.NullInt64
+	CreatedAt     string
+	Version       int64
+}
+
 type Tenant struct {
 	ID        int64
 	Name      string
