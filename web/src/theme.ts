@@ -42,11 +42,26 @@ const charcoal: MantineColorsTuple = [
   '#2d3436',
 ];
 
+// Amber - warm golden for staples/essentials
+const amber: MantineColorsTuple = [
+  '#fffbeb',
+  '#fef3c7',
+  '#fde68a',
+  '#fcd34d',
+  '#fbbf24',
+  '#f59e0b',
+  '#d97706',
+  '#b45309',
+  '#92400e',
+  '#78350f',
+];
+
 export const theme = createTheme({
   colors: {
     coral,
     sage,
     charcoal,
+    amber,
   },
   primaryColor: 'coral',
   fontFamily: '"Bricolage Grotesque", sans-serif',
