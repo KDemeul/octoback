@@ -247,7 +247,7 @@ export function AppLayout({ children, title, backTo, action }: AppLayoutProps) {
               data-active={isActive || undefined}
             >
               <item.icon />
-              <Text size="xs" mt={4}>
+              <Text size="xs" mt={4} className={classes.bottomNavLabel}>
                 {item.label}
               </Text>
             </UnstyledButton>
@@ -258,7 +258,7 @@ export function AppLayout({ children, title, backTo, action }: AppLayoutProps) {
           onClick={openMobileMenu}
         >
           <MoreIcon />
-          <Text size="xs" mt={4}>
+          <Text size="xs" mt={4} className={classes.bottomNavLabel}>
             Plus
           </Text>
         </UnstyledButton>
