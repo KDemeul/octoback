@@ -29,6 +29,7 @@ import (
 	tenantsv1 "github.com/kiliandbigblue/octoback/internal/tenants/v1"
 	"github.com/kiliandbigblue/octoback/internal/x/auth0"
 	"github.com/kiliandbigblue/octoback/internal/x/cloudzap"
+	"github.com/kiliandbigblue/octoback/internal/x/openai"
 	"github.com/kiliandbigblue/octoback/internal/x/tenant"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -43,6 +44,7 @@ type config struct {
 	staticDir     string
 	auth0Domain   string
 	auth0Audience string
+	openaiAPIKey  string
 }
 
 func main() {
@@ -52,6 +54,7 @@ func main() {
 	flag.StringVar(&cfg.staticDir, "static-dir", os.Getenv("STATIC_DIR"), "directory containing static files to serve")
 	flag.StringVar(&cfg.auth0Domain, "auth0-domain", os.Getenv("AUTH0_DOMAIN"), "Auth0 domain (e.g., your-tenant.auth0.com)")
 	flag.StringVar(&cfg.auth0Audience, "auth0-audience", os.Getenv("AUTH0_AUDIENCE"), "Auth0 API audience identifier")
+	flag.StringVar(&cfg.openaiAPIKey, "openai-api-key", os.Getenv("OPENAI_API_KEY"), "OpenAI API key for recipe import from web")
 	flag.Parse()
 
 	if cfg.dbPath == "" {
@@ -95,7 +98,17 @@ func main() {
 
 	querier := store.New(db)
 	groceriesSvc := groceriesv1.NewService(querier)
-	recipesSvc := recipesv1.NewService(querier)
+
+	// Initialize OpenAI client if configured
+	var openaiClient *openai.Client
+	if cfg.openaiAPIKey != "" {
+		openaiClient = openai.NewClient(openai.Config{APIKey: cfg.openaiAPIKey})
+		log.Info("OpenAI client initialized for recipe web import")
+	} else {
+		log.Warn("OPENAI_API_KEY not set, recipe web import will be disabled")
+	}
+
+	recipesSvc := recipesv1.NewService(querier, recipesv1.WithOpenAIClient(openaiClient))
 	mealplansSvc := mealplansv1.NewService(querier)
 	staplesSvc := staplesv1.NewService(querier)
 	tenantsSvc := tenantsv1.NewService(querier)

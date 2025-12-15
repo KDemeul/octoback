@@ -6,6 +6,7 @@ import {
   deleteRecipeIngredient,
   getRecipe,
   getRecipeIngredient,
+  importRecipeFromWeb,
   listRecipeIngredients,
   listRecipes,
   updateRecipe,
@@ -84,5 +85,12 @@ export function useUpdateRecipeIngredient() {
  */
 export function useDeleteRecipeIngredient() {
   return useMutation(deleteRecipeIngredient);
+}
+
+/**
+ * Import a recipe from a web URL using AI extraction
+ */
+export function useImportRecipeFromWeb() {
+  return useMutation(importRecipeFromWeb);
 }
 

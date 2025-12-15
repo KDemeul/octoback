@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
 import {
   ActionIcon,
+  Alert,
   Badge,
   Box,
   Button,
+  Divider,
   Group,
   Loader,
+  Menu,
   Modal,
+  NumberInput,
+  ScrollArea,
   SimpleGrid,
   Stack,
   Text,
@@ -19,7 +24,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppLayout } from '../components/AppLayout/AppLayout';
-import { useRecipes, useCreateRecipe, useDeleteRecipe } from '../hooks/use-recipes';
+import { useRecipes, useCreateRecipe, useDeleteRecipe, useImportRecipeFromWeb, useCreateRecipeIngredient } from '../hooks/use-recipes';
 import { Recipe } from '../gen/octoback/recipes/v1/recipes_pb';
 import { useQueryClient } from '@tanstack/react-query';
 import classes from './Recipes.module.css';
@@ -67,6 +72,34 @@ function ServingsIcon() {
       <circle cx="9" cy="7" r="4" />
       <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
       <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+
+function GlobeIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="2" y1="12" x2="22" y2="12" />
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+    </svg>
+  );
+}
+
+function ChevronDownIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+}
+
+function AlertIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
     </svg>
   );
 }
@@ -196,19 +229,35 @@ function RecipeCard({ recipe, onDelete, delay }: RecipeCardProps) {
 export function RecipesPage() {
   const { colorScheme } = useMantineColorScheme();
   const [opened, { open, close }] = useDisclosure(false);
+  const [importOpened, { open: openImport, close: closeImport }] = useDisclosure(false);
+  const [previewOpened, { open: openPreview, close: closePreview }] = useDisclosure(false);
   const [newRecipeName, setNewRecipeName] = useState('');
   const [newRecipeDescription, setNewRecipeDescription] = useState('');
+  const [importUrl, setImportUrl] = useState('');
+  const [importError, setImportError] = useState<string | null>(null);
+  const [editedImport, setEditedImport] = useState<{
+    name: string;
+    description: string;
+    servings: number;
+    prepTimeMinutes: number;
+    cookTimeMinutes: number;
+    ingredients: { name: string; quantity: number; unit: string }[];
+  } | null>(null);
   const navigate = useNavigate();
 
   const { data, isLoading } = useRecipes();
   const createMutation = useCreateRecipe();
   const deleteMutation = useDeleteRecipe();
+  const importMutation = useImportRecipeFromWeb();
+  const createIngredientMutation = useCreateRecipeIngredient();
   const queryClient = useQueryClient();
 
   const recipes = data?.recipes ?? [];
 
   const handleCreate = async () => {
-    if (!newRecipeName.trim()) return;
+    if (!newRecipeName.trim()) {
+      return;
+    }
 
     const result = await createMutation.mutateAsync({
       name: newRecipeName.trim(),
@@ -236,19 +285,122 @@ export function RecipesPage() {
     setNewRecipeDescription('');
   };
 
+  const resetImportForm = () => {
+    setImportUrl('');
+    setImportError(null);
+    setEditedImport(null);
+  };
+
+  const handleImportFromWeb = async () => {
+    if (!importUrl.trim()) {
+      return;
+    }
+    setImportError(null);
+
+    try {
+      const result = await importMutation.mutateAsync({ url: importUrl.trim() });
+      setEditedImport({
+        name: result.name,
+        description: result.description,
+        servings: result.servings,
+        prepTimeMinutes: result.prepTimeMinutes,
+        cookTimeMinutes: result.cookTimeMinutes,
+        ingredients: result.ingredients.map((ing) => ({
+          name: ing.name,
+          quantity: ing.quantity,
+          unit: ing.unit,
+        })),
+      });
+      closeImport();
+      openPreview();
+    } catch (err) {
+      setImportError(err instanceof Error ? err.message : 'Échec de l\'import de la recette');
+    }
+  };
+
+  const handleConfirmImport = async () => {
+    if (!editedImport) {
+      return;
+    }
+
+    try {
+      // Create the recipe first
+      const result = await createMutation.mutateAsync({
+        name: editedImport.name.trim(),
+        description: editedImport.description.trim(),
+        servings: editedImport.servings,
+        prepTimeMinutes: editedImport.prepTimeMinutes,
+        cookTimeMinutes: editedImport.cookTimeMinutes,
+      });
+
+      if (result.recipe) {
+        // Create all ingredients for the recipe
+        for (const ingredient of editedImport.ingredients) {
+          if (ingredient.name.trim()) {
+            await createIngredientMutation.mutateAsync({
+              recipe: result.recipe.id,
+              name: ingredient.name.trim(),
+              quantity: ingredient.quantity || 1,
+              unit: ingredient.unit || '',
+            });
+          }
+        }
+      }
+
+      queryClient.invalidateQueries({ queryKey: ['octoback.recipes.v1.Service', 'ListRecipes'] });
+      closePreview();
+      resetImportForm();
+
+      if (result.recipe) {
+        navigate(`/recipes/${result.recipe.id}`);
+      }
+    } catch (err) {
+      setImportError(err instanceof Error ? err.message : 'Échec de la création de la recette');
+    }
+  };
+
+  const updateIngredient = (index: number, field: 'name' | 'quantity' | 'unit', value: string | number) => {
+    if (!editedImport) {
+      return;
+    }
+    const newIngredients = [...editedImport.ingredients];
+    newIngredients[index] = { ...newIngredients[index], [field]: value };
+    setEditedImport({ ...editedImport, ingredients: newIngredients });
+  };
+
+  const removeIngredient = (index: number) => {
+    if (!editedImport) {
+      return;
+    }
+    const newIngredients = editedImport.ingredients.filter((_, i) => i !== index);
+    setEditedImport({ ...editedImport, ingredients: newIngredients });
+  };
+
   return (
     <AppLayout
       title="Mes recettes"
       action={
-        <Button
-          leftSection={<PlusIcon />}
-          color="sage"
-          radius="xl"
-          onClick={open}
-          className={classes.createButton}
-        >
-          Nouvelle recette
-        </Button>
+        <Menu shadow="md" width={220} position="bottom-end">
+          <Menu.Target>
+            <Button
+              leftSection={<PlusIcon />}
+              rightSection={<ChevronDownIcon />}
+              color="sage"
+              radius="xl"
+              className={classes.createButton}
+            >
+              Nouvelle recette
+            </Button>
+          </Menu.Target>
+          <Menu.Dropdown>
+            <Menu.Item leftSection={<PlusIcon />} onClick={open}>
+              Créer manuellement
+            </Menu.Item>
+            <Menu.Item leftSection={<GlobeIcon />} onClick={openImport}>
+              Importer du web
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
       }
     >
       {isLoading ? (
@@ -346,6 +498,208 @@ export function RecipesPage() {
             </Button>
           </Group>
         </Stack>
+      </Modal>
+
+      {/* Import from Web Modal */}
+      <Modal
+        opened={importOpened}
+        onClose={() => {
+          closeImport();
+          resetImportForm();
+        }}
+        title="Importer du web"
+        centered
+        radius="lg"
+        size="md"
+        classNames={{
+          title: classes.modalTitle,
+          content: classes.modalContent,
+        }}
+      >
+        <Stack gap="md">
+          <Text size="sm" c="dimmed">
+            Collez l'URL d'une recette et notre IA extraira automatiquement les informations.
+          </Text>
+          <TextInput
+            label="URL de la recette"
+            placeholder="https://exemple.com/ma-recette"
+            value={importUrl}
+            onChange={(e) => setImportUrl(e.currentTarget.value)}
+            size="md"
+            radius="md"
+            autoFocus
+            required
+          />
+          {importError && (
+            <Alert color="red" variant="light" icon={<AlertIcon />}>
+              {importError}
+            </Alert>
+          )}
+          <Group justify="flex-end" gap="sm" mt="md">
+            <Button
+              variant="subtle"
+              color="gray"
+              onClick={() => {
+                closeImport();
+                resetImportForm();
+              }}
+              radius="md"
+            >
+              Annuler
+            </Button>
+            <Button
+              color="sage"
+              onClick={handleImportFromWeb}
+              loading={importMutation.isPending}
+              radius="md"
+              leftSection={<GlobeIcon />}
+            >
+              Importer
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* Preview Imported Recipe Modal */}
+      <Modal
+        opened={previewOpened}
+        onClose={() => {
+          closePreview();
+          resetImportForm();
+        }}
+        title="Recette importée"
+        centered
+        radius="lg"
+        size="lg"
+        classNames={{
+          title: classes.modalTitle,
+          content: classes.modalContent,
+        }}
+      >
+        {editedImport && (
+          <Stack gap="md">
+            <Text size="sm" c="dimmed">
+              Vérifiez et modifiez les informations extraites avant d'enregistrer.
+            </Text>
+
+            <TextInput
+              label="Nom de la recette"
+              value={editedImport.name}
+              onChange={(e) => setEditedImport({ ...editedImport, name: e.currentTarget.value })}
+              size="md"
+              radius="md"
+              required
+            />
+
+            <Textarea
+              label="Description"
+              value={editedImport.description}
+              onChange={(e) => setEditedImport({ ...editedImport, description: e.currentTarget.value })}
+              size="md"
+              radius="md"
+              rows={2}
+            />
+
+            <Group grow>
+              <NumberInput
+                label="Portions"
+                value={editedImport.servings}
+                onChange={(val) => setEditedImport({ ...editedImport, servings: Number(val) || 0 })}
+                size="md"
+                radius="md"
+                min={0}
+              />
+              <NumberInput
+                label="Préparation (min)"
+                value={editedImport.prepTimeMinutes}
+                onChange={(val) => setEditedImport({ ...editedImport, prepTimeMinutes: Number(val) || 0 })}
+                size="md"
+                radius="md"
+                min={0}
+              />
+              <NumberInput
+                label="Cuisson (min)"
+                value={editedImport.cookTimeMinutes}
+                onChange={(val) => setEditedImport({ ...editedImport, cookTimeMinutes: Number(val) || 0 })}
+                size="md"
+                radius="md"
+                min={0}
+              />
+            </Group>
+
+            <Divider label="Ingrédients" labelPosition="center" />
+
+            <ScrollArea.Autosize mah={250}>
+              <Stack gap="xs">
+                {editedImport.ingredients.map((ingredient, index) => (
+                  <Group key={index} gap="xs" align="flex-end">
+                    <NumberInput
+                      placeholder="Qté"
+                      value={ingredient.quantity}
+                      onChange={(val) => updateIngredient(index, 'quantity', Number(val) || 0)}
+                      size="sm"
+                      radius="md"
+                      min={0}
+                      w={70}
+                    />
+                    <TextInput
+                      placeholder="Unité"
+                      value={ingredient.unit}
+                      onChange={(e) => updateIngredient(index, 'unit', e.currentTarget.value)}
+                      size="sm"
+                      radius="md"
+                      w={80}
+                    />
+                    <TextInput
+                      placeholder="Ingrédient"
+                      value={ingredient.name}
+                      onChange={(e) => updateIngredient(index, 'name', e.currentTarget.value)}
+                      size="sm"
+                      radius="md"
+                      style={{ flex: 1 }}
+                    />
+                    <ActionIcon
+                      variant="subtle"
+                      color="red"
+                      size="sm"
+                      onClick={() => removeIngredient(index)}
+                    >
+                      <TrashIcon />
+                    </ActionIcon>
+                  </Group>
+                ))}
+              </Stack>
+            </ScrollArea.Autosize>
+
+            {importError && (
+              <Alert color="red" variant="light" icon={<AlertIcon />}>
+                {importError}
+              </Alert>
+            )}
+
+            <Group justify="flex-end" gap="sm" mt="md">
+              <Button
+                variant="subtle"
+                color="gray"
+                onClick={() => {
+                  closePreview();
+                  resetImportForm();
+                }}
+                radius="md"
+              >
+                Annuler
+              </Button>
+              <Button
+                color="sage"
+                onClick={handleConfirmImport}
+                loading={createMutation.isPending}
+                radius="md"
+              >
+                Enregistrer la recette
+              </Button>
+            </Group>
+          </Stack>
+        )}
       </Modal>
     </AppLayout>
   );

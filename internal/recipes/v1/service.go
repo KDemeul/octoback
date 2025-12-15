@@ -9,17 +9,36 @@ import (
 	models "github.com/kiliandbigblue/octoback/gen/proto/go/octoback/recipes/v1"
 	store "github.com/kiliandbigblue/octoback/gen/store/v1"
 	"github.com/kiliandbigblue/octoback/internal/x/cloudzap"
+	"github.com/kiliandbigblue/octoback/internal/x/openai"
 	"github.com/kiliandbigblue/octoback/internal/x/tenant"
+	"go.uber.org/zap"
 )
 
 type Service struct {
-	querier store.Querier
+	querier   store.Querier
+	extractor *RecipeExtractor
 }
 
-func NewService(querier store.Querier) *Service {
-	return &Service{
+// ServiceOption is a functional option for configuring the Service.
+type ServiceOption func(*Service)
+
+// WithOpenAIClient configures the service with an OpenAI client for recipe extraction.
+func WithOpenAIClient(client *openai.Client) ServiceOption {
+	return func(s *Service) {
+		if client != nil && client.IsConfigured() {
+			s.extractor = NewRecipeExtractor(client)
+		}
+	}
+}
+
+func NewService(querier store.Querier, opts ...ServiceOption) *Service {
+	s := &Service{
 		querier: querier,
 	}
+	for _, opt := range opts {
+		opt(s)
+	}
+	return s
 }
 
 // tenantIDFromContext extracts tenant_id from context and converts it to sql.NullInt64.
@@ -343,4 +362,39 @@ func (s *Service) DeleteRecipeIngredient(ctx context.Context, r *connect.Request
 	}
 
 	return connect.NewResponse(&models.DeleteRecipeIngredientResponse{}), nil
+}
+
+// ImportRecipeFromWeb extracts recipe data from a web URL using AI.
+func (s *Service) ImportRecipeFromWeb(ctx context.Context, r *connect.Request[models.ImportRecipeFromWebRequest]) (*connect.Response[models.ImportRecipeFromWebResponse], error) {
+	log, _ := cloudzap.GetLogger(ctx)
+	log.Info("ImportRecipeFromWeb", zap.String("url", r.Msg.GetUrl()))
+
+	if s.extractor == nil || !s.extractor.IsConfigured() {
+		return nil, connect.NewError(connect.CodeFailedPrecondition, errors.New("recipe import from web is not configured"))
+	}
+
+	recipe, err := s.extractor.ExtractFromURL(ctx, r.Msg.GetUrl())
+	if err != nil {
+		log.Error("failed to extract recipe", zap.Error(err))
+		return nil, connect.NewError(connect.CodeInternal, errors.New("failed to extract recipe from URL"))
+	}
+
+	// Convert parsed ingredients to proto format
+	ingredients := make([]*models.ParsedIngredient, len(recipe.Ingredients))
+	for i, ing := range recipe.Ingredients {
+		ingredients[i] = &models.ParsedIngredient{
+			Name:     ing.Name,
+			Quantity: ing.Quantity,
+			Unit:     ing.Unit,
+		}
+	}
+
+	return connect.NewResponse(&models.ImportRecipeFromWebResponse{
+		Name:            recipe.Name,
+		Description:     recipe.Description,
+		Servings:        recipe.Servings,
+		PrepTimeMinutes: recipe.PrepTimeMinutes,
+		CookTimeMinutes: recipe.CookTimeMinutes,
+		Ingredients:     ingredients,
+	}), nil
 }

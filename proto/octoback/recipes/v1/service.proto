@@ -30,6 +30,8 @@ service Service {
     rpc ListRecipeIngredients(ListRecipeIngredientsRequest) returns (ListRecipeIngredientsResponse);
     // Delete a recipe ingredient
     rpc DeleteRecipeIngredient(DeleteRecipeIngredientRequest) returns (DeleteRecipeIngredientResponse);
+    // Import a recipe from a web URL using AI extraction
+    rpc ImportRecipeFromWeb(ImportRecipeFromWebRequest) returns (ImportRecipeFromWebResponse);
 }
 
 message GetRecipeRequest {
@@ -138,4 +140,34 @@ message DeleteRecipeIngredientRequest {
 }
 
 message DeleteRecipeIngredientResponse {}
+
+message ImportRecipeFromWebRequest {
+    // The URL of the recipe webpage to import.
+    string url = 1 [(buf.validate.field).string.uri = true];
+}
+
+// Parsed ingredient from web import (not yet persisted).
+message ParsedIngredient {
+    // The ingredient name.
+    string name = 1;
+    // The ingredient quantity.
+    int32 quantity = 2;
+    // The ingredient unit (e.g., "cups", "tbsp").
+    string unit = 3;
+}
+
+message ImportRecipeFromWebResponse {
+    // The parsed recipe name.
+    string name = 1;
+    // The parsed recipe description.
+    string description = 2;
+    // The number of servings.
+    int32 servings = 3;
+    // Preparation time in minutes.
+    int32 prep_time_minutes = 4;
+    // Cooking time in minutes.
+    int32 cook_time_minutes = 5;
+    // The parsed ingredients.
+    repeated ParsedIngredient ingredients = 6;
+}
 
