@@ -507,24 +507,23 @@ export function GroceryListDetailPage() {
 
   const isLoading = listLoading || itemsLoading || virtualItemsLoading || stapleItemsLoading;
 
-  return (
-    <AppLayout title={list?.name ?? 'Chargement...'} backTo="/groceries">
-      <Box className={classes.wrapper} data-theme={colorScheme}>
-        {/* Progress indicator */}
-        {totalCount > 0 && (
-          <Box className={classes.progress}>
-            <Box className={classes.progressBar}>
-              <Box
-                className={classes.progressFill}
-                style={{ width: `${(checkedCount / totalCount) * 100}%` }}
-              />
-            </Box>
-            <Text size="sm" c="dimmed">
-              {checkedCount} / {totalCount} articles
-            </Text>
-          </Box>
-        )}
+  const progressSeparator = totalCount > 0 ? (
+    <Box className={classes.progressSeparator} data-theme={colorScheme}>
+      <Box className={classes.progressSeparatorBar}>
+        <Box
+          className={classes.progressSeparatorFill}
+          style={{ width: `${(checkedCount / totalCount) * 100}%` }}
+        />
+      </Box>
+      <Text className={classes.progressSeparatorText}>
+        {checkedCount} / {totalCount} articles
+      </Text>
+    </Box>
+  ) : undefined;
 
+  return (
+    <AppLayout title={list?.name ?? 'Chargement...'} backTo="/groceries" headerSeparator={progressSeparator}>
+      <Box className={classes.wrapper} data-theme={colorScheme}>
         {/* Add item form */}
         <Paper className={classes.addForm} data-theme={colorScheme}>
           <Group className={classes.addFormGroup} wrap="nowrap">

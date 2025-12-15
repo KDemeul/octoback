@@ -143,9 +143,10 @@ interface AppLayoutProps {
   title?: string;
   backTo?: string;
   action?: React.ReactNode;
+  headerSeparator?: React.ReactNode;
 }
 
-export function AppLayout({ children, title, backTo, action }: AppLayoutProps) {
+export function AppLayout({ children, title, backTo, action, headerSeparator }: AppLayoutProps) {
   const { colorScheme } = useMantineColorScheme();
   const { logout } = useAuth0();
   const location = useLocation();
@@ -211,7 +212,7 @@ export function AppLayout({ children, title, backTo, action }: AppLayoutProps) {
       {/* Main content */}
       <Box className={classes.main}>
         {title && (
-          <Box className={classes.pageHeader}>
+          <Box className={classes.pageHeader} data-has-separator={headerSeparator ? true : undefined}>
             <Container size="lg">
               <Group justify="space-between" align="center">
                 <Group gap="md">
@@ -225,6 +226,11 @@ export function AppLayout({ children, title, backTo, action }: AppLayoutProps) {
                 {action}
               </Group>
             </Container>
+            {headerSeparator && (
+              <Box className={classes.headerSeparator}>
+                {headerSeparator}
+              </Box>
+            )}
           </Box>
         )}
         <Box className={classes.content}>
