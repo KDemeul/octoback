@@ -467,9 +467,20 @@ export function HomePage() {
               </Box>
               <Text fw={600}>OctoPlanner</Text>
             </Group>
-            <Text size="sm" c="dimmed">
-              © 2024 OctoPlanner. Fait avec ❤️ pour les amoureux de la cuisine.
-            </Text>
+            <Group gap="lg">
+              <Text
+                component="a"
+                href="mailto:contact.octoplanner@gmail.com"
+                size="sm"
+                c="dimmed"
+                style={{ textDecoration: 'none' }}
+              >
+                contact.octoplanner@gmail.com
+              </Text>
+              <Text size="sm" c="dimmed">
+                © 2024 OctoPlanner. Fait avec ❤️ pour les amoureux de la cuisine.
+              </Text>
+            </Group>
           </Group>
         </Container>
       </Box>

@@ -153,6 +153,15 @@ function LogoutIcon() {
   );
 }
 
+function MailIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="4" width="20" height="16" rx="2" />
+      <path d="M22 7L12 13L2 7" />
+    </svg>
+  );
+}
+
 function MoreIcon() {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -226,6 +235,17 @@ export function AppLayout({ children, title, backTo, action, headerSeparator }: 
             >
               <SettingsIcon />
             </UnstyledButton>
+          </Tooltip>
+          <Tooltip label="contact.octoplanner@gmail.com" position="right" offset={12}>
+            <ActionIcon
+              component="a"
+              href="mailto:contact.octoplanner@gmail.com"
+              variant="subtle"
+              color="gray"
+              size="lg"
+            >
+              <MailIcon />
+            </ActionIcon>
           </Tooltip>
           <ColorSchemeToggle />
           <Tooltip label="Déconnexion" position="right" offset={12}>
@@ -331,6 +351,18 @@ export function AppLayout({ children, title, backTo, action, headerSeparator }: 
               <SettingsIcon />
             </Box>
             <Text size="sm" fw={500}>Paramètres</Text>
+          </UnstyledButton>
+          
+          <UnstyledButton
+            component="a"
+            href="mailto:contact.octoplanner@gmail.com"
+            className={classes.mobileMenuItem}
+            onClick={closeMobileMenu}
+          >
+            <Box className={classes.mobileMenuIcon}>
+              <MailIcon />
+            </Box>
+            <Text size="sm" fw={500}>contact.octoplanner@gmail.com</Text>
           </UnstyledButton>
           
           <UnstyledButton
