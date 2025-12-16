@@ -10,18 +10,6 @@ import (
 	"database/sql"
 )
 
-const countAllUsers = `-- name: CountAllUsers :one
-SELECT COUNT(DISTINCT user_id) as count
-FROM tenant_member
-`
-
-func (q *Queries) CountAllUsers(ctx context.Context) (int64, error) {
-	row := q.db.QueryRowContext(ctx, countAllUsers)
-	var count int64
-	err := row.Scan(&count)
-	return count, err
-}
-
 const countUserTenants = `-- name: CountUserTenants :one
 SELECT COUNT(*) AS count
 FROM tenant_member
@@ -365,54 +353,6 @@ func (q *Queries) IsTenantMember(ctx context.Context, arg IsTenantMemberParams) 
 	var is_member bool
 	err := row.Scan(&is_member)
 	return is_member, err
-}
-
-const listAllTenantMembers = `-- name: ListAllTenantMembers :many
-SELECT tm.id, tm.tenant_id, tm.user_id, tm.role, tm.created_at, t.name as tenant_name, t.created_at as tenant_created_at
-FROM tenant_member tm
-JOIN tenant t ON tm.tenant_id = t.id
-ORDER BY tm.created_at DESC
-`
-
-type ListAllTenantMembersRow struct {
-	ID              int64
-	TenantID        int64
-	UserID          string
-	Role            string
-	CreatedAt       string
-	TenantName      string
-	TenantCreatedAt string
-}
-
-func (q *Queries) ListAllTenantMembers(ctx context.Context) ([]ListAllTenantMembersRow, error) {
-	rows, err := q.db.QueryContext(ctx, listAllTenantMembers)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []ListAllTenantMembersRow
-	for rows.Next() {
-		var i ListAllTenantMembersRow
-		if err := rows.Scan(
-			&i.ID,
-			&i.TenantID,
-			&i.UserID,
-			&i.Role,
-			&i.CreatedAt,
-			&i.TenantName,
-			&i.TenantCreatedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
 }
 
 const listTenantInvitations = `-- name: ListTenantInvitations :many

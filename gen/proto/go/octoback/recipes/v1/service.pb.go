@@ -339,7 +339,13 @@ func (x *UpdateRecipeResponse) GetRecipe() *Recipe {
 }
 
 type ListRecipesRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Optional search query to filter recipes by name (case-insensitive).
+	Query string `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`
+	// Maximum number of recipes to return. Default is 20.
+	PageSize int32 `protobuf:"varint,2,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	// Page token for pagination. Empty for first page.
+	PageToken     string `protobuf:"bytes,3,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -374,9 +380,34 @@ func (*ListRecipesRequest) Descriptor() ([]byte, []int) {
 	return file_octoback_recipes_v1_service_proto_rawDescGZIP(), []int{6}
 }
 
+func (x *ListRecipesRequest) GetQuery() string {
+	if x != nil {
+		return x.Query
+	}
+	return ""
+}
+
+func (x *ListRecipesRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListRecipesRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
 type ListRecipesResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Recipes       []*Recipe              `protobuf:"bytes,1,rep,name=recipes,proto3" json:"recipes,omitempty"`
+	state   protoimpl.MessageState `protogen:"open.v1"`
+	Recipes []*Recipe              `protobuf:"bytes,1,rep,name=recipes,proto3" json:"recipes,omitempty"`
+	// Token for the next page, empty if no more results.
+	NextPageToken string `protobuf:"bytes,2,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	// Total count of recipes matching the query (for UI display).
+	TotalCount    int32 `protobuf:"varint,3,opt,name=total_count,json=totalCount,proto3" json:"total_count,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -416,6 +447,20 @@ func (x *ListRecipesResponse) GetRecipes() []*Recipe {
 		return x.Recipes
 	}
 	return nil
+}
+
+func (x *ListRecipesResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
+func (x *ListRecipesResponse) GetTotalCount() int32 {
+	if x != nil {
+		return x.TotalCount
+	}
+	return 0
 }
 
 type DeleteRecipeRequest struct {
@@ -1196,10 +1241,17 @@ const file_octoback_recipes_v1_service_proto_rawDesc = "" +
 	"\vupdate_mask\x18\x02 \x01(\v2\x1a.google.protobuf.FieldMaskR\n" +
 	"updateMask\"K\n" +
 	"\x14UpdateRecipeResponse\x123\n" +
-	"\x06recipe\x18\x01 \x01(\v2\x1b.octoback.recipes.v1.RecipeR\x06recipe\"\x14\n" +
-	"\x12ListRecipesRequest\"L\n" +
+	"\x06recipe\x18\x01 \x01(\v2\x1b.octoback.recipes.v1.RecipeR\x06recipe\"f\n" +
+	"\x12ListRecipesRequest\x12\x14\n" +
+	"\x05query\x18\x01 \x01(\tR\x05query\x12\x1b\n" +
+	"\tpage_size\x18\x02 \x01(\x05R\bpageSize\x12\x1d\n" +
+	"\n" +
+	"page_token\x18\x03 \x01(\tR\tpageToken\"\x95\x01\n" +
 	"\x13ListRecipesResponse\x125\n" +
-	"\arecipes\x18\x01 \x03(\v2\x1b.octoback.recipes.v1.RecipeR\arecipes\"%\n" +
+	"\arecipes\x18\x01 \x03(\v2\x1b.octoback.recipes.v1.RecipeR\arecipes\x12&\n" +
+	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1f\n" +
+	"\vtotal_count\x18\x03 \x01(\x05R\n" +
+	"totalCount\"%\n" +
 	"\x13DeleteRecipeRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"\x16\n" +
 	"\x14DeleteRecipeResponse\",\n" +

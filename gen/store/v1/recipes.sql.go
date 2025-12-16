@@ -10,6 +10,25 @@ import (
 	"database/sql"
 )
 
+const countRecipes = `-- name: CountRecipes :one
+SELECT COUNT(*) as count
+FROM recipe
+WHERE tenant_id = ?1
+  AND (?2 = '' OR name LIKE '%' || ?2 || '%')
+`
+
+type CountRecipesParams struct {
+	TenantID sql.NullInt64
+	Query    interface{}
+}
+
+func (q *Queries) CountRecipes(ctx context.Context, arg CountRecipesParams) (int64, error) {
+	row := q.db.QueryRowContext(ctx, countRecipes, arg.TenantID, arg.Query)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createRecipe = `-- name: CreateRecipe :one
 INSERT INTO recipe (name, description, servings, prep_time_minutes, cook_time_minutes, tenant_id)
 VALUES (?, ?, ?, ?, ?, ?)
@@ -234,11 +253,27 @@ func (q *Queries) ListRecipeIngredientsByRecipe(ctx context.Context, arg ListRec
 const listRecipes = `-- name: ListRecipes :many
 SELECT id, name, description, servings, prep_time_minutes, cook_time_minutes, created_at, version, tenant_id
 FROM recipe
-WHERE tenant_id = ?
+WHERE tenant_id = ?1
+  AND (?2 = '' OR name LIKE '%' || ?2 || '%')
+ORDER BY name ASC
+LIMIT ?4
+OFFSET ?3
 `
 
-func (q *Queries) ListRecipes(ctx context.Context, tenantID sql.NullInt64) ([]Recipe, error) {
-	rows, err := q.db.QueryContext(ctx, listRecipes, tenantID)
+type ListRecipesParams struct {
+	TenantID sql.NullInt64
+	Query    interface{}
+	Offset   int64
+	Limit    int64
+}
+
+func (q *Queries) ListRecipes(ctx context.Context, arg ListRecipesParams) ([]Recipe, error) {
+	rows, err := q.db.QueryContext(ctx, listRecipes,
+		arg.TenantID,
+		arg.Query,
+		arg.Offset,
+		arg.Limit,
+	)
 	if err != nil {
 		return nil, err
 	}

@@ -285,6 +285,27 @@ export class UpdateRecipeResponse extends Message<UpdateRecipeResponse> {
  * @generated from message octoback.recipes.v1.ListRecipesRequest
  */
 export class ListRecipesRequest extends Message<ListRecipesRequest> {
+  /**
+   * Optional search query to filter recipes by name (case-insensitive).
+   *
+   * @generated from field: string query = 1;
+   */
+  query = "";
+
+  /**
+   * Maximum number of recipes to return. Default is 20.
+   *
+   * @generated from field: int32 page_size = 2;
+   */
+  pageSize = 0;
+
+  /**
+   * Page token for pagination. Empty for first page.
+   *
+   * @generated from field: string page_token = 3;
+   */
+  pageToken = "";
+
   constructor(data?: PartialMessage<ListRecipesRequest>) {
     super();
     proto3.util.initPartial(data, this);
@@ -293,6 +314,9 @@ export class ListRecipesRequest extends Message<ListRecipesRequest> {
   static readonly runtime: typeof proto3 = proto3;
   static readonly typeName = "octoback.recipes.v1.ListRecipesRequest";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
+    { no: 1, name: "query", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 2, name: "page_size", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
+    { no: 3, name: "page_token", kind: "scalar", T: 9 /* ScalarType.STRING */ },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListRecipesRequest {
@@ -321,6 +345,20 @@ export class ListRecipesResponse extends Message<ListRecipesResponse> {
    */
   recipes: Recipe[] = [];
 
+  /**
+   * Token for the next page, empty if no more results.
+   *
+   * @generated from field: string next_page_token = 2;
+   */
+  nextPageToken = "";
+
+  /**
+   * Total count of recipes matching the query (for UI display).
+   *
+   * @generated from field: int32 total_count = 3;
+   */
+  totalCount = 0;
+
   constructor(data?: PartialMessage<ListRecipesResponse>) {
     super();
     proto3.util.initPartial(data, this);
@@ -330,6 +368,8 @@ export class ListRecipesResponse extends Message<ListRecipesResponse> {
   static readonly typeName = "octoback.recipes.v1.ListRecipesResponse";
   static readonly fields: FieldList = proto3.util.newFieldList(() => [
     { no: 1, name: "recipes", kind: "message", T: Recipe, repeated: true },
+    { no: 2, name: "next_page_token", kind: "scalar", T: 9 /* ScalarType.STRING */ },
+    { no: 3, name: "total_count", kind: "scalar", T: 5 /* ScalarType.INT32 */ },
   ]);
 
   static fromBinary(bytes: Uint8Array, options?: Partial<BinaryReadOptions>): ListRecipesResponse {
