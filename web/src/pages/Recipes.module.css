@@ -218,6 +218,7 @@
 .servingsCell {
   color: var(--mantine-color-gray-6);
   font-size: 0.875rem;
+  white-space: nowrap;
 }
 
 /* Create button */
