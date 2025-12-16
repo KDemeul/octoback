@@ -187,22 +187,41 @@ func openDB(cfg config) (*sql.DB, error) {
 // spaHandler returns a handler that serves static files with SPA fallback.
 // For any request that doesn't match a static file, it serves index.html.
 func spaHandler(staticDir string) http.Handler {
+	// Get absolute path of static directory for security validation
+	absStaticDir, err := filepath.Abs(staticDir)
+	if err != nil {
+		panic("invalid static directory: " + err.Error())
+	}
+
 	fileServer := http.FileServer(http.Dir(staticDir))
+	indexPath := filepath.Join(absStaticDir, "index.html")
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Clean the path to prevent directory traversal
-		path := filepath.Clean(r.URL.Path)
-		if path == "/" {
-			path = "/index.html"
+		// Clean the path and make it relative to prevent path traversal.
+		// filepath.Clean normalizes the path, then we strip the leading slash
+		// to ensure it's treated as relative when joined with staticDir.
+		path := filepath.Clean("/" + r.URL.Path)
+		path = strings.TrimPrefix(path, "/")
+		if path == "" || path == "." {
+			path = "index.html"
+		}
+
+		// Build full path and verify it's within staticDir
+		fullPath := filepath.Join(absStaticDir, path)
+
+		// Security check: ensure the resolved path is within the static directory.
+		// This prevents path traversal attacks even if filepath.Join behavior changes.
+		if !strings.HasPrefix(fullPath, absStaticDir+string(filepath.Separator)) && fullPath != absStaticDir {
+			http.Error(w, "Forbidden", http.StatusForbidden)
+			return
 		}
 
 		// Check if the file exists
-		fullPath := filepath.Join(staticDir, path)
 		info, err := os.Stat(fullPath)
 		if err != nil {
 			if errors.Is(err, fs.ErrNotExist) {
 				// File doesn't exist, serve index.html for SPA routing
-				http.ServeFile(w, r, filepath.Join(staticDir, "index.html"))
+				http.ServeFile(w, r, indexPath)
 				return
 			}
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -212,18 +231,18 @@ func spaHandler(staticDir string) http.Handler {
 		// Don't serve directories directly
 		if info.IsDir() {
 			// Try to serve index.html from the directory
-			indexPath := filepath.Join(fullPath, "index.html")
-			if _, err := os.Stat(indexPath); err == nil {
-				http.ServeFile(w, r, indexPath)
+			dirIndexPath := filepath.Join(fullPath, "index.html")
+			if _, err := os.Stat(dirIndexPath); err == nil {
+				http.ServeFile(w, r, dirIndexPath)
 				return
 			}
 			// Fall back to SPA index.html
-			http.ServeFile(w, r, filepath.Join(staticDir, "index.html"))
+			http.ServeFile(w, r, indexPath)
 			return
 		}
 
 		// Set cache headers for static assets
-		if strings.HasPrefix(path, "/assets/") {
+		if strings.HasPrefix(r.URL.Path, "/assets/") {
 			w.Header().Set("Cache-Control", "public, max-age=31536000, immutable")
 		}
 
