@@ -20,7 +20,7 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure, useDebouncedValue } from '@mantine/hooks';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '../components/AppLayout/AppLayout';
 import { useRecipes, useCreateRecipe, useDeleteRecipe, useImportRecipeFromWeb, useCreateRecipeIngredient } from '../hooks/use-recipes';
 import { Recipe } from '../gen/octoback/recipes/v1/recipes_pb';
@@ -188,19 +188,24 @@ interface RecipeRowProps {
 }
 
 function RecipeRow({ recipe, onDelete }: RecipeRowProps) {
+  const navigate = useNavigate();
   const totalTime = recipe.prepTimeMinutes + recipe.cookTimeMinutes;
 
+  const handleRowClick = () => {
+    navigate(`/recipes/${recipe.id}`);
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete(recipe.id);
+  };
+
   return (
-    <Table.Tr className={classes.tableRow}>
+    <Table.Tr className={classes.tableRow} onClick={handleRowClick} style={{ cursor: 'pointer' }}>
       <Table.Td>
-        <Anchor
-          component={Link}
-          to={`/recipes/${recipe.id}`}
-          className={classes.recipeName}
-          underline="never"
-        >
+        <Text className={classes.recipeName}>
           {recipe.name}
-        </Anchor>
+        </Text>
       </Table.Td>
       <Table.Td className={classes.timeCell}>
         {totalTime > 0 ? formatTime(totalTime) : '—'}
@@ -213,7 +218,7 @@ function RecipeRow({ recipe, onDelete }: RecipeRowProps) {
           variant="subtle"
           color="red"
           size="sm"
-          onClick={() => onDelete(recipe.id)}
+          onClick={handleDeleteClick}
         >
           <TrashIcon />
         </ActionIcon>
