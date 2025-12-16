@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { HomePage } from './pages/Home.page';
+import { FAQPage } from './pages/FAQ.page';
 import { SettingsPage } from './pages/Settings.page';
 import { GroceryListsPage } from './pages/GroceryLists.page';
 import { GroceryListDetailPage } from './pages/GroceryListDetail.page';
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <HomePage />,
+  },
+  {
+    path: '/faq',
+    element: <FAQPage />,
   },
   {
     path: '/invite/:code',

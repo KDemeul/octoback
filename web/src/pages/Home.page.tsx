@@ -252,6 +252,14 @@ export function HomePage() {
               </Text>
             </Group>
             <Group>
+              <Button
+                variant="subtle"
+                color="gray"
+                radius="xl"
+                onClick={() => navigate('/faq')}
+              >
+                Guide d'utilisation
+              </Button>
               <ColorSchemeToggle />
               {!isAuthenticated && (
                 <Button
