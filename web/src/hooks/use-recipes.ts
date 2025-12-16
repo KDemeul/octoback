@@ -23,10 +23,14 @@ export function useRecipe(id: bigint) {
 }
 
 /**
- * Fetch all recipes
+ * Fetch recipes with optional search and pagination
  */
-export function useRecipes() {
-  return useQuery(listRecipes, {});
+export function useRecipes(query?: string, pageSize?: number, pageToken?: string) {
+  return useQuery(listRecipes, {
+    query: query ?? '',
+    pageSize: pageSize ?? 20,
+    pageToken: pageToken ?? '',
+  });
 }
 
 /**

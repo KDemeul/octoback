@@ -23,7 +23,17 @@ RETURNING *;
 -- name: ListRecipes :many
 SELECT *
 FROM recipe
-WHERE tenant_id = ?;
+WHERE tenant_id = sqlc.arg(tenant_id)
+  AND (sqlc.arg(query) = '' OR name LIKE '%' || sqlc.arg(query) || '%')
+ORDER BY name ASC
+LIMIT sqlc.arg(limit)
+OFFSET sqlc.arg(offset);
+
+-- name: CountRecipes :one
+SELECT COUNT(*) as count
+FROM recipe
+WHERE tenant_id = sqlc.arg(tenant_id)
+  AND (sqlc.arg(query) = '' OR name LIKE '%' || sqlc.arg(query) || '%');
 
 -- name: GetRecipeIngredient :one
 SELECT ri.*

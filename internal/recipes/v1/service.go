@@ -3,7 +3,10 @@ package v1
 import (
 	"context"
 	"database/sql"
+	"encoding/base64"
 	"errors"
+	"fmt"
+	"strconv"
 
 	"connectrpc.com/connect"
 	models "github.com/kiliandbigblue/octoback/gen/proto/go/octoback/recipes/v1"
@@ -13,6 +16,28 @@ import (
 	"github.com/kiliandbigblue/octoback/internal/x/tenant"
 	"go.uber.org/zap"
 )
+
+// generatePageToken creates a page token from an offset.
+func generatePageToken(offset int64) string {
+	return base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%d", offset)))
+}
+
+// parsePageToken extracts the offset from a page token.
+func parsePageToken(token string, offset *int64) (bool, error) {
+	if token == "" {
+		return false, nil
+	}
+	decoded, err := base64.StdEncoding.DecodeString(token)
+	if err != nil {
+		return false, err
+	}
+	val, err := strconv.ParseInt(string(decoded), 10, 64)
+	if err != nil {
+		return false, err
+	}
+	*offset = val
+	return true, nil
+}
 
 type Service struct {
 	querier   store.Querier
@@ -158,14 +183,49 @@ func (s *Service) UpdateRecipe(ctx context.Context, r *connect.Request[models.Up
 	}), nil
 }
 
-// ListRecipes lists all recipes.
+// ListRecipes lists recipes with optional search and pagination.
 //
 //nolint:unparam // error is never used.
-func (s *Service) ListRecipes(ctx context.Context, _ *connect.Request[models.ListRecipesRequest]) (*connect.Response[models.ListRecipesResponse], error) {
+func (s *Service) ListRecipes(ctx context.Context, r *connect.Request[models.ListRecipesRequest]) (*connect.Response[models.ListRecipesResponse], error) {
 	log, _ := cloudzap.GetLogger(ctx)
-	log.Info("ListRecipes")
+	log.Info("ListRecipes", zap.String("query", r.Msg.GetQuery()), zap.Int32("page_size", r.Msg.GetPageSize()))
 
-	recipes, err := s.querier.ListRecipes(ctx, tenantIDFromContext(ctx))
+	tenantID := tenantIDFromContext(ctx)
+	query := r.Msg.GetQuery()
+
+	// Default page size
+	pageSize := int64(r.Msg.GetPageSize())
+	if pageSize <= 0 {
+		pageSize = 20
+	}
+	if pageSize > 100 {
+		pageSize = 100
+	}
+
+	// Parse page token (offset)
+	var offset int64
+	if r.Msg.GetPageToken() != "" {
+		if _, err := parsePageToken(r.Msg.GetPageToken(), &offset); err != nil {
+			return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("invalid page token"))
+		}
+	}
+
+	// Get total count for pagination info
+	totalCount, err := s.querier.CountRecipes(ctx, store.CountRecipesParams{
+		TenantID: tenantID,
+		Query:    query,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	// Fetch recipes
+	recipes, err := s.querier.ListRecipes(ctx, store.ListRecipesParams{
+		TenantID: tenantID,
+		Query:    query,
+		Offset:   offset,
+		Limit:    pageSize,
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -175,8 +235,16 @@ func (s *Service) ListRecipes(ctx context.Context, _ *connect.Request[models.Lis
 		result[i] = translateRecipe(recipe)
 	}
 
+	// Generate next page token if there are more results
+	var nextPageToken string
+	if offset+int64(len(recipes)) < totalCount {
+		nextPageToken = generatePageToken(offset + pageSize)
+	}
+
 	return connect.NewResponse(&models.ListRecipesResponse{
-		Recipes: result,
+		Recipes:       result,
+		NextPageToken: nextPageToken,
+		TotalCount:    int32(totalCount),
 	}), nil
 }
 

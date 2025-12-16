@@ -74,10 +74,21 @@ message UpdateRecipeResponse {
     Recipe recipe = 1;
 }
 
-message ListRecipesRequest {}
+message ListRecipesRequest {
+    // Optional search query to filter recipes by name (case-insensitive).
+    string query = 1;
+    // Maximum number of recipes to return. Default is 20.
+    int32 page_size = 2;
+    // Page token for pagination. Empty for first page.
+    string page_token = 3;
+}
 
 message ListRecipesResponse {
     repeated Recipe recipes = 1;
+    // Token for the next page, empty if no more results.
+    string next_page_token = 2;
+    // Total count of recipes matching the query (for UI display).
+    int32 total_count = 3;
 }
 
 message DeleteRecipeRequest {

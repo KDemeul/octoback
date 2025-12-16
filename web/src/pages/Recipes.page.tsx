@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   ActionIcon,
   Alert,
   Anchor,
-  Badge,
   Box,
   Button,
   Divider,
@@ -13,21 +12,22 @@ import {
   Modal,
   NumberInput,
   ScrollArea,
-  SimpleGrid,
   Stack,
+  Table,
   Text,
   Textarea,
   TextInput,
-  ThemeIcon,
-  UnstyledButton,
   useMantineColorScheme,
 } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { useDisclosure, useDebouncedValue } from '@mantine/hooks';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppLayout } from '../components/AppLayout/AppLayout';
 import { useRecipes, useCreateRecipe, useDeleteRecipe, useImportRecipeFromWeb, useCreateRecipeIngredient } from '../hooks/use-recipes';
 import { Recipe } from '../gen/octoback/recipes/v1/recipes_pb';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTransport } from '@connectrpc/connect-query';
+import { createClient } from '@connectrpc/connect';
+import { Service } from '../gen/octoback/recipes/v1/service_connect';
 import classes from './Recipes.module.css';
 
 function ChefHatIcon({ size = 48 }: { size?: number }) {
@@ -105,6 +105,24 @@ function AlertIcon() {
   );
 }
 
+function SearchIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  );
+}
+
+function ClearIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  );
+}
+
 function EmptyState() {
   const { colorScheme } = useMantineColorScheme();
 
@@ -164,102 +182,47 @@ function TextWithLinks({ text }: { text: string }) {
   return <>{parts}</>;
 }
 
-interface RecipeCardProps {
+interface RecipeRowProps {
   recipe: Recipe;
   onDelete: (id: bigint) => void;
-  delay: number;
 }
 
-function RecipeCard({ recipe, onDelete, delay }: RecipeCardProps) {
-  const { colorScheme } = useMantineColorScheme();
-  const [isHovered, setIsHovered] = useState(false);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
-
-  useEffect(() => {
-    const hasTouch = window.matchMedia('(hover: none)').matches;
-    setIsTouchDevice(hasTouch);
-  }, []);
-
-  const showDelete = isHovered || isTouchDevice;
+function RecipeRow({ recipe, onDelete }: RecipeRowProps) {
   const totalTime = recipe.prepTimeMinutes + recipe.cookTimeMinutes;
 
   return (
-    <UnstyledButton
-      component={Link}
-      to={`/recipes/${recipe.id}`}
-      className={classes.recipeCard}
-      data-theme={colorScheme}
-      style={{ animationDelay: `${delay}ms` }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <Box className={classes.cardPattern} />
-
-      <Group justify="space-between" align="flex-start" mb="lg" style={{ position: 'relative', zIndex: 1 }}>
-        <ThemeIcon
-          size={48}
-          radius="xl"
-          variant="light"
-          color="sage"
-          className={classes.cardIcon}
+    <Table.Tr className={classes.tableRow}>
+      <Table.Td>
+        <Anchor
+          component={Link}
+          to={`/recipes/${recipe.id}`}
+          className={classes.recipeName}
+          underline="never"
         >
-          <ChefHatIcon size={24} />
-        </ThemeIcon>
-
-        {showDelete && (
-          <ActionIcon
-            variant="subtle"
-            color="red"
-            size="sm"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onDelete(recipe.id);
-            }}
-            className={classes.deleteButton}
-          >
-            <TrashIcon />
-          </ActionIcon>
-        )}
-      </Group>
-
-      <Stack gap="xs" style={{ position: 'relative', zIndex: 1 }}>
-        <Text className={classes.cardTitle}>{recipe.name}</Text>
-        {recipe.description && (
-          <Text className={classes.cardDescription} lineClamp={2}>
-            <TextWithLinks text={recipe.description} />
-          </Text>
-        )}
-        <Group gap="md" mt="xs">
-          {totalTime > 0 && (
-            <Badge
-              variant="light"
-              color="sage"
-              size="sm"
-              leftSection={<ClockIcon />}
-              className={classes.metaBadge}
-            >
-              {formatTime(totalTime)}
-            </Badge>
-          )}
-          {recipe.servings > 0 && (
-            <Badge
-              variant="light"
-              color="coral"
-              size="sm"
-              leftSection={<ServingsIcon />}
-              className={classes.metaBadge}
-            >
-              {recipe.servings} pers.
-            </Badge>
-          )}
-        </Group>
-      </Stack>
-
-      <Box className={classes.cardArrow}>→</Box>
-    </UnstyledButton>
+          {recipe.name}
+        </Anchor>
+      </Table.Td>
+      <Table.Td className={classes.timeCell}>
+        {totalTime > 0 ? formatTime(totalTime) : '—'}
+      </Table.Td>
+      <Table.Td className={classes.servingsCell}>
+        {recipe.servings > 0 ? `${recipe.servings}` : '—'}
+      </Table.Td>
+      <Table.Td className={classes.actionsCell}>
+        <ActionIcon
+          variant="subtle"
+          color="red"
+          size="sm"
+          onClick={() => onDelete(recipe.id)}
+        >
+          <TrashIcon />
+        </ActionIcon>
+      </Table.Td>
+    </Table.Tr>
   );
 }
+
+const PAGE_SIZE = 20;
 
 export function RecipesPage() {
   const { colorScheme } = useMantineColorScheme();
@@ -280,14 +243,57 @@ export function RecipesPage() {
   } | null>(null);
   const navigate = useNavigate();
 
-  const { data, isLoading } = useRecipes();
+  // Search state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch] = useDebouncedValue(searchQuery, 300);
+  
+  // Pagination state
+  const [allRecipes, setAllRecipes] = useState<Recipe[]>([]);
+  const [nextPageToken, setNextPageToken] = useState<string>('');
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasInitiallyLoaded, setHasInitiallyLoaded] = useState(false);
+
+  const transport = useTransport();
+  const client = useMemo(() => createClient(Service, transport), [transport]);
+
+  const { data, isLoading, isFetching } = useRecipes(debouncedSearch, PAGE_SIZE);
   const createMutation = useCreateRecipe();
   const deleteMutation = useDeleteRecipe();
   const importMutation = useImportRecipeFromWeb();
   const createIngredientMutation = useCreateRecipeIngredient();
   const queryClient = useQueryClient();
 
-  const recipes = data?.recipes ?? [];
+  // Reset pagination when search changes
+  useEffect(() => {
+    if (data) {
+      setAllRecipes(data.recipes);
+      setNextPageToken(data.nextPageToken);
+      setHasInitiallyLoaded(true);
+    }
+  }, [data]);
+
+  const loadMore = useCallback(async () => {
+    if (!nextPageToken || isLoadingMore) return;
+    
+    setIsLoadingMore(true);
+    try {
+      const response = await client.listRecipes({
+        query: debouncedSearch,
+        pageSize: PAGE_SIZE,
+        pageToken: nextPageToken,
+      });
+      setAllRecipes(prev => [...prev, ...response.recipes]);
+      setNextPageToken(response.nextPageToken);
+    } catch (error) {
+      console.error('Failed to load more recipes:', error);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [client, debouncedSearch, nextPageToken, isLoadingMore]);
+
+  const recipes = allRecipes;
+  const totalCount = data?.totalCount ?? 0;
+  const hasMore = !!nextPageToken;
 
   const handleCreate = async () => {
     if (!newRecipeName.trim()) {
@@ -411,6 +417,9 @@ export function RecipesPage() {
     setEditedImport({ ...editedImport, ingredients: newIngredients });
   };
 
+  const showEmptyState = hasInitiallyLoaded && recipes.length === 0 && !debouncedSearch;
+  const showNoResults = hasInitiallyLoaded && recipes.length === 0 && debouncedSearch;
+
   return (
     <AppLayout
       title="Mes recettes"
@@ -438,41 +447,96 @@ export function RecipesPage() {
         </Menu>
       }
     >
-      {isLoading ? (
+      {/* Search bar */}
+      <Box className={classes.searchContainer} data-theme={colorScheme}>
+        <TextInput
+          placeholder="Rechercher une recette..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.currentTarget.value)}
+          leftSection={<SearchIcon />}
+          rightSection={
+            searchQuery ? (
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                size="sm"
+                onClick={() => setSearchQuery('')}
+              >
+                <ClearIcon />
+              </ActionIcon>
+            ) : null
+          }
+          size="md"
+          radius="xl"
+          className={classes.searchInput}
+        />
+        {totalCount > 0 && (
+          <Text size="sm" c="dimmed" className={classes.resultCount}>
+            {totalCount} recette{totalCount > 1 ? 's' : ''}
+            {debouncedSearch && ` pour "${debouncedSearch}"`}
+          </Text>
+        )}
+      </Box>
+
+      {isLoading && !hasInitiallyLoaded ? (
         <Box className={classes.loadingState}>
           <Loader color="sage" size="lg" />
         </Box>
-      ) : recipes.length === 0 ? (
+      ) : showEmptyState ? (
         <EmptyState />
+      ) : showNoResults ? (
+        <Box className={classes.noResults} data-theme={colorScheme}>
+          <Text size="lg" fw={500}>Aucune recette trouvée</Text>
+          <Text c="dimmed">Essayez avec d'autres termes de recherche</Text>
+        </Box>
       ) : (
-        <SimpleGrid
-          cols={{ base: 1, xs: 2, md: 3 }}
-          spacing={{ base: 'md', md: 'lg' }}
-          className={classes.grid}
-        >
-          {recipes.map((recipe, index) => (
-            <RecipeCard
-              key={recipe.id.toString()}
-              recipe={recipe}
-              onDelete={handleDelete}
-              delay={index * 50}
-            />
-          ))}
+        <>
+          <Box className={classes.tableContainer} data-theme={colorScheme}>
+            <Table highlightOnHover className={classes.table}>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Nom</Table.Th>
+                  <Table.Th className={classes.timeHeader}>Temps</Table.Th>
+                  <Table.Th className={classes.servingsHeader}>Pers.</Table.Th>
+                  <Table.Th className={classes.actionsHeader}></Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {recipes.map((recipe) => (
+                  <RecipeRow
+                    key={recipe.id.toString()}
+                    recipe={recipe}
+                    onDelete={handleDelete}
+                  />
+                ))}
+              </Table.Tbody>
+            </Table>
+          </Box>
 
-          {/* Add new recipe card */}
-          <UnstyledButton
-            className={classes.addCard}
-            data-theme={colorScheme}
-            onClick={open}
-          >
-            <Box className={classes.addIcon}>
-              <PlusIcon />
+          {/* Load more button */}
+          {hasMore && (
+            <Box className={classes.loadMoreContainer}>
+              <Button
+                variant="light"
+                color="sage"
+                radius="xl"
+                size="md"
+                onClick={loadMore}
+                loading={isLoadingMore}
+                className={classes.loadMoreButton}
+              >
+                Charger plus de recettes
+              </Button>
             </Box>
-            <Text size="sm" c="dimmed" fw={500}>
-              Ajouter une recette
-            </Text>
-          </UnstyledButton>
-        </SimpleGrid>
+          )}
+
+          {/* Loading indicator while fetching */}
+          {isFetching && hasInitiallyLoaded && (
+            <Box className={classes.fetchingIndicator}>
+              <Loader color="sage" size="sm" />
+            </Box>
+          )}
+        </>
       )}
 
       {/* Create Modal */}
