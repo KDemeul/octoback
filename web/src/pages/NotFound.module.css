@@ -1,0 +1,20 @@
+.wrapper {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Error code */
+.errorCode {
+  font-size: clamp(4rem, 12vw, 8rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -6px;
+  background: linear-gradient(135deg, var(--mantine-color-coral-4) 0%, var(--mantine-color-coral-7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0.9;
+  margin-top: -10px;
+}
