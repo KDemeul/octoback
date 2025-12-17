@@ -36,6 +36,7 @@ import classes from './GroceryListDetail.module.css';
 type GroupingMode = 'alphabetical' | 'category' | 'recipe';
 
 const GROUPING_STORAGE_KEY = 'grocery-list-grouping-mode';
+const SHOW_CHECKED_STORAGE_KEY_PREFIX = 'grocery-list-show-checked:';
 
 function getStoredGroupingMode(): GroupingMode {
   try {
@@ -52,6 +53,29 @@ function getStoredGroupingMode(): GroupingMode {
 function setStoredGroupingMode(mode: GroupingMode) {
   try {
     localStorage.setItem(GROUPING_STORAGE_KEY, mode);
+  } catch {
+    // localStorage not available
+  }
+}
+
+function getStoredShowChecked(key: string): boolean {
+  try {
+    const stored = localStorage.getItem(key);
+    if (stored === 'true') {
+      return true;
+    }
+    if (stored === 'false') {
+      return false;
+    }
+  } catch {
+    // localStorage not available
+  }
+  return false;
+}
+
+function setStoredShowChecked(key: string, value: boolean) {
+  try {
+    localStorage.setItem(key, value ? 'true' : 'false');
   } catch {
     // localStorage not available
   }
@@ -374,11 +398,28 @@ export function GroceryListDetailPage() {
   const [newItemName, setNewItemName] = useState('');
   const [newItemQuantity, setNewItemQuantity] = useState(1);
   const [groupingMode, setGroupingMode] = useState<GroupingMode>(getStoredGroupingMode);
+  const showCheckedStorageKey = useMemo(
+    () => `${SHOW_CHECKED_STORAGE_KEY_PREFIX}${id ?? '0'}`,
+    [id]
+  );
+  const [showChecked, setShowChecked] = useState(false);
+
+  useEffect(() => {
+    setShowChecked(getStoredShowChecked(showCheckedStorageKey));
+  }, [showCheckedStorageKey]);
 
   const handleGroupingChange = (value: string) => {
     const mode = value as GroupingMode;
     setGroupingMode(mode);
     setStoredGroupingMode(mode);
+  };
+
+  const handleToggleShowChecked = () => {
+    setShowChecked((prev) => {
+      const next = !prev;
+      setStoredShowChecked(showCheckedStorageKey, next);
+      return next;
+    });
   };
 
   const listId = BigInt(id ?? '0');
@@ -514,7 +555,7 @@ export function GroceryListDetailPage() {
 
     // Optimistic update: add the item immediately
     queryClient.setQueryData(
-      ['octoback.groceries.v1.Service', 'ListGroceryItems', { groceryList: listId.toString() + 'n' }],
+      ['octoback.groceries.v1.Service', 'ListGroceryItems', { groceryList: `${listId.toString()}n` }],
       (old: { groceryItems: GroceryItem[] } | undefined) => ({
         groceryItems: [...(old?.groceryItems ?? []), newItem],
       })
@@ -544,7 +585,7 @@ export function GroceryListDetailPage() {
 
     // Optimistic update: toggle immediately
     queryClient.setQueryData(
-      ['octoback.groceries.v1.Service', 'ListGroceryItems', { groceryList: listId.toString() + 'n' }],
+      ['octoback.groceries.v1.Service', 'ListGroceryItems', { groceryList: `${listId.toString()}n` }],
       (old: { groceryItems: GroceryItem[] } | undefined) => ({
         groceryItems: (old?.groceryItems ?? []).map((i) =>
           i.id === item.id ? { ...i, checked: newChecked } : i
@@ -573,7 +614,7 @@ export function GroceryListDetailPage() {
 
     // Optimistic update: toggle immediately
     queryClient.setQueryData(
-      ['octoback.mealplans.v1.Service', 'ListVirtualGroceryItems', { groceryListId: listId.toString() + 'n' }],
+      ['octoback.mealplans.v1.Service', 'ListVirtualGroceryItems', { groceryListId: `${listId.toString()}n` }],
       (old: { items: VirtualGroceryItem[] } | undefined) => ({
         items: (old?.items ?? []).map((i) =>
           i.mealPlanEntryId === item.mealPlanEntryId && i.recipeIngredientId === item.recipeIngredientId
@@ -602,7 +643,7 @@ export function GroceryListDetailPage() {
 
     // Optimistic update: toggle immediately
     queryClient.setQueryData(
-      ['octoback.staples.v1.Service', 'ListVirtualStapleItems', { groceryListId: listId.toString() + 'n' }],
+      ['octoback.staples.v1.Service', 'ListVirtualStapleItems', { groceryListId: `${listId.toString()}n` }],
       (old: { items: VirtualStapleItem[] } | undefined) => ({
         items: (old?.items ?? []).map((i) =>
           i.stapleItemId === item.stapleItemId
@@ -629,7 +670,7 @@ export function GroceryListDetailPage() {
   const handleResetStapleItems = async () => {
     // Optimistic update: uncheck all staple items immediately
     queryClient.setQueryData(
-      ['octoback.staples.v1.Service', 'ListVirtualStapleItems', { groceryListId: listId.toString() + 'n' }],
+      ['octoback.staples.v1.Service', 'ListVirtualStapleItems', { groceryListId: `${listId.toString()}n` }],
       (old: { items: VirtualStapleItem[] } | undefined) => ({
         items: (old?.items ?? []).map((i) => ({ ...i, checked: false })),
       })
@@ -650,7 +691,7 @@ export function GroceryListDetailPage() {
   const handleDeleteItem = async (itemId: bigint) => {
     // Optimistic update: remove immediately
     queryClient.setQueryData(
-      ['octoback.groceries.v1.Service', 'ListGroceryItems', { groceryList: listId.toString() + 'n' }],
+      ['octoback.groceries.v1.Service', 'ListGroceryItems', { groceryList: `${listId.toString()}n` }],
       (old: { groceryItems: GroceryItem[] } | undefined) => ({
         groceryItems: (old?.groceryItems ?? []).filter((i) => i.id !== itemId),
       })
@@ -668,17 +709,26 @@ export function GroceryListDetailPage() {
 
   const isLoading = listLoading || itemsLoading || virtualItemsLoading || stapleItemsLoading;
 
+  const uncheckedCount = useMemo(() => unifiedItems.filter((i) => !isItemChecked(i)).length, [unifiedItems]);
+
   const progressSeparator = totalCount > 0 ? (
     <Box className={classes.progressSeparator} data-theme={colorScheme}>
+      <Box className={classes.progressMetaRow}>
+        <Text className={classes.progressSeparatorText}>
+          {checkedCount} / {totalCount} articles
+        </Text>
+        {checkedCount > 0 && (
+          <UnstyledButton className={classes.progressToggleButton} onClick={handleToggleShowChecked}>
+            {showChecked ? 'Masquer' : 'Afficher'}
+          </UnstyledButton>
+        )}
+      </Box>
       <Box className={classes.progressSeparatorBar}>
         <Box
           className={classes.progressSeparatorFill}
           style={{ width: `${(checkedCount / totalCount) * 100}%` }}
         />
       </Box>
-      <Text className={classes.progressSeparatorText}>
-        {checkedCount} / {totalCount} articles
-      </Text>
     </Box>
   ) : undefined;
 
@@ -773,6 +823,18 @@ export function GroceryListDetailPage() {
           </Box>
         ) : totalCount === 0 ? (
           <EmptyState />
+        ) : !showChecked && checkedCount > 0 && uncheckedCount === 0 ? (
+          <Stack gap="sm" className={classes.itemsList}>
+            <Paper className={classes.allCheckedState} data-theme={colorScheme}>
+              <Text fw={600}>Tout est coché</Text>
+              <Text size="sm" c="dimmed">
+                Les articles cochés sont masqués pour gagner de la place.
+              </Text>
+              <UnstyledButton className={classes.allCheckedToggle} onClick={handleToggleShowChecked}>
+                Afficher les articles cochés
+              </UnstyledButton>
+            </Paper>
+          </Stack>
         ) : (
           <Stack gap="sm" className={classes.itemsList}>
             {groupedItems.map((group, groupIndex) => {
@@ -781,6 +843,11 @@ export function GroceryListDetailPage() {
               const hasChecked = checkedItems.length > 0;
               const hasUnchecked = uncheckedItems.length > 0;
               let itemIndex = 0;
+
+              // When checked items are hidden, skip groups that would render empty.
+              if (!showChecked && !hasUnchecked) {
+                return null;
+              }
 
               return (
                 <Box key={group.label ?? 'all'}>
@@ -837,7 +904,7 @@ export function GroceryListDetailPage() {
                   })}
 
                   {/* Separator within group */}
-                  {hasChecked && hasUnchecked && (
+                  {showChecked && hasChecked && hasUnchecked && (
                     <Box className={classes.separator}>
                       <Box className={classes.separatorLine} />
                       <Text size="xs" c="dimmed" px="md">
@@ -848,46 +915,47 @@ export function GroceryListDetailPage() {
                   )}
 
                   {/* Checked items */}
-                  {checkedItems.map((unified) => {
-                    const delay = (groupIndex * 10 + itemIndex++) * 20;
-                    
-                    if (unified.type === 'grocery') {
+                  {showChecked &&
+                    checkedItems.map((unified) => {
+                      const delay = (groupIndex * 10 + itemIndex++) * 20;
+
+                      if (unified.type === 'grocery') {
+                        return (
+                          <GroceryItemRow
+                            key={`grocery-${unified.item.id.toString()}`}
+                            item={unified.item}
+                            onToggle={handleToggleItem}
+                            onDelete={handleDeleteItem}
+                            delay={delay}
+                          />
+                        );
+                      }
+                      if (unified.type === 'recipe') {
+                        return (
+                          <VirtualItemRow
+                            key={`recipe-${unified.item.mealPlanEntryId}-${unified.item.recipeIngredientId}`}
+                            item={unified.item}
+                            onToggle={handleToggleVirtualItem}
+                            delay={delay}
+                            showRecipeBadge={groupingMode !== 'recipe'}
+                          />
+                        );
+                      }
                       return (
-                        <GroceryItemRow
-                          key={`grocery-${unified.item.id.toString()}`}
+                        <StapleItemRow
+                          key={`staple-${unified.item.stapleItemId}`}
                           item={unified.item}
-                          onToggle={handleToggleItem}
-                          onDelete={handleDeleteItem}
+                          onToggle={handleToggleStapleItem}
                           delay={delay}
                         />
                       );
-                    }
-                    if (unified.type === 'recipe') {
-                      return (
-                        <VirtualItemRow
-                          key={`recipe-${unified.item.mealPlanEntryId}-${unified.item.recipeIngredientId}`}
-                          item={unified.item}
-                          onToggle={handleToggleVirtualItem}
-                          delay={delay}
-                          showRecipeBadge={groupingMode !== 'recipe'}
-                        />
-                      );
-                    }
-                    return (
-                      <StapleItemRow
-                        key={`staple-${unified.item.stapleItemId}`}
-                        item={unified.item}
-                        onToggle={handleToggleStapleItem}
-                        delay={delay}
-                      />
-                    );
-                  })}
+                    })}
                 </Box>
               );
             })}
 
             {/* Reset staple items button */}
-            {hasStapleItems && stapleItems.some(i => i.checked) && (
+            {showChecked && hasStapleItems && stapleItems.some(i => i.checked) && (
               <Button
                 variant="subtle"
                 color="amber"

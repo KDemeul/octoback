@@ -6,14 +6,22 @@
 /* Progress indicator (header separator) */
 .progressSeparator {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
   padding: 0 var(--mantine-spacing-md);
 }
 
+.progressMetaRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .progressSeparatorBar {
-  flex: 1;
   height: 4px;
+  width: 100%;
   background: var(--mantine-color-gray-2);
   border-radius: 2px;
   overflow: hidden;
@@ -31,10 +39,26 @@
 }
 
 .progressSeparatorText {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--mantine-color-gray-5);
   white-space: nowrap;
   font-weight: 500;
+}
+
+.progressToggleButton {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--mantine-color-coral-6);
+  line-height: 1;
+  padding: 0;
+}
+
+.wrapper[data-theme='dark'] .progressToggleButton {
+  color: var(--mantine-color-coral-4);
+}
+
+.progressToggleButton:hover {
+  opacity: 0.85;
 }
 
 /* Add form */
@@ -500,7 +524,7 @@
   }
 
   .progressSeparator {
-    gap: 8px;
+    gap: 6px;
   }
 
   .progressSeparatorBar {
@@ -508,7 +532,11 @@
   }
 
   .progressSeparatorText {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+  }
+
+  .progressToggleButton {
+    font-size: 0.7rem;
   }
 
   .addForm {
@@ -581,7 +609,7 @@
 /* Extra compact for small phones */
 @media (max-width: 480px) {
   .progressSeparator {
-    gap: 6px;
+    gap: 5px;
   }
 
   .progressSeparatorBar {
@@ -589,7 +617,11 @@
   }
 
   .progressSeparatorText {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
+  }
+
+  .progressToggleButton {
+    font-size: 0.65rem;
   }
 
   .addForm {
@@ -647,5 +679,29 @@
     left: 42px;
     right: 12px;
   }
+}
+
+/* All-checked compact state (when checked rows are hidden) */
+.allCheckedState {
+  padding: 14px 16px;
+  border-radius: var(--mantine-radius-lg);
+  background: var(--mantine-color-body);
+  border: 2px solid var(--mantine-color-gray-2);
+}
+
+.allCheckedState[data-theme='dark'] {
+  background: var(--mantine-color-dark-7);
+  border-color: var(--mantine-color-dark-5);
+}
+
+.allCheckedToggle {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--mantine-color-coral-6);
+}
+
+.wrapper[data-theme='dark'] .allCheckedToggle {
+  color: var(--mantine-color-coral-4);
 }
 
