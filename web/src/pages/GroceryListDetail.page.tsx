@@ -717,11 +717,6 @@ export function GroceryListDetailPage() {
         <Text className={classes.progressSeparatorText}>
           {checkedCount} / {totalCount} articles
         </Text>
-        {checkedCount > 0 && (
-          <UnstyledButton className={classes.progressToggleButton} onClick={handleToggleShowChecked}>
-            {showChecked ? 'Masquer' : 'Afficher'}
-          </UnstyledButton>
-        )}
       </Box>
       <Box className={classes.progressSeparatorBar}>
         <Box
@@ -733,13 +728,21 @@ export function GroceryListDetailPage() {
   ) : undefined;
 
   const headerAction = (
-    <Menu shadow="md" width={180} position="bottom-end">
+    <Menu shadow="md" width={200} position="bottom-end">
       <Menu.Target>
         <ActionIcon variant="subtle" color="gray" size="lg">
           <MoreVerticalIcon />
         </ActionIcon>
       </Menu.Target>
       <Menu.Dropdown>
+        {checkedCount > 0 && (
+          <>
+            <Menu.Item onClick={handleToggleShowChecked}>
+              {showChecked ? 'Masquer les articles cochés' : 'Afficher les articles cochés'}
+            </Menu.Item>
+            <Menu.Divider />
+          </>
+        )}
         <Menu.Label>Trier par</Menu.Label>
         <Menu.Item
           onClick={() => handleGroupingChange('alphabetical')}
