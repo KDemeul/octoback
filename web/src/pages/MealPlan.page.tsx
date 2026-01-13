@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   ActionIcon,
   Box,
@@ -18,6 +18,7 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '../components/AppLayout/AppLayout';
 import {
   useMealPlan,
@@ -28,13 +29,24 @@ import {
   useClearMealPlanEntry,
 } from '../hooks/use-mealplans';
 import { useGroceryLists } from '../hooks/use-groceries';
-import { useRecipes } from '../hooks/use-recipes';
+import { useAllRecipes } from '../hooks/use-recipes';
 import { useQueryClient } from '@tanstack/react-query';
 import { MealPlanEntry } from '../gen/octoback/mealplans/v1/mealplans_pb';
 import { Recipe } from '../gen/octoback/recipes/v1/recipes_pb';
 import classes from './MealPlan.module.css';
 
 const DAY_NAMES = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+
+function useIsTouchDevice() {
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  
+  useEffect(() => {
+    const hasTouch = window.matchMedia('(hover: none)').matches;
+    setIsTouchDevice(hasTouch);
+  }, []);
+  
+  return isTouchDevice;
+}
 
 // Get day indices starting from today
 // JS Date: 0=Sunday, 1=Monday, ..., 6=Saturday
@@ -93,15 +105,71 @@ function SearchIcon() {
   );
 }
 
+interface RecipeCardProps {
+  entry: MealPlanEntry;
+  recipe: Recipe;
+  onRemove: (entryId: bigint) => void;
+  onClick: (recipeId: bigint) => void;
+}
+
+function RecipeCard({ entry, recipe, onRemove, onClick }: RecipeCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  const isTouchDevice = useIsTouchDevice();
+  
+  const totalTime = recipe.prepTimeMinutes + recipe.cookTimeMinutes;
+  const showRemoveButton = isHovered || isTouchDevice;
+
+  return (
+    <Box 
+      className={classes.recipeCard}
+      onClick={() => onClick(recipe.id)}
+      style={{ cursor: 'pointer' }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <Group justify="space-between" align="flex-start" mb="xs">
+        <ThemeIcon size={32} radius="xl" variant="light" color="sage" className={classes.recipeIcon}>
+          <ChefHatIcon size={18} />
+        </ThemeIcon>
+        <ActionIcon
+          variant="subtle"
+          color="red"
+          size="sm"
+          className={classes.removeButton}
+          style={{ opacity: showRemoveButton ? 1 : 0 }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove(entry.id);
+          }}
+        >
+          <CloseIcon />
+        </ActionIcon>
+      </Group>
+      <Text className={classes.recipeName} lineClamp={2}>
+        {recipe.name}
+      </Text>
+      {totalTime > 0 && (
+        <Group gap={4} mt="xs">
+          <ClockIcon />
+          <Text size="xs" c="dimmed">
+            {totalTime} min
+          </Text>
+        </Group>
+      )}
+    </Box>
+  );
+}
+
 interface DayCardProps {
   dayIndex: number;
   entries: MealPlanEntry[];
   recipes: Recipe[];
   onAddRecipe: (dayIndex: number) => void;
   onRemoveRecipe: (entryId: bigint) => void;
+  onRecipeClick: (recipeId: bigint) => void;
 }
 
-function DayCard({ dayIndex, entries, recipes, onAddRecipe, onRemoveRecipe }: DayCardProps) {
+function DayCard({ dayIndex, entries, recipes, onAddRecipe, onRemoveRecipe, onRecipeClick }: DayCardProps) {
   const { colorScheme } = useMantineColorScheme();
 
   return (
@@ -113,39 +181,17 @@ function DayCard({ dayIndex, entries, recipes, onAddRecipe, onRemoveRecipe }: Da
         <Stack gap="xs" className={classes.recipeInDay}>
           {entries.map((entry) => {
             const recipe = recipes.find(r => r.id === entry.recipeId);
-            if (!recipe) return null;
-            const totalTime = recipe.prepTimeMinutes + recipe.cookTimeMinutes;
+            if (!recipe) {
+              return null;
+            }
             return (
-              <Box key={entry.id.toString()} className={classes.recipeCard}>
-                <Group justify="space-between" align="flex-start" mb="xs">
-                  <ThemeIcon size={32} radius="xl" variant="light" color="sage" className={classes.recipeIcon}>
-                    <ChefHatIcon size={18} />
-                  </ThemeIcon>
-                  <ActionIcon
-                    variant="subtle"
-                    color="red"
-                    size="sm"
-                    className={classes.removeButton}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onRemoveRecipe(entry.id);
-                    }}
-                  >
-                    <CloseIcon />
-                  </ActionIcon>
-                </Group>
-                <Text className={classes.recipeName} lineClamp={2}>
-                  {recipe.name}
-                </Text>
-                {totalTime > 0 && (
-                  <Group gap={4} mt="xs">
-                    <ClockIcon />
-                    <Text size="xs" c="dimmed">
-                      {totalTime} min
-                    </Text>
-                  </Group>
-                )}
-              </Box>
+              <RecipeCard
+                key={entry.id.toString()}
+                entry={entry}
+                recipe={recipe}
+                onRemove={onRemoveRecipe}
+                onClick={onRecipeClick}
+              />
             );
           })}
           <UnstyledButton 
@@ -180,7 +226,9 @@ function RecipeSelectorModal({ opened, onClose, onSelect, recipes, dayIndex }: R
 
   const filteredRecipes = useMemo(() => {
     const searchLower = search.toLowerCase().trim();
-    if (!searchLower) return recipes.slice(0, 10); // Show first 10 when no search
+    if (!searchLower) {
+      return recipes.slice(0, 10); // Show first 10 when no search
+    }
     return recipes.filter((recipe) =>
       recipe.name.toLowerCase().includes(searchLower)
     );
@@ -200,7 +248,9 @@ function RecipeSelectorModal({ opened, onClose, onSelect, recipes, dayIndex }: R
     onClose();
   };
 
-  if (dayIndex === null) return null;
+  if (dayIndex === null) {
+    return null;
+  }
 
   return (
     <Modal
@@ -302,12 +352,13 @@ function RecipeSelectorModal({ opened, onClose, onSelect, recipes, dayIndex }: R
 export function MealPlanPage() {
   const { colorScheme } = useMantineColorScheme();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [selectorOpened, { open: openSelector, close: closeSelector }] = useDisclosure(false);
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
 
   const { data: mealPlanData, isLoading: mealPlanLoading } = useMealPlan();
   const { data: entriesData, isLoading: entriesLoading } = useMealPlanEntries();
-  const { data: recipesData, isLoading: recipesLoading } = useRecipes();
+  const { data: allRecipes, isLoading: recipesLoading } = useAllRecipes();
   const { data: groceryListsData, isLoading: groceryListsLoading } = useGroceryLists();
 
   const createMealPlanMutation = useCreateMealPlan();
@@ -317,7 +368,7 @@ export function MealPlanPage() {
 
   const mealPlan = mealPlanData?.mealPlan;
   const entries = entriesData?.entries ?? [];
-  const recipes = recipesData?.recipes ?? [];
+  const recipes = allRecipes ?? [];
   const groceryLists = groceryListsData?.groceryLists ?? [];
 
   const isLoading = mealPlanLoading || entriesLoading || recipesLoading || groceryListsLoading;
@@ -350,7 +401,9 @@ export function MealPlanPage() {
   };
 
   const handleSelectRecipe = async (recipeId: bigint) => {
-    if (selectedDay === null) return;
+    if (selectedDay === null) {
+      return;
+    }
     
     await setEntryMutation.mutateAsync({
       recipeId,
@@ -364,6 +417,10 @@ export function MealPlanPage() {
   const handleRemoveRecipe = async (entryId: bigint) => {
     await clearEntryMutation.mutateAsync({ entryId });
     queryClient.invalidateQueries({ queryKey: ['octoback.mealplans.v1.Service'] });
+  };
+
+  const handleRecipeClick = (recipeId: bigint) => {
+    navigate(`/recipes/${recipeId}`, { state: { from: '/mealplan' } });
   };
 
   const groceryListOptions = groceryLists.map(list => ({
@@ -410,6 +467,7 @@ export function MealPlanPage() {
                 recipes={recipes}
                 onAddRecipe={handleAddRecipe}
                 onRemoveRecipe={handleRemoveRecipe}
+                onRecipeClick={handleRecipeClick}
               />
             ))}
           </Box>

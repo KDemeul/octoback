@@ -958,7 +958,7 @@ export function GroceryListDetailPage() {
             })}
 
             {/* Reset staple items button */}
-            {showChecked && hasStapleItems && stapleItems.some(i => i.checked) && (
+            {hasStapleItems && (
               <Button
                 variant="subtle"
                 color="amber"

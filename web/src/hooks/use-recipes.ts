@@ -1,4 +1,7 @@
-import { useMutation, useQuery } from '@connectrpc/connect-query';
+import { useMutation, useQuery, useTransport } from '@connectrpc/connect-query';
+import { useQuery as useTanstackQuery } from '@tanstack/react-query';
+import { createClient } from '@connectrpc/connect';
+import { useMemo, useCallback } from 'react';
 import {
   createRecipe,
   createRecipeIngredient,
@@ -12,6 +15,8 @@ import {
   updateRecipe,
   updateRecipeIngredient,
 } from '../gen/octoback/recipes/v1/service-Service_connectquery';
+import { Service } from '../gen/octoback/recipes/v1/service_connect';
+import { Recipe } from '../gen/octoback/recipes/v1/recipes_pb';
 
 // ============ Query Hooks ============
 
@@ -30,6 +35,38 @@ export function useRecipes(query?: string, pageSize?: number, pageToken?: string
     query: query ?? '',
     pageSize: pageSize ?? 20,
     pageToken: pageToken ?? '',
+  });
+}
+
+/**
+ * Fetch ALL recipes by paginating through all pages
+ * Useful when you need access to the complete recipe list (e.g., meal plan selector)
+ */
+export function useAllRecipes() {
+  const transport = useTransport();
+  const client = useMemo(() => createClient(Service, transport), [transport]);
+
+  const fetchAllRecipes = useCallback(async (): Promise<Recipe[]> => {
+    const allRecipes: Recipe[] = [];
+    let pageToken = '';
+    const pageSize = 100; // Max page size
+
+    do {
+      const response = await client.listRecipes({
+        query: '',
+        pageSize,
+        pageToken,
+      });
+      allRecipes.push(...response.recipes);
+      pageToken = response.nextPageToken;
+    } while (pageToken);
+
+    return allRecipes;
+  }, [client]);
+
+  return useTanstackQuery({
+    queryKey: ['octoback.recipes.v1.Service', 'ListRecipes', 'all'],
+    queryFn: fetchAllRecipes,
   });
 }
 

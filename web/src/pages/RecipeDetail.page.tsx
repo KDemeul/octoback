@@ -21,7 +21,7 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { AppLayout } from '../components/AppLayout/AppLayout';
 import {
   useRecipe,
@@ -229,6 +229,7 @@ export function RecipeDetailPage() {
   const { colorScheme } = useMantineColorScheme();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -367,11 +368,14 @@ export function RecipeDetailPage() {
 
   const isLoading = recipeLoading || ingredientsLoading;
   const totalTime = (recipe?.prepTimeMinutes ?? 0) + (recipe?.cookTimeMinutes ?? 0);
+  
+  // Determine where to go back to based on where the user came from
+  const backTo = (location.state as { from?: string })?.from || '/recipes';
 
   return (
     <AppLayout
       title={recipe?.name ?? 'Chargement...'}
-      backTo="/recipes"
+      backTo={backTo}
       action={
         recipe && (
           <ActionIcon
